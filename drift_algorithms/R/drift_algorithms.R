@@ -1,0 +1,166 @@
+######################################################################
+# ATTACH
+######################################################################
+
+attach <- function(fixation_XY, line_Y) {
+	n <- nrow(fixation_XY)
+	for (fixation_i in 1 : n) {
+		fixation_y <- fixation_XY[fixation_i, 2]
+		line_i <- which.min(abs(line_Y - fixation_y))
+		fixation_XY[fixation_i, 2] <- line_Y[line_i]
+	}
+	return(fixation_XY)
+}
+
+######################################################################
+# CHAIN
+######################################################################
+
+chain <- function(fixation_XY, line_Y, x_thresh=192, y_thresh=32) {
+	n <- nrow(fixation_XY)
+	dist_X <- abs(diff(fixation_XY[, 1]))
+	dist_Y <- abs(diff(fixation_XY[, 2]))
+	end_chain_indices <- which(dist_X > x_thresh | dist_Y > y_thresh)
+	end_chain_indices <- append(end_chain_indices, n)
+	start_of_chain <- 1
+	for (end_of_chain in end_chain_indices) {
+		mean_y <- mean(fixation_XY[start_of_chain:end_of_chain, 2])
+		line_i <- which.min(abs(line_Y - mean_y))
+		fixation_XY[start_of_chain:end_of_chain, 2] <- line_Y[line_i]
+		start_of_chain <- end_of_chain + 1
+	}
+	return(fixation_XY)
+}
+
+######################################################################
+# CLUSTER
+######################################################################
+
+cluster <- function(fixation_XY, line_Y) {
+	n <- nrow(fixation_XY)
+	m <- length(line_Y)
+	fixation_Y <- fixation_XY[, 2]
+	clusters <- kmeans(fixation_Y, m)
+	ordered_cluster_indices <- order(clusters$centers)
+	for (fixation_i in 1 : n) {
+		cluster_i <- clusters$cluster[fixation_i]
+		line_i <- which(ordered_cluster_indices == cluster_i)
+		fixation_XY[fixation_i, 2] <- line_Y[line_i]
+	}
+	return(fixation_XY)
+}
+
+######################################################################
+# REGRESS
+######################################################################
+
+regress <- function(fixation_XY, line_Y, k_bounds=c(-0.1, 0.1), o_bounds=c(-50, 50), s_bounds=c(1, 20)) {
+	n <- nrow(fixation_XY)
+	m <- length(line_Y)
+
+	fit_lines <- function(params, return_line_assignments=FALSE) {
+		k <- k_bounds[1] + (k_bounds[2] - k_bounds[1]) * pnorm(params[1])
+		o <- o_bounds[1] + (o_bounds[2] - o_bounds[1]) * pnorm(params[2])
+		s <- s_bounds[1] + (s_bounds[2] - s_bounds[1]) * pnorm(params[3])
+		predicted_Y_from_slope <- fixation_XY[, 1] * k
+		line_Y_plus_offset <- line_Y + o
+		density <- matrix(nrow=n, ncol=m)
+		for (line_i in 1 : m) {
+			fit_Y <- predicted_Y_from_slope + line_Y_plus_offset[line_i]
+			density[, line_i] <- log(dnorm(fixation_XY[, 2], fit_Y, s))
+		}
+		if (return_line_assignments) {
+			return(apply(density, 1, which.max))
+		}
+		return(-sum(apply(density, 1, max)))
+	}
+
+	best_fit <- optim(c(0, 0, 0), fit_lines)
+	line_assignments <- fit_lines(best_fit$par, TRUE)
+	for (fixation_i in 1 : n) {
+		line_i <- line_assignments[fixation_i]
+		fixation_XY[fixation_i, 2] <- line_Y[line_i]
+	}
+	return(fixation_XY)
+}
+
+######################################################################
+# SEGMENT
+######################################################################
+
+segment <- function(fixation_XY, line_Y) {
+	n <- nrow(fixation_XY)
+	m <- length(line_Y)
+	diff_X <- diff(fixation_XY[, 1])
+	saccades_ordered_by_length <- order(diff_X)
+	line_change_indices <- saccades_ordered_by_length[1:m-1]
+	current_line_i <- 1
+	for (fixation_i in 1 : n) {
+		fixation_XY[fixation_i, 2] <- line_Y[current_line_i]
+		if (is.element(fixation_i, line_change_indices)) {
+			current_line_i <- current_line_i + 1
+		}
+	}
+	return(fixation_XY)
+}
+
+######################################################################
+# WARP
+######################################################################
+
+warp <- function(fixation_XY, character_XY) {
+	n <- nrow(fixation_XY)
+	warping_path <- dynamic_time_warping(fixation_XY, character_XY)
+	for (fixation_i in 1 : n) {
+		characters_mapped_to_fixation_i <- unlist(warping_path[[fixation_i]])
+		candidate_Y <- character_XY[characters_mapped_to_fixation_i, 2]
+		fixation_XY[fixation_i, 2] <- mode(candidate_Y)
+	}
+	return(fixation_XY)
+}
+
+mode <- function(values) {
+	unique_values <- unique(values)
+	return(unique_values[which.max(tabulate(match(values, unique_values)))])
+}
+
+dynamic_time_warping <- function(sequence1, sequence2) {
+	n1 <- nrow(sequence1)
+	n2 <- nrow(sequence2)
+	cost_matrix <- matrix(nrow=n1+1, ncol=n2+1)
+	cost_matrix[1, ] <- Inf
+	cost_matrix[ ,1] <- Inf
+	cost_matrix[1,1] <- 0
+	for (i in 1 : n1) {
+		for (j in 1 : n2) {
+			cost <- sqrt((sequence1[i,1] - sequence2[j,1])^2 + (sequence1[i,2] - sequence2[j,2])^2)
+			cost_matrix[i+1, j+1] <- cost + min(cost_matrix[i, j+1], cost_matrix[i+1, j], cost_matrix[i, j])
+		}
+	}
+	cost_matrix <- cost_matrix[2:(n1+1), 2:(n2+1)]
+	warping_path <- replicate(n1, list())
+	while (i > 1 | j > 1) {
+		warping_path[[i]] <- append(warping_path[[i]], j)
+		possible_moves = c(Inf, Inf, Inf)
+		if (i > 1 & j > 1) {
+			possible_moves[1] <- cost_matrix[i-1, j-1]
+		}
+		if (i > 1) {
+			possible_moves[2] <- cost_matrix[i-1, j]
+		}
+		if (j > 1) {
+			possible_moves[3] <- cost_matrix[i, j-1]
+		}
+		best_move = which.min(possible_moves)
+		if (best_move == 1) {
+			i = i - 1
+			j = j - 1
+		} else if (best_move == 2) {
+			i = i - 1
+		} else {
+			j = j - 1
+		}
+	}
+	warping_path[[1]] <- append(warping_path[[1]], 1)
+	return(warping_path)
+}
