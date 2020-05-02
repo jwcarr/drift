@@ -16,8 +16,8 @@ plt.rcParams.update({'font.size': 7})
 
 y_to_line_mapping = {155:1, 219:2, 283:3, 347:4, 411:5, 475:6, 539:7, 603:8, 667:9, 731:10, 795:11, 859:12, 923:13}
 
-methods = ['attach',  'chain',   'cluster', 'regress', 'segment', 'warp',    'gold']
-colors  = ['#6B6B7F', '#E85A71', '#4EA1D3', '#FCBE32', '#17A363', '#7544D6', '#B0944B']
+methods = ['attach',  'chain',   'cluster', 'regress', 'segment', 'warp']
+colors  = ['#6B6B7F', '#E85A71', '#4EA1D3', '#FCBE32', '#17A363', '#7544D6']
 
 def prop_mismatch(line_assignments1, line_assignments2):
 	matches = line_assignments1 == line_assignments2
@@ -87,7 +87,7 @@ def plot_analyses(filepath):
 
 	fig, axes = plt.subplots(1, 2, figsize=(5.5, 2.5))
 
-	algorithm_distances = compute_distance_matrix(methods[:-1])
+	algorithm_distances = compute_distance_matrix(methods)
 
 	linkage = hierarchy.linkage(distance.squareform(algorithm_distances, 'tovector'))
 	tree = hierarchy.to_tree(linkage)
@@ -97,8 +97,7 @@ def plot_analyses(filepath):
 	axes[0].set_xticks([])
 	axes[0].set_yticks([])
 
-	algorithm_distances = compute_distance_matrix(methods)
-	solution = MDS(dissimilarity='precomputed', n_components=2, n_init=25, max_iter=2000, random_state=100)
+	solution = MDS(dissimilarity='precomputed', n_components=2, n_init=25, max_iter=2000, random_state=11)
 	positions = solution.fit_transform(algorithm_distances)
 	positions = min_max_normalize(positions)
 	mn, mx = positions[:, 0].min(), positions[:, 0].max()
