@@ -16,9 +16,9 @@ colors  = ['#6B6B7F', '#E85A71', '#4EA1D3', '#FCBE32', '#17A363', '#7544D6', '#6
 
 y_to_line_mapping = {155:1, 219:2, 283:3, 347:4, 411:5, 475:6, 539:7, 603:8, 667:9, 731:10, 795:11, 859:12, 923:13}
 
-def prop_mismatch(line_assignments1, line_assignments2):
+def percentage_match(line_assignments1, line_assignments2):
 	matches = line_assignments1 == line_assignments2
-	return matches.sum() / len(matches)
+	return matches.sum() / len(matches) * 100
 
 def line_assignments(fixations):
 	line_assignments = np.zeros(len(fixations), dtype=int)
@@ -58,8 +58,8 @@ def plot_accuracy(results, filepath):
 		axis.plot([i-0.2, i+0.2], [median_k, median_k], color='black', linewidth=2, linestyle=':')
 		axis.text(i+0.25, median_a, str(round(median_a*100, 1)) + '%', ha='left', va='bottom', color='black', fontsize=7)
 		axis.text(i+0.25, median_k, str(round(median_k*100, 1)) + '%', ha='left', va='top', color='black', fontsize=7)
-	axis.set_ylabel('Accuracy of algorithmic correction')
-	axis.set_ylim(-0.05, 1.05)
+	axis.set_ylabel('Accuracy of algorithmic correction (%)')
+	axis.set_ylim(-5, 105)
 	axis.set_xlim(-0.5, i+0.7)
 	axis.set_xticks(list(range(len(results))))
 	axis.tick_params(bottom=False)

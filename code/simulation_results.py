@@ -34,22 +34,23 @@ def plot_results(layout, filepath, n_rows=2, figsize=None):
 			axes[r][c].legend(legend_patches, methods, loc='center', frameon=False, markerscale=2)
 			continue
 		results = tools.unpickle('../data/algorithm_performance/%s.pkl'%factor)
+		results *= 100
 		factor_label, (factor_min_val, factor_max_val) = factors[factor]
 		factor_space = np.linspace(factor_min_val, factor_max_val, len(results[0]))
 		for method_i, method in enumerate(methods):
 			means = results[method_i, :].mean(axis=1)
-			staggered_means = means - (0.01 * method_i) + (0.01 * (len(methods)-1)/2)
+			staggered_means = means - method_i + (len(methods)-1)/2
 			line, = axes[r][c].plot(factor_space, staggered_means, color=colors[method_i], label=method, linewidth=1.2)
 			if r == 0 and c == 0:
 				legend_patches.append(line)
-			axes[r][c].set_ylim(-0.05, 1.05)
+			axes[r][c].set_ylim(-5, 105)
 			offset = (factor_max_val - factor_min_val) * 0.05
 			axes[r][c].set_xlim(factor_min_val-offset, factor_max_val+offset)
 			axes[r][c].set_xlabel(factor_label)
 		axes[r][c].text(factor_min_val, 0, '(%s)'%('ABCDE'[subplot_i]), fontsize=8)
 		subplot_i += 1
 	for axis in axes[:, 0]:
-		axis.set_ylabel('Accuracy of algorithmic correction')
+		axis.set_ylabel('Accuracy of algorithmic correction (%)')
 	for axis in axes[:, 1:].flatten():
 		axis.set_yticklabels([])
 	for r, c in list(np.ndindex((n_rows, n_cols)))[len(layout):]:
