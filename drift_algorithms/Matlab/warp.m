@@ -1,3 +1,9 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% WARP
+% The dynamic_time_warping function was adapted from:
+% https://github.com/talcs/simpledtw
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function fixation_XY = warp(fixation_XY, character_XY)
 
 	n = size(fixation_XY, 1);

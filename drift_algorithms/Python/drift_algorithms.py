@@ -13,6 +13,8 @@ def attach(fixation_XY, line_Y):
 
 ######################################################################
 # CHAIN
+# This is an adaptation of the chain method in popEye:
+# https://github.com/sascha2schroeder/popEye/
 ######################################################################
 
 def chain(fixation_XY, line_Y, x_thresh=192, y_thresh=32):
@@ -31,6 +33,8 @@ def chain(fixation_XY, line_Y, x_thresh=192, y_thresh=32):
 
 ######################################################################
 # CLUSTER
+# This is an adaptation of the cluster method in popEye:
+# https://github.com/sascha2schroeder/popEye/
 ######################################################################
 
 from sklearn.cluster import KMeans
@@ -48,6 +52,11 @@ def cluster(fixation_XY, line_Y):
 
 ######################################################################
 # REGRESS
+# This is an adaptation of FixAlign:
+# https://blogs.umass.edu/rdcl/resources/
+# Cohen, A. L. (2013). Software for the automatic correction of
+# recorded eye fixation locations in reading experiments. Behavior
+# Research Methods, 45, 679–683. doi:10.3758/s13428-012-0280-3
 ######################################################################
 
 from scipy.optimize import minimize
@@ -96,20 +105,22 @@ def segment(fixation_XY, line_Y):
 
 ######################################################################
 # WARP
+# The dynamic_time_warping function was adapted from:
+# https://github.com/talcs/simpledtw
 ######################################################################
 
 def warp(fixation_XY, character_XY):
-	warping_path = _dynamic_time_warping(fixation_XY, character_XY)
+	warping_path = dynamic_time_warping(fixation_XY, character_XY)
 	for fixation_i, characters_mapped_to_fixation_i in enumerate(warping_path):
 		candidate_Y = character_XY[characters_mapped_to_fixation_i, 1]
-		fixation_XY[fixation_i, 1] = _mode(candidate_Y)
+		fixation_XY[fixation_i, 1] = mode(candidate_Y)
 	return fixation_XY
 
-def _mode(values):
+def mode(values):
 	values = list(values)
 	return max(set(values), key=values.count)
 
-def _dynamic_time_warping(sequence1, sequence2):
+def dynamic_time_warping(sequence1, sequence2):
 	n1 = len(sequence1)
 	n2 = len(sequence2)
 	cost_matrix = np.zeros((n1+1, n2+1))

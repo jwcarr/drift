@@ -14,6 +14,8 @@ attach <- function(fixation_XY, line_Y) {
 
 ######################################################################
 # CHAIN
+# This is an adaptation of the chain method in popEye:
+# https://github.com/sascha2schroeder/popEye/
 ######################################################################
 
 chain <- function(fixation_XY, line_Y, x_thresh=192, y_thresh=32) {
@@ -34,6 +36,8 @@ chain <- function(fixation_XY, line_Y, x_thresh=192, y_thresh=32) {
 
 ######################################################################
 # CLUSTER
+# This is an adaptation of the cluster method in popEye:
+# https://github.com/sascha2schroeder/popEye/
 ######################################################################
 
 cluster <- function(fixation_XY, line_Y) {
@@ -52,6 +56,11 @@ cluster <- function(fixation_XY, line_Y) {
 
 ######################################################################
 # REGRESS
+# This is an adaptation of FixAlign:
+# https://blogs.umass.edu/rdcl/resources/
+# Cohen, A. L. (2013). Software for the automatic correction of
+# recorded eye fixation locations in reading experiments. Behavior
+# Research Methods, 45, 679–683. doi:10.3758/s13428-012-0280-3
 ######################################################################
 
 regress <- function(fixation_XY, line_Y, k_bounds=c(-0.1, 0.1), o_bounds=c(-50, 50), s_bounds=c(1, 20)) {
@@ -106,6 +115,8 @@ segment <- function(fixation_XY, line_Y) {
 
 ######################################################################
 # WARP
+# The dynamic_time_warping function was adapted from:
+# https://github.com/talcs/simpledtw
 ######################################################################
 
 warp <- function(fixation_XY, character_XY) {

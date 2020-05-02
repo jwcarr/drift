@@ -1,3 +1,9 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CLUSTER
+% This is an adaptation of the cluster method in popEye:
+% https://github.com/sascha2schroeder/popEye/
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function fixation_XY = cluster(fixation_XY, line_Y)
 
 	n = size(fixation_XY, 1);

@@ -1,3 +1,9 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAIN
+% This is an adaptation of the chain method in popEye:
+% https://github.com/sascha2schroeder/popEye/
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function fixation_XY = chain(fixation_XY, line_Y, x_thresh, y_thresh)
 
 	if ~exist('x_thresh')

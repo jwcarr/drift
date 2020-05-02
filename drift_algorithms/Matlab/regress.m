@@ -1,3 +1,12 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% REGRESS
+% This is an adaptation of FixAlign:
+% https://blogs.umass.edu/rdcl/resources/
+% Cohen, A. L. (2013). Software for the automatic correction of
+% recorded eye fixation locations in reading experiments. Behavior
+% Research Methods, 45, 679–683. doi:10.3758/s13428-012-0280-3
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function fixation_XY = regress(fixation_XY, line_Y, k_bounds, o_bounds, s_bounds)
 
 	if ~exist('k_bounds')
