@@ -141,7 +141,7 @@ dynamic_time_warping <- function(sequence1, sequence2) {
 	warping_path <- replicate(n1, list())
 	while (i > 1 | j > 1) {
 		warping_path[[i]] <- append(warping_path[[i]], j)
-		possible_moves = c(Inf, Inf, Inf)
+		possible_moves <- c(Inf, Inf, Inf)
 		if (i > 1 & j > 1) {
 			possible_moves[1] <- cost_matrix[i-1, j-1]
 		}
@@ -151,14 +151,14 @@ dynamic_time_warping <- function(sequence1, sequence2) {
 		if (j > 1) {
 			possible_moves[3] <- cost_matrix[i, j-1]
 		}
-		best_move = which.min(possible_moves)
+		best_move <- which.min(possible_moves)
 		if (best_move == 1) {
-			i = i - 1
-			j = j - 1
+			i <- i - 1
+			j <- j - 1
 		} else if (best_move == 2) {
-			i = i - 1
+			i <- i - 1
 		} else {
-			j = j - 1
+			j <- j - 1
 		}
 	}
 	warping_path[[1]] <- append(warping_path[[1]], 1)
