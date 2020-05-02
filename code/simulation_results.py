@@ -4,6 +4,7 @@ Code for plotting the simulation results.
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.transforms as transforms
 import eyekit
 import tools
 
@@ -47,7 +48,8 @@ def plot_results(layout, filepath, n_rows=2, figsize=None):
 			offset = (factor_max_val - factor_min_val) * 0.05
 			axes[r][c].set_xlim(factor_min_val-offset, factor_max_val+offset)
 			axes[r][c].set_xlabel(factor_label)
-		axes[r][c].text(factor_min_val, 0, '(%s)'%('ABCDE'[subplot_i]), fontsize=8)
+		inches_from_origin = (fig.dpi_scale_trans + transforms.ScaledTranslation(0, 0, axes[r][c].transAxes))
+		axes[r][c].text(0.1, 0.1, '(%s)'%('ABCDE'[subplot_i]), fontsize=8, fontweight='bold', ha='left', va='bottom', transform=inches_from_origin)
 		subplot_i += 1
 	for axis in axes[:, 0]:
 		axis.set_ylabel('Accuracy of algorithmic correction (%)')

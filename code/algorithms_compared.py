@@ -5,6 +5,7 @@ clustering analysis.
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.transforms as transforms
 from sklearn.manifold import MDS
 from scipy.spatial import distance
 from scipy.cluster import hierarchy
@@ -96,6 +97,8 @@ def plot_analyses(filepath):
 	axes[0].set_ylim(min_y-0.75, 0.25)
 	axes[0].set_xticks([])
 	axes[0].set_yticks([])
+	inches_from_origin = (fig.dpi_scale_trans + transforms.ScaledTranslation(0, 1, axes[0].transAxes))
+	axes[0].text(0.1, -0.1, '(A)', fontsize=8, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
 
 	solution = MDS(dissimilarity='precomputed', n_components=2, n_init=25, max_iter=2000, random_state=11)
 	positions = solution.fit_transform(algorithm_distances)
@@ -115,6 +118,8 @@ def plot_analyses(filepath):
 	axes[1].set_ylim(mn-offset, mx+offset)
 	axes[1].set_xticks([])
 	axes[1].set_yticks([])
+	inches_from_origin = (fig.dpi_scale_trans + transforms.ScaledTranslation(0, 1, axes[1].transAxes))
+	axes[1].text(0.1, -0.1, '(B)', fontsize=8, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
 
 	arrow_offset = 0.05
 	arrow_length = 0.6
