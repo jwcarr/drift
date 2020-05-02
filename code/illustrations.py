@@ -129,22 +129,10 @@ def visualize_warp(passage, fixation_sequence, output_file):
 			diagram.draw_arbitrary_line(fixation.xy, char_position, color)
 	diagram.save(output_file, crop_to_passage=True)
 
-def visualize_input_output(passage, fixation_sequence, input_file, output_file):
-	diagram = eyekit.Diagram(1920, 1080)
-	diagram.render_passage(passage, 28, color='rgb(135, 135, 135)')
-	diagram.render_fixations(fixation_sequence, color='black')
-	diagram.save(input_file, crop_to_passage=True)
-
-	eyekit.tools.correct_vertical_drift(fixation_sequence, passage, 'attach')
-
-	diagram = eyekit.Diagram(1920, 1080)
-	diagram.render_passage(passage, 28, color='rgb(135, 135, 135)')
-	diagram.render_fixations(fixation_sequence, color='black')
-	diagram.save(output_file, crop_to_passage=True)
 
 if __name__ == '__main__':
 
-	# eyekit.set_alphabet(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'])
+	eyekit.set_alphabet(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'])
 
 	passage = eyekit.Passage('../data/passages/lorem_ipsum_short.txt',
 		                     first_character_position=(368, 155),
@@ -154,28 +142,18 @@ if __name__ == '__main__':
 
 	# ALGORITHM ILLUSTRATIONS
 
-	# SIMPLE
-	# reading_scenario = simulation.ReadingScenario(passage, noise=10, slope=0.02, drift=0.04)#, regression_within=0.1, regression_across=0.1)
-	# create_fixation_sequence(reading_scenario, '../data/examples/algorithm_illustrations.json')
-	# fixation_sequence, _ = load_fixation_sequence('../data/examples/algorithm_illustrations_simple.json')
-	# visualize_input_output(passage, fixation_sequence, '../visuals/examples/simple_input.svg', '../visuals/examples/simple_output.svg')
-	# visualize_chain(passage, fixation_sequence, '../visuals/examples/chain.svg')
-	# visualize_cluster(passage, fixation_sequence, '../visuals//examples/cluster.svg')
-	# visualize_attach(passage, fixation_sequence, '../visuals/examples/attach.svg')
-	# visualize_regress(passage, fixation_sequence, '../visuals/examples/regress.svg')
-	# visualize_segment(passage, fixation_sequence, '../visuals/examples/segment.svg')
-	# visualize_warp(passage, fixation_sequence, '../visuals/examples/warp.svg')
-
-	# COMPLEX
-	# reading_scenario = simulation.ReadingScenario(passage, noise=10, slope=0.03, shift=0.06, regression_within=0.25, regression_between=0)
-	# create_fixation_sequence(reading_scenario, '../data/examples/algorithm_illustrations_complex.json')
-	# fixation_sequence, _ = load_fixation_sequence('../data/examples/algorithm_illustrations_complex.json')
-	# visualize_input_output(passage, fixation_sequence, '../visuals/examples/complex_input.svg', '../visuals/examples/complex_output.svg')
+	fixation_sequence, _ = load_fixation_sequence('../data/examples/algorithm_illustrations_simple.json')
+	visualize_attach(passage, fixation_sequence, '../visuals/examples/algorithms/attach.svg')
+	visualize_chain(passage, fixation_sequence, '../visuals/examples/algorithms/chain.svg')
+	visualize_cluster(passage, fixation_sequence, '../visuals//examples/algorithms/cluster.svg')
+	visualize_regress(passage, fixation_sequence, '../visuals/examples/algorithms/regress.svg')
+	visualize_segment(passage, fixation_sequence, '../visuals/examples/algorithms/segment.svg')
+	visualize_warp(passage, fixation_sequence, '../visuals/examples/algorithms/warp.svg')
 
 	# ISOLATED PHENOMENA EXAMPLES
 
-	# run_and_visualize(passage, '../visuals/examples/phenomena/noise.svg', noise=20.0, slope=0.0, shift=0.0, regression_within=0.0, regression_between=0.0)
-	# run_and_visualize(passage, '../visuals/examples/phenomena/slope.svg', noise=4.0, slope=0.08, shift=0.0, regression_within=0.0, regression_between=0.0)
-	# run_and_visualize(passage, '../visuals/examples/phenomena/drift.svg', noise=4.0, slope=0.0, shift=0.14, regression_within=0.0, regression_between=0.0)
-	# run_and_visualize(passage, '../visuals/examples/phenomena/within.svg', noise=4.0, slope=0.0, shift=0.0, regression_within=0.5, regression_between=0.0)
-	# run_and_visualize(passage, '../visuals/examples/phenomena/between.svg', noise=4.0, slope=0.0, shift=0.0, regression_within=0.0, regression_between=0.5)
+	run_and_visualize(passage, '../visuals/examples/phenomena/noise.svg', noise=20.0, slope=0.0, shift=0.0, regression_within=0.0, regression_between=0.0)
+	run_and_visualize(passage, '../visuals/examples/phenomena/slope.svg', noise=4.0, slope=0.08, shift=0.0, regression_within=0.0, regression_between=0.0)
+	run_and_visualize(passage, '../visuals/examples/phenomena/drift.svg', noise=4.0, slope=0.0, shift=0.14, regression_within=0.0, regression_between=0.0)
+	run_and_visualize(passage, '../visuals/examples/phenomena/within.svg', noise=4.0, slope=0.0, shift=0.0, regression_within=0.5, regression_between=0.0)
+	run_and_visualize(passage, '../visuals/examples/phenomena/between.svg', noise=4.0, slope=0.0, shift=0.0, regression_within=0.0, regression_between=0.5)
