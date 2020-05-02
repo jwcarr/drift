@@ -75,7 +75,7 @@ class ReadingScenario:
 					X.insert(-rand_insert_point, rx)
 					Y.insert(-rand_insert_point, ry)
 					I.insert(-rand_insert_point, ri)
-		fixation_sequence = eyekit.FixationSequence([(x, y, 100) for x, y in zip(X, Y)])
+		fixation_sequence = np.column_stack([X, Y, [100]*len(X)])
 		return fixation_sequence, np.array(I, dtype=int)
 
 
@@ -87,9 +87,9 @@ def simulate_factor(passage, factor, n_gradations, n_sims):
 		reading_scenario = ReadingScenario(passage, **{factor:factor_value})
 		for method_i, (method, params) in enumerate(methods):
 			for sim_i in range(n_sims):
-				fixation_sequence, true_line_numbers = reading_scenario.generate_fixation_sequence()
-				eyekit.tools.correct_vertical_drift(fixation_sequence, passage, method, **params)
-				pred_line_numbers = np.array([line_positions.index(fixation.y) for fixation in fixation_sequence], dtype=int)
+				fixation_XY, true_line_numbers = reading_scenario.generate_fixation_sequence()
+				fixation_XY = algorithms.__dict__[method](fixation_XY, passage.line_positions, **params)
+				pred_line_numbers = np.array([line_positions.index(fixation[1]) for fixation in fixation_XY], dtype=int)
 				matches = true_line_numbers == pred_line_numbers
 				results[method_i][gradation_i][sim_i] = matches.sum() / len(matches)
 	return results

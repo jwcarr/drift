@@ -5,6 +5,7 @@ Code for running the algorithms over the sample data
 from collections import defaultdict
 import json
 import eyekit
+import algorithms
 import tools
 
 methods = [('attach', {}),
@@ -19,10 +20,12 @@ def run_algorithm(sample_data, passages, output_dir, method, **params):
 	output_data = defaultdict(dict)
 	for passage_id, participant_data in sample_data.items():
 		print(passage_id)
+		line_Y = passages[passage_id].line_positions
 		for participant_id, fixations in participant_data.items():
 			print('-', participant_id)
-			fixation_sequence = eyekit.FixationSequence(fixations)
-			eyekit.tools.correct_vertical_drift(fixation_sequence, passages[passage_id], method, **params)
+			fixation_XY = np.array(fixations, dtype=int)
+			fixation_XY = algorithms.__dict__[method](fixation_XY, line_Y, **params)
+			fixation_sequence = eyekit.FixationSequence(fixation_XY)
 			output_data[passage_id][participant_id] = fixation_sequence.tolist()
 	with open(output_dir + '%s.json' % method, 'w') as file:
 		json.dump(output_data, file)
