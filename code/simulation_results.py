@@ -13,11 +13,11 @@ plt.rcParams.update({'font.size': 7})
 methods = ['attach',  'chain',   'cluster', 'regress', 'segment', 'warp']
 colors  = ['#6B6B7F', '#E85A71', '#4EA1D3', '#FCBE32', '#17A363', '#7544D6']
 
-factors = {'noise':('Noise distortion (dnoise)', (0, 40)),
-           'slope':('Slope distortion (dslope)', (-0.1, 0.1)),
-           'drift':('Drift distortion (ddrift)', (-0.2, 0.2)),
-           'regression_within':('Within-line regression (rwithin)', (0, 1)),
-           'regression_across':('Across-line regression (racross)', (0, 1))}
+factors = {'noise':('Noise distortion', (0, 40)),
+           'slope':('Slope distortion', (-0.1, 0.1)),
+           'shift':('Shift distortion', (-0.2, 0.2)),
+           'regression_within':('Within-line regression', (0, 1)),
+           'regression_between':('Between-line regression', (0, 1))}
 
 def plot_results(layout, filepath, n_rows=2, figsize=None):
 	n_cols = len(layout) // n_rows
@@ -63,5 +63,5 @@ def plot_results(layout, filepath, n_rows=2, figsize=None):
 
 if __name__ == '__main__':
 
-	# plot_results(['noise', 'legend', 'slope', 'drift', 'regression_within', 'regression_across'], '../visuals/algorithm_performance.pdf', 3, (5.5, 7))
-	plot_results(['noise', 'legend', 'slope', 'drift', 'regression_within', 'regression_across'], '../manuscript/figs/algorithm_performance.eps', 3, (6.8, 6))
+	# plot_results(['noise', 'legend', 'slope', 'shift', 'regression_within', 'regression_between'], '../visuals/simulation_results.pdf', 3, (5.5, 7))
+	plot_results(['noise', 'legend', 'slope', 'shift', 'regression_within', 'regression_between'], '../manuscript/figs/simulation_results.eps', 3, (6.8, 7))

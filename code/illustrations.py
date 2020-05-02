@@ -167,15 +167,15 @@ if __name__ == '__main__':
 	# visualize_warp(passage, fixation_sequence, '../visuals/examples/warp.svg')
 
 	# COMPLEX
-	# reading_scenario = simulation.ReadingScenario(passage, noise=10, slope=0.03, drift=0.06, regression_within=0.25, regression_across=0)
+	# reading_scenario = simulation.ReadingScenario(passage, noise=10, slope=0.03, shift=0.06, regression_within=0.25, regression_between=0)
 	# create_fixation_sequence(reading_scenario, '../data/examples/algorithm_illustrations_complex.json')
 	# fixation_sequence, _ = load_fixation_sequence('../data/examples/algorithm_illustrations_complex.json')
 	# visualize_input_output(passage, fixation_sequence, '../visuals/examples/complex_input.svg', '../visuals/examples/complex_output.svg')
 
 	# ISOLATED PHENOMENA EXAMPLES
 
-	# run_and_visualize(passage, '../visuals/examples/phenomena/noise.svg', noise=20.0, slope=0.0, drift=0.0, regression_within=0.0, regression_across=0.0)
-	# run_and_visualize(passage, '../visuals/examples/phenomena/slope.svg', noise=4.0, slope=0.08, drift=0.0, regression_within=0.0, regression_across=0.0)
-	# run_and_visualize(passage, '../visuals/examples/phenomena/drift.svg', noise=4.0, slope=0.0, drift=0.14, regression_within=0.0, regression_across=0.0)
-	# run_and_visualize(passage, '../visuals/examples/phenomena/within.svg', noise=4.0, slope=0.0, drift=0.0, regression_within=0.5, regression_across=0.0)
-	# run_and_visualize(passage, '../visuals/examples/phenomena/across.svg', noise=4.0, slope=0.0, drift=0.0, regression_within=0.0, regression_across=0.5)
+	# run_and_visualize(passage, '../visuals/examples/phenomena/noise.svg', noise=20.0, slope=0.0, shift=0.0, regression_within=0.0, regression_between=0.0)
+	# run_and_visualize(passage, '../visuals/examples/phenomena/slope.svg', noise=4.0, slope=0.08, shift=0.0, regression_within=0.0, regression_between=0.0)
+	# run_and_visualize(passage, '../visuals/examples/phenomena/drift.svg', noise=4.0, slope=0.0, shift=0.14, regression_within=0.0, regression_between=0.0)
+	# run_and_visualize(passage, '../visuals/examples/phenomena/within.svg', noise=4.0, slope=0.0, shift=0.0, regression_within=0.5, regression_between=0.0)
+	# run_and_visualize(passage, '../visuals/examples/phenomena/between.svg', noise=4.0, slope=0.0, shift=0.0, regression_within=0.0, regression_between=0.5)

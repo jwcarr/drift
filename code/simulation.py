@@ -13,21 +13,21 @@ methods = [('attach', {}),
            ('segment', {'match_threshold':9999}),
            ('warp', {'match_threshold':9999})]
 
-factors = {'noise':(0, 40), 'slope':(-0.1, 0.1), 'drift':(-0.2, 0.2), 'regression_within':(0, 1), 'regression_across':(0, 1)}
+factors = {'noise':(0, 40), 'slope':(-0.1, 0.1), 'shift':(-0.2, 0.2), 'regression_within':(0, 1), 'regression_between':(0, 1)}
 
 class ReadingScenario:
 
-	def __init__(self, passage, noise=0, slope=0, drift=0, regression_within=0, regression_across=0):
+	def __init__(self, passage, noise=0, slope=0, shift=0, regression_within=0, regression_between=0):
 		self.passage = passage
 		self.noise = noise
 		self.slope = slope
-		self.drift = drift
+		self.shift = shift
 		self.regression_within = regression_within
-		self.regression_across = regression_across
+		self.regression_between = regression_between
 		self.x_margin, self.y_margin = self.passage.first_character_position
 		self.max_line_width = self.passage.character_spacing * self.passage.n_cols
 
-	def _generate_line_sequence(self, line_i, partial_reading=False, inherited_line_y_for_drift=None):
+	def _generate_line_sequence(self, line_i, partial_reading=False, inherited_line_y_for_shift=None):
 		if partial_reading:
 			start_point = np.random.randint(0, self.max_line_width//2) + self.x_margin
 			end_point = np.random.randint(self.max_line_width//2, self.max_line_width) + self.x_margin
@@ -48,17 +48,17 @@ class ReadingScenario:
 		line_y = self.passage.line_positions[line_i] - self.y_margin
 		line_Y = np.random.normal(line_y, self.noise, len(line_X))
 		line_Y += line_X * self.slope
-		if inherited_line_y_for_drift:
-			line_Y += (inherited_line_y_for_drift-self.y_margin) * self.drift
+		if inherited_line_y_for_shift:
+			line_Y += (inherited_line_y_for_shift-self.y_margin) * self.shift
 		else:
-			line_Y += line_y * self.drift
+			line_Y += line_y * self.shift
 		line_Y = np.array(list(map(round, line_Y)), dtype=int)
 		return line_X+self.x_margin, line_Y+self.y_margin, [line_i]*len(line_X)
 
 	def generate_fixation_sequence(self):
 		'''
 		Given a passage, generate a fixation sequence with certain noise,
-		slope, and drift characteristics. Returns both the fixation sequence
+		slope, and shift characteristics. Returns both the fixation sequence
 		and the "correct" lines numbers for each fixation.
 		'''
 		X, Y, I = [], [], []
@@ -67,10 +67,10 @@ class ReadingScenario:
 			X.extend(line_X)
 			Y.extend(line_Y)
 			I.extend(line_I)
-			if line_i > 0 and np.random.random() < self.regression_across:
+			if line_i > 0 and np.random.random() < self.regression_between:
 				rand_prev_line = int(np.random.triangular(0, line_i, line_i))
 				rand_insert_point = np.random.randint(1, len(line_X)-1)
-				regression = self._generate_line_sequence(rand_prev_line, partial_reading=True, inherited_line_y_for_drift=line_y)
+				regression = self._generate_line_sequence(rand_prev_line, partial_reading=True, inherited_line_y_for_shift=line_y)
 				for rx, ry, ri in zip(*regression):
 					X.insert(-rand_insert_point, rx)
 					Y.insert(-rand_insert_point, ry)
