@@ -118,11 +118,11 @@ def plot_analyses(filepath):
 	axes[1].set_yticks([])
 
 	arrow_offset = 0.05
-	arrow_length = 0.4
-	axes[1].arrow(0, arrow_offset, 0, arrow_length, width=0.01, color='black')
-	axes[1].text(arrow_offset, arrow_offset+arrow_length/2, 'position–order', ha='center', va='center', rotation=90)
-	axes[1].arrow(arrow_offset, 0, arrow_length, 0, width=0.01, color='black')
-	axes[1].text(arrow_offset+arrow_length/2, arrow_offset, 'global–local', ha='center', va='center')
+	arrow_length = 0.6
+	axes[1].annotate('', xy=(0, arrow_offset), xytext=(0, arrow_length), arrowprops=dict(arrowstyle='<->', shrinkA=0, shrinkB=0))
+	axes[1].annotate('', xy=(arrow_offset, 0), xytext=(arrow_length, 0), arrowprops=dict(arrowstyle='<->', shrinkA=0, shrinkB=0))
+	axes[1].text(arrow_offset, arrow_offset+arrow_length/2, 'position — order', ha='center', va='center', rotation=90)
+	axes[1].text((arrow_offset+arrow_length)/2, arrow_offset, 'global — local', ha='center', va='center')
 
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
