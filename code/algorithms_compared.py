@@ -16,8 +16,8 @@ plt.rcParams.update({'font.size': 7})
 
 y_to_line_mapping = {155:1, 219:2, 283:3, 347:4, 411:5, 475:6, 539:7, 603:8, 667:9, 731:10, 795:11, 859:12, 923:13}
 
-methods = ['chain',   'cluster', 'match',   'regress', 'segment', 'warp',    'gold']
-colors  = ['#E85A71', '#6B6B7F', '#4EA1D3', '#FCBE32', '#17A363', '#7544D6', '#B0944B']
+methods = ['attach',  'chain',   'cluster', 'regress', 'segment', 'warp',    'gold']
+colors  = ['#6B6B7F', '#E85A71', '#4EA1D3', '#FCBE32', '#17A363', '#7544D6', '#B0944B']
 
 def prop_mismatch(line_assignments1, line_assignments2):
 	matches = line_assignments1 == line_assignments2
@@ -126,7 +126,7 @@ def plot_analyses(filepath):
 
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
-	tools.format_svg_labels(filepath, monospace=['chain', 'cluster', 'match', 'regress', 'segment', 'warp'], arbitrary_replacements={'gold':'Gold standard'})
+	tools.format_svg_labels(filepath, monospace=['attach', 'chain', 'cluster', 'regress', 'segment', 'warp'], arbitrary_replacements={'gold':'Gold standard'})
 	if not filepath.endswith('.svg'):
 		tools.convert_svg(filepath, filepath)
 

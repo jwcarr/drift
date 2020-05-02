@@ -11,8 +11,8 @@ import tools
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
 plt.rcParams.update({'font.size': 7})
 
-algorithms = ['chain',   'cluster', 'match',   'regress', 'segment', 'warp']
-colors  = ['#E85A71', '#6B6B7F', '#4EA1D3', '#FCBE32', '#17A363', '#7544D6', '#6172D4']
+algorithms = ['attach', 'chain', 'cluster', 'regress', 'segment', 'warp']
+colors  = ['#6B6B7F', '#E85A71', '#4EA1D3', '#FCBE32', '#17A363', '#7544D6', '#6172D4']
 
 y_to_line_mapping = {155:1, 219:2, 283:3, 347:4, 411:5, 475:6, 539:7, 603:8, 667:9, 731:10, 795:11, 859:12, 923:13}
 

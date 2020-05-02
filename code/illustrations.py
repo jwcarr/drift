@@ -9,16 +9,15 @@ from tools import unpickle
 import simulation
 import json
 
-methods = ['chain',   'cluster', 'match',   'regress', 'segment', 'warp']
-colors  = ['#E85A71', '#6B6B7F', '#4EA1D3', '#FCBE32', '#17A363', '#7544D6']
+methods = ['attach', 'chain', 'cluster', 'regress', 'segment', 'warp']
 
 y_to_line_mapping = {155:1, 219:2, 283:3, 347:4, 411:5, 475:6, 539:7, 603:8, 667:9, 731:10, 795:11, 859:12, 923:13}
 
 cluster_colors  = ['#E85A71', '#7544D6', '#4EA1D3', '#FCBE32']
 
-methods = [('chain', {'x_thresh':192, 'y_thresh':32}),
+methods = [('attach', None),
+           ('chain', {'x_thresh':192, 'y_thresh':32}),
            ('cluster', None),
-           ('match', None),
            ('regress', {'k_bounds':(-0.1, 0.1), 'o_bounds':(-50, 50), 's_bounds':(1, 20)}),
            ('segment', {'match_theshold':99999}),
            ('warp', {'match_theshold':99999})]
@@ -69,8 +68,8 @@ def visualize_chain(passage, fixation_sequence, output_file):
 		prev = fixation
 	diagram.save(output_file, crop_to_passage=True)
 
-def visualize_match(passage, fixation_sequence, output_file):
-	corrected_sequence, solution = eyekit.tools.correct_vertical_drift(fixation_sequence, passage, 'match', copy=True, return_solution=True)
+def visualize_attach(passage, fixation_sequence, output_file):
+	corrected_sequence, solution = eyekit.tools.correct_vertical_drift(fixation_sequence, passage, 'attach', copy=True, return_solution=True)
 	diagram = eyekit.Diagram(1920, 1080)
 	diagram.render_passage(passage, 28, color='rgb(135, 135, 135)')
 	for line_y, color in zip(passage.line_positions, cluster_colors):
@@ -136,7 +135,7 @@ def visualize_input_output(passage, fixation_sequence, input_file, output_file):
 	diagram.render_fixations(fixation_sequence, color='black')
 	diagram.save(input_file, crop_to_passage=True)
 
-	eyekit.tools.correct_vertical_drift(fixation_sequence, passage, 'match')
+	eyekit.tools.correct_vertical_drift(fixation_sequence, passage, 'attach')
 
 	diagram = eyekit.Diagram(1920, 1080)
 	diagram.render_passage(passage, 28, color='rgb(135, 135, 135)')
@@ -162,7 +161,7 @@ if __name__ == '__main__':
 	# visualize_input_output(passage, fixation_sequence, '../visuals/examples/simple_input.svg', '../visuals/examples/simple_output.svg')
 	# visualize_chain(passage, fixation_sequence, '../visuals/examples/chain.svg')
 	# visualize_cluster(passage, fixation_sequence, '../visuals//examples/cluster.svg')
-	# visualize_match(passage, fixation_sequence, '../visuals/examples/match.svg')
+	# visualize_attach(passage, fixation_sequence, '../visuals/examples/attach.svg')
 	# visualize_regress(passage, fixation_sequence, '../visuals/examples/regress.svg')
 	# visualize_segment(passage, fixation_sequence, '../visuals/examples/segment.svg')
 	# visualize_warp(passage, fixation_sequence, '../visuals/examples/warp.svg')

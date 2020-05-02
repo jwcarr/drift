@@ -10,8 +10,8 @@ import tools
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
 plt.rcParams.update({'font.size': 7})
 
-methods = ['chain',   'cluster', 'match',   'regress', 'segment', 'warp']
-colors  = ['#E85A71', '#6B6B7F', '#4EA1D3', '#FCBE32', '#17A363', '#7544D6']
+methods = ['attach',  'chain',   'cluster', 'regress', 'segment', 'warp']
+colors  = ['#6B6B7F', '#E85A71', '#4EA1D3', '#FCBE32', '#17A363', '#7544D6']
 
 factors = {'noise':('Noise distortion (dnoise)', (0, 40)),
            'slope':('Slope distortion (dslope)', (-0.1, 0.1)),
