@@ -32,32 +32,51 @@ def compare_outputs(method1, method2):
 		data1 = json.load(file)
 	with open('../data/fixations/%s.json'%method2) as file:
 		data2 = json.load(file)
-	results = {'adults':[], 'kids':[]}
+	results = {'adults':[], 'kids':[], 'adults_IDs':[], 'kids_IDs':[]}
 	IDs = []
 	for passage_id, participant_data in data1.items():
 		for participant_id, fixations in participant_data.items():
 			line_assignments1 = line_assignments(fixations)
 			line_assignments2 = line_assignments(data2[passage_id][participant_id])
-			prop = prop_mismatch(line_assignments1, line_assignments2)
+			percentage = percentage_match(line_assignments1, line_assignments2)
 			if int(participant_id) > 100:
-				results['kids'].append(prop)
+				results['kids'].append(percentage)
+				results['kids_IDs'].append(participant_id)
 			else:
-				results['adults'].append(prop)
+				results['adults'].append(percentage)
+				results['adults_IDs'].append(participant_id)
 			IDs.append(participant_id)
 	return results, IDs
 
 def plot_accuracy(results, filepath):
 	fig, axis = plt.subplots(1, 1, figsize=(6.8, 2.5))
+	last_special_adult_result, last_special_kid_result = None, None
 	for algorithm, data in results.items():
 		i = algorithms.index(algorithm)
-		axis.scatter(np.random.normal(i, 0.075, len(data['adults'])), data['adults'], color=colors[i], s=6)
-		axis.scatter(np.random.normal(i, 0.075, len(data['kids'])), data['kids'], color=colors[i], s=6, marker='^')
-		median_a = np.median(data['adults'])
-		median_k = np.median(data['kids'])
-		axis.plot([i-0.185, i+0.185], [median_a, median_a], color='black', linewidth=2)
-		axis.plot([i-0.2, i+0.2], [median_k, median_k], color='black', linewidth=2, linestyle=':')
-		axis.text(i+0.25, median_a, str(round(median_a*100, 1)) + '%', ha='left', va='bottom', color='black', fontsize=7)
-		axis.text(i+0.25, median_k, str(round(median_k*100, 1)) + '%', ha='left', va='top', color='black', fontsize=7)
+
+		special_adult = data['adults_IDs'].index('8')
+		special_kid = data['kids_IDs'].index('204')
+		special_adult_result = data['adults'][special_adult]
+		special_kid_result = data['kids'][special_kid]
+		remaining_adult_results = data['adults'][:special_adult] + data['adults'][special_adult+1:]
+		remaining_kid_results = data['kids'][:special_kid] + data['kids'][special_kid+1:]
+
+		axis.scatter(np.random.normal(i, 0.075, len(remaining_adult_results)), remaining_adult_results, edgecolors=colors[i], facecolors='none', s=8, linewidths=0.5)
+		axis.scatter(np.random.normal(i, 0.075, len(remaining_kid_results)),   remaining_kid_results,   edgecolors=colors[i], facecolors='none', s=8, linewidths=0.5, marker='^')
+		axis.scatter(i, special_adult_result, color=colors[i], s=8)
+		axis.scatter(i, special_kid_result, color=colors[i], s=8, marker='^')
+
+		if last_special_adult_result:
+			axis.plot([i-1, i], [last_special_adult_result, special_adult_result], color='#BBBBBB', linestyle='--', linewidth=0.5, zorder=0)
+		if last_special_kid_result:
+			axis.plot([i-1, i], [last_special_kid_result, special_kid_result], color='#BBBBBB', linestyle='--', linewidth=0.5, zorder=0)
+
+		median = np.median(data['adults'] + data['kids'])
+		axis.plot([i-0.185, i+0.185], [median, median], color='black', linewidth=2)
+		axis.text(i+0.25, median, str(round(median, 1)) + '%', ha='left', va='center', color='black', fontsize=7)
+
+		last_special_adult_result, last_special_kid_result = special_adult_result, special_kid_result
+
 	axis.set_ylabel('Accuracy of algorithmic correction (%)')
 	axis.set_ylim(-5, 105)
 	axis.set_xlim(-0.5, i+0.7)
