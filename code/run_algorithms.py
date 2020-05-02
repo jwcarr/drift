@@ -11,8 +11,8 @@ methods = [('attach', {}),
            ('chain', {'x_thresh':192, 'y_thresh':32}),
            ('cluster', {}),
            ('regress', {'k_bounds':(-0.1, 0.1), 'o_bounds':(-50, 50), 's_bounds':(1, 20)}),
-           ('segment', {'match_threshold':9999}),
-           ('warp', {'match_threshold':9999})]
+           ('segment', {}),
+           ('warp', {})]
 
 def run_algorithm(sample_data, passages, output_dir, method, **params):
 	print(method.upper())

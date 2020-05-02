@@ -10,8 +10,8 @@ methods = [('attach', {}),
            ('chain', {'x_thresh':192, 'y_thresh':32}),
            ('cluster', {}),
            ('regress', {'k_bounds':(-0.1, 0.1), 'o_bounds':(-50, 50), 's_bounds':(1, 20)}),
-           ('segment', {'match_threshold':9999}),
-           ('warp', {'match_threshold':9999})]
+           ('segment', {}),
+           ('warp', {})]
 
 factors = {'noise':(0, 40), 'slope':(-0.1, 0.1), 'shift':(-0.2, 0.2), 'regression_within':(0, 1), 'regression_between':(0, 1)}
 

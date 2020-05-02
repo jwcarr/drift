@@ -19,8 +19,8 @@ methods = [('attach', None),
            ('chain', {'x_thresh':192, 'y_thresh':32}),
            ('cluster', None),
            ('regress', {'k_bounds':(-0.1, 0.1), 'o_bounds':(-50, 50), 's_bounds':(1, 20)}),
-           ('segment', {'match_theshold':99999}),
-           ('warp', {'match_theshold':99999})]
+           ('segment', {'attach_theshold':99999}),
+           ('warp', {'attach_theshold':99999})]
 
 def create_fixation_sequence(reading_scenario, output_file):
 	fixation_sequence, true_lines = reading_scenario.generate_fixation_sequence()
