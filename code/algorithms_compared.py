@@ -85,7 +85,7 @@ def plot_tree(node, axis, x=0, y=0, min_x=0, max_x=0, min_y=0):
 
 def plot_analyses(filepath):
 
-	fig, axes = plt.subplots(1, 2, figsize=(5.5, 2.5))
+	fig, axes = plt.subplots(2, 1, figsize=(3.3, 6))
 
 	algorithm_distances = compute_distance_matrix(methods)
 
@@ -131,5 +131,5 @@ def plot_analyses(filepath):
 
 if __name__ == '__main__':
 
-	# plot_analyses('../visuals/analysis.pdf')
-	plot_analyses('../manuscript/figs/analysis.eps')
+	# plot_analyses('../visuals/algorithm_analysis.pdf')
+	plot_analyses('../manuscript/figs/algorithm_analysis.eps')
