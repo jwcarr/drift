@@ -17,11 +17,11 @@ def render(passages, input_file, output_dir):
 			print('-', participant_id)
 			fixation_sequence = eyekit.FixationSequence(fixations)
 			diagram = eyekit.Diagram(1920, 1080)
-			diagram.render_passage(passages[passage_id], 28)
-			diagram.render_fixations(fixation_sequence, number_fixations=True, include_discards=True)
-			diagram.save(output_dir + '%s_%s.svg' % (participant_id, passage_id))
+			diagram.render_passage(passages[passage_id], 28, color='gray')
+			diagram.render_fixations(fixation_sequence, include_discards=True)
+			diagram.save(output_dir + '%s_%s.pdf' % (participant_id, passage_id), crop_to_passage=True)
 
-def comparison_render(passages, input_file1, input_file2, output_dir, colors, include_discards):
+def comparison_render(passages, input_file1, input_file2, output_dir):
 	print('RENDERING: %s against %s' % (input_file1, input_file2))
 	with open(input_file1) as file:
 		input_data1 = json.load(file)
@@ -35,9 +35,9 @@ def comparison_render(passages, input_file1, input_file2, output_dir, colors, in
 			fixation_sequence2 = eyekit.FixationSequence(input_data2[passage_id][participant_id])
 
 			diagram = eyekit.Diagram(1920, 1080)
-			diagram.render_passage(passages[passage_id], 28)
-			diagram.render_fixation_comparison(fixation_sequence1, fixation_sequence2, color_match='green', color_mismatch='red')
-			output_path = output_dir + '%s_%s.svg'%(participant_id, passage_id)
+			diagram.render_passage(passages[passage_id], 28, color='gray')
+			diagram.render_fixation_comparison(fixation_sequence1, fixation_sequence2, color_match='black', color_mismatch='red')
+			output_path = output_dir + '%s_%s.pdf'%(participant_id, passage_id)
 			diagram.save(output_path, crop_to_passage=True)
 
 
@@ -45,4 +45,12 @@ if __name__ == '__main__':
 
 	passages = tools.load_passages('../data/passages/')
 	
+	# Render the original data
 	render(passages, '../data/fixations/sample.json', '../visuals/passage_renders/sample/')
+
+	# Render the gold standard corrections
+	render(passages, '../data/fixations/gold.json', '../visuals/passage_renders/gold/')
+
+	# Render the algorithmic corrections
+	for algorithm in ['attach, ''chain', 'cluster', 'regress', 'segment', 'warp']:
+		comparison_render(passages, '../data/fixations/gold.json', '../data/fixations/%s.json'%algorithm, '../visuals/passage_renders/%s/'%algorithm)
