@@ -38,7 +38,7 @@ function fixation_XY = regress(fixation_XY, line_Y, k_bounds, o_bounds, s_bounds
 	end
 
 	best_fit = fminsearch(@fit_lines, [0, 0, 0]); % Octave < 6.0 does not support handles to nested functions
-	[_, line_assignments] = fit_lines(best_fit);
+	[~, line_assignments] = fit_lines(best_fit);
 	for fixation_i = 1 : n
 		line_i = line_assignments(fixation_i);
 		fixation_XY(fixation_i, 2) = line_Y(line_i);

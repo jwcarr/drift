@@ -44,7 +44,7 @@ function warping_path = dynamic_time_warping(sequence1, sequence2)
 		if j > 1
 			possible_moves(3) = cost_matrix(i, j-1);
 		end
-		[_, best_move] = min(possible_moves);
+		[~, best_move] = min(possible_moves);
 		if best_move == 1
 			i = i - 1;
 			j = j - 1;

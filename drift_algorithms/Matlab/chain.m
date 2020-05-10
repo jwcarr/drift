@@ -22,7 +22,7 @@ function fixation_XY = chain(fixation_XY, line_Y, x_thresh, y_thresh)
 	for chain_i = 1 : length(end_chain_indices)
 		end_of_chain = end_chain_indices(chain_i);
 		mean_y = mean(fixation_XY(start_of_chain:end_of_chain, 2));
-		[_, line_i] = min(abs(line_Y - mean_y));
+		[~, line_i] = min(abs(line_Y - mean_y));
 		fixation_XY(start_of_chain:end_of_chain, 2) = line_Y(line_i);
 		start_of_chain = end_of_chain + 1;
 	end
