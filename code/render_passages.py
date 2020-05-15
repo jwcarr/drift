@@ -6,6 +6,7 @@ from collections import defaultdict
 import json
 import eyekit
 import tools
+import defaults
 
 def render(passages, input_file, output_dir):
 	print('RENDERING: %s' % input_file)
@@ -52,5 +53,5 @@ if __name__ == '__main__':
 	render(passages, '../data/fixations/gold.json', '../visuals/passage_renders/gold/')
 
 	# Render the algorithmic corrections
-	for algorithm in ['attach, ''chain', 'cluster', 'regress', 'segment', 'warp']:
+	for algorithm in defaults.algorithms:
 		comparison_render(passages, '../data/fixations/gold.json', '../data/fixations/%s.json'%algorithm, '../visuals/passage_renders/%s/'%algorithm)

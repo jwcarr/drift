@@ -7,14 +7,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 import tools
+import defaults
 
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
 plt.rcParams.update({'font.size': 7})
 
-algorithms = ['attach', 'chain', 'cluster', 'regress', 'segment', 'warp']
-colors  = ['#6B6B7F', '#E85A71', '#4EA1D3', '#FCBE32', '#17A363', '#7544D6', '#6172D4']
-
-y_to_line_mapping = {155:1, 219:2, 283:3, 347:4, 411:5, 475:6, 539:7, 603:8, 667:9, 731:10, 795:11, 859:12, 923:13}
 
 def percentage_match(line_assignments1, line_assignments2):
 	matches = line_assignments1 == line_assignments2
@@ -24,7 +21,7 @@ def line_assignments(fixations):
 	line_assignments = np.zeros(len(fixations), dtype=int)
 	for i, fixation in enumerate(fixations):
 		if fixation[3] == False:
-			line_assignments[i] = y_to_line_mapping[fixation[1]]
+			line_assignments[i] = defaults.y_to_line_mapping[fixation[1]]
 	return line_assignments
 
 def compare_outputs(method1, method2):
@@ -52,7 +49,7 @@ def calculate_improvement(results):
 	improvement_results = {}
 	attach_adults = np.array(results['attach']['adults'], dtype=float)
 	attach_kids = np.array(results['attach']['kids'], dtype=float)
-	for algorithm in algorithms[1:]:
+	for algorithm in defaults.true_algorithms:
 		assert results[algorithm]['adults_IDs'] == results['attach']['adults_IDs']
 		assert results[algorithm]['kids_IDs'] == results['attach']['kids_IDs']
 		alg_adults = np.array(results[algorithm]['adults'], dtype=float)
@@ -66,7 +63,7 @@ def plot_accuracy(results, filepath):
 	fig, axis = plt.subplots(1, 1, figsize=(6.8, 2.5))
 	last_special_adult_result, last_special_kid_result = None, None
 	for algorithm, data in results.items():
-		i = algorithms.index(algorithm)
+		i = defaults.algorithms.index(algorithm)
 
 		special_adult = data['adults_IDs'].index('8')
 		special_kid = data['kids_IDs'].index('204')
@@ -75,10 +72,10 @@ def plot_accuracy(results, filepath):
 		remaining_adult_results = data['adults'][:special_adult] + data['adults'][special_adult+1:]
 		remaining_kid_results = data['kids'][:special_kid] + data['kids'][special_kid+1:]
 
-		axis.scatter(np.random.normal(i, 0.075, len(remaining_adult_results)), remaining_adult_results, edgecolors=colors[i], facecolors='none', s=8, linewidths=0.5)
-		axis.scatter(np.random.normal(i, 0.075, len(remaining_kid_results)),   remaining_kid_results,   edgecolors=colors[i], facecolors='none', s=8, linewidths=0.5, marker='^')
-		axis.scatter(i, special_adult_result, color=colors[i], s=8)
-		axis.scatter(i, special_kid_result, color=colors[i], s=8, marker='^')
+		axis.scatter(np.random.normal(i, 0.075, len(remaining_adult_results)), remaining_adult_results, edgecolors=defaults.colors[algorithm], facecolors='none', s=8, linewidths=0.5)
+		axis.scatter(np.random.normal(i, 0.075, len(remaining_kid_results)),   remaining_kid_results,   edgecolors=defaults.colors[algorithm], facecolors='none', s=8, linewidths=0.5, marker='^')
+		axis.scatter(i, special_adult_result, color=defaults.colors[algorithm], s=8)
+		axis.scatter(i, special_kid_result, color=defaults.colors[algorithm], s=8, marker='^')
 
 		if last_special_adult_result:
 			axis.plot([i-1, i], [last_special_adult_result, special_adult_result], color='#BBBBBB', linestyle='--', linewidth=0.5, zorder=0)
@@ -96,10 +93,10 @@ def plot_accuracy(results, filepath):
 	axis.set_xlim(-0.5, i+0.7)
 	axis.set_xticks(list(range(len(results))))
 	axis.tick_params(bottom=False)
-	axis.set_xticklabels(algorithms)
+	axis.set_xticklabels(defaults.algorithms)
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
-	tools.format_svg_labels(filepath, algorithms)
+	tools.format_svg_labels(filepath, defaults.algorithms)
 	if not filepath.endswith('.svg'):
 		tools.convert_svg(filepath, filepath)
 
@@ -108,7 +105,7 @@ def plot_accuracy_improvement(results, filepath):
 	axis.plot([-1, 7], [0, 0], color='black', linewidth=1)
 	last_special_adult_result, last_special_kid_result = None, None
 	for algorithm, data in results.items():
-		i = algorithms.index(algorithm)
+		i = defaults.algorithms.index(algorithm)
 
 		special_adult = data['adults_IDs'].index('8')
 		special_kid = data['kids_IDs'].index('204')
@@ -117,10 +114,10 @@ def plot_accuracy_improvement(results, filepath):
 		remaining_adult_results = data['adults'][:special_adult] + data['adults'][special_adult+1:]
 		remaining_kid_results = data['kids'][:special_kid] + data['kids'][special_kid+1:]
 
-		axis.scatter(np.random.normal(i, 0.075, len(remaining_adult_results)), remaining_adult_results, edgecolors=colors[i], facecolors='none', s=8, linewidths=0.5)
-		axis.scatter(np.random.normal(i, 0.075, len(remaining_kid_results)),   remaining_kid_results,   edgecolors=colors[i], facecolors='none', s=8, linewidths=0.5, marker='^')
-		axis.scatter(i, special_adult_result, color=colors[i], s=8, linewidths=0.5)
-		axis.scatter(i, special_kid_result, color=colors[i], s=8, linewidths=0.5, marker='^')
+		axis.scatter(np.random.normal(i, 0.075, len(remaining_adult_results)), remaining_adult_results, edgecolors=defaults.colors[algorithm], facecolors='none', s=8, linewidths=0.5)
+		axis.scatter(np.random.normal(i, 0.075, len(remaining_kid_results)),   remaining_kid_results,   edgecolors=defaults.colors[algorithm], facecolors='none', s=8, linewidths=0.5, marker='^')
+		axis.scatter(i, special_adult_result, color=defaults.colors[algorithm], s=8, linewidths=0.5)
+		axis.scatter(i, special_kid_result, color=defaults.colors[algorithm], s=8, linewidths=0.5, marker='^')
 
 		if last_special_adult_result:
 			axis.plot([i-1, i], [last_special_adult_result, special_adult_result], color='gray', linestyle='--', linewidth=0.5, zorder=0)
@@ -138,10 +135,10 @@ def plot_accuracy_improvement(results, filepath):
 	axis.set_xlim(0.5, i+0.7)
 	axis.set_xticks(list(range(1, len(results)+1)))
 	axis.tick_params(bottom=False)
-	axis.set_xticklabels(algorithms[1:])
+	axis.set_xticklabels(defaults.true_algorithms)
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
-	tools.format_svg_labels(filepath, algorithms)
+	tools.format_svg_labels(filepath, defaults.algorithms)
 	if not filepath.endswith('.svg'):
 		tools.convert_svg(filepath, filepath)
 
@@ -149,7 +146,7 @@ def plot_accuracy_improvement(results, filepath):
 if __name__ == '__main__':
 
 	results = {}
-	for algorithm in algorithms:
+	for algorithm in defaults.algorithms:
 		alg_results, IDs = compare_outputs('gold', algorithm)
 		results[algorithm] = alg_results
 

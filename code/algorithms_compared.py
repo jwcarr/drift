@@ -11,13 +11,11 @@ from scipy.spatial import distance
 from scipy.cluster import hierarchy
 import json
 import tools
+import defaults
 
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
 plt.rcParams.update({'font.size': 7})
 
-y_to_line_mapping = {155:1, 219:2, 283:3, 347:4, 411:5, 475:6, 539:7, 603:8, 667:9, 731:10, 795:11, 859:12, 923:13}
-
-colors = {'attach':'#6B6B7F', 'chain':'#E85A71', 'cluster':'#4EA1D3', 'regress':'#FCBE32', 'segment':'#17A363', 'warp':'#7544D6', 'gold':'#B0944B', 'JC':'black', 'VP':'black'}
 
 def prop_mismatch(line_assignments1, line_assignments2):
 	matches = line_assignments1 == line_assignments2
@@ -27,7 +25,7 @@ def line_assignments(fixations):
 	line_assignments = np.zeros(len(fixations), dtype=int)
 	for i, fixation in enumerate(fixations):
 		if fixation[3] == False:
-			line_assignments[i] = y_to_line_mapping[fixation[1]]
+			line_assignments[i] = defaults.y_to_line_mapping[fixation[1]]
 	return line_assignments
 
 def compare_outputs(method1, method2):
@@ -79,7 +77,7 @@ def recursive_plot_tree(node, axis, methods, x=0, y=0, min_x=0, max_x=0, min_y=0
 	left = node.get_left()
 	right = node.get_right()
 	if left.is_leaf():
-		axis.scatter([x-1], [y-1], c=colors[methods[left.get_id()]])
+		axis.scatter([x-1], [y-1], c=defaults.colors[methods[left.get_id()]])
 		axis.annotate(methods[left.get_id()], (x-1, y-1.2), va='top', ha='center', fontsize=7)
 	else:
 		double_leaved, min_x, max_x, min_y = recursive_plot_tree(left, axis, methods, x-1, y-1, min_x, max_x, min_y)
@@ -89,7 +87,7 @@ def recursive_plot_tree(node, axis, methods, x=0, y=0, min_x=0, max_x=0, min_y=0
 	else:
 		axis.plot([x-1, x, x+1], [y-1, y, y-1], c='black', zorder=0)
 	if right.is_leaf():
-		axis.scatter([x+1], [y-1], c=colors[methods[right.get_id()]])
+		axis.scatter([x+1], [y-1], c=defaults.colors[methods[right.get_id()]])
 		axis.annotate(methods[right.get_id()], (x+1, y-1.2), va='top', ha='center', fontsize=7)
 	else:
 		_, min_x, max_x, min_y = recursive_plot_tree(right, axis, methods, x+1, y-1, min_x, max_x, min_y)
@@ -111,7 +109,7 @@ def plot_analyses(ahc_tree, ahc_methods, mds_solution, mds_methods, filepath):
 	mn, mx = mds_solution[:, 0].min(), mds_solution[:, 0].max()
 	offset = (mx - mn) * 0.1
 	furthest_method_to_right = mds_methods[np.argmax(mds_solution[:, 0])]
-	axes[1].scatter(mds_solution[:, 0], mds_solution[:, 1], color=[colors[m] for m in mds_methods])
+	axes[1].scatter(mds_solution[:, 0], mds_solution[:, 1], color=[defaults.colors[m] for m in mds_methods])
 	for label, position in zip(mds_methods, mds_solution):
 		if label == furthest_method_to_right:
 			axes[1].text(position[0]-offset/2, position[1], label, va='center', ha='right')
@@ -128,17 +126,14 @@ def plot_analyses(ahc_tree, ahc_methods, mds_solution, mds_methods, filepath):
 
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
-	tools.format_svg_labels(filepath, monospace=['attach', 'chain', 'cluster', 'regress', 'segment', 'warp'], arbitrary_replacements={'gold':'Gold standard', 'JC':'Jon', 'VP':'Vale'})
+	tools.format_svg_labels(filepath, monospace=defaults.algorithms, arbitrary_replacements={'gold':'Gold standard', 'JC':'Jon', 'VP':'Vale'})
 	if not filepath.endswith('.svg'):
 		tools.convert_svg(filepath, filepath)
 
 if __name__ == '__main__':
 
-	ahc_methods = ['attach',  'chain',   'cluster', 'regress', 'segment', 'warp']
-	mds_methods = ['attach',  'chain',   'cluster', 'regress', 'segment', 'warp', 'gold']
+	ahc_tree = hierarchical_clustering_analysis(defaults.algorithms)
+	mds_solution = multidimensional_scaling_analysis(defaults.algorithms_plus_gold, random_seed=220)
 
-	ahc_tree = hierarchical_clustering_analysis(ahc_methods)
-	mds_solution = multidimensional_scaling_analysis(mds_methods, random_seed=220)
-
-	# plot_analyses(ahc_tree, ahc_methods, mds_solution, mds_methods, '../visuals/algorithm_analysis.pdf')
-	plot_analyses(ahc_tree, ahc_methods, mds_solution, mds_methods, '../manuscript/figs/algorithm_analysis.eps')
+	# plot_analyses(ahc_tree, defaults.algorithms, mds_solution, defaults.algorithms_plus_gold, '../visuals/algorithm_analysis.pdf')
+	plot_analyses(ahc_tree, defaults.algorithms, mds_solution, defaults.algorithms_plus_gold, '../manuscript/figs/algorithm_analysis.eps')

@@ -5,15 +5,9 @@ Code for performing the fixation sequence simulations.
 import numpy as np
 import eyekit
 from tools import pickle
+import algorithms
+import defaults
 
-methods = [('attach', {}),
-           ('chain', {'x_thresh':192, 'y_thresh':32}),
-           ('cluster', {}),
-           ('regress', {'k_bounds':(-0.1, 0.1), 'o_bounds':(-50, 50), 's_bounds':(1, 20)}),
-           ('segment', {}),
-           ('warp', {})]
-
-factors = {'noise':(0, 40), 'slope':(-0.1, 0.1), 'shift':(-0.2, 0.2), 'regression_within':(0, 1), 'regression_between':(0, 1)}
 
 class ReadingScenario:
 
@@ -75,20 +69,20 @@ class ReadingScenario:
 					X.insert(-rand_insert_point, rx)
 					Y.insert(-rand_insert_point, ry)
 					I.insert(-rand_insert_point, ri)
-		fixation_sequence = np.column_stack([X, Y, [100]*len(X)])
+		fixation_sequence = np.column_stack([X, Y])
 		return fixation_sequence, np.array(I, dtype=int)
 
 
 def simulate_factor(passage, factor, n_gradations, n_sims):
 	line_positions = list(passage.line_positions)
-	results = np.zeros((len(methods), n_gradations, n_sims), dtype=float)
-	factor_min, factor_max = factors[factor]
+	results = np.zeros((len(defaults.algorithms), n_gradations, n_sims), dtype=float)
+	_, (factor_min, factor_max) = defaults.factors[factor]
 	for gradation_i, factor_value in enumerate(np.linspace(factor_min, factor_max, n_gradations)):
 		reading_scenario = ReadingScenario(passage, **{factor:factor_value})
-		for method_i, (method, params) in enumerate(methods):
+		for method_i, method in enumerate(defaults.algorithms):
 			for sim_i in range(n_sims):
 				fixation_XY, true_line_numbers = reading_scenario.generate_fixation_sequence()
-				fixation_XY = algorithms.__dict__[method](fixation_XY, passage.line_positions, **params)
+				fixation_XY = algorithms.correct_drift(method, fixation_XY, passage)
 				pred_line_numbers = np.array([line_positions.index(fixation[1]) for fixation in fixation_XY], dtype=int)
 				matches = true_line_numbers == pred_line_numbers
 				results[method_i][gradation_i][sim_i] = matches.sum() / len(matches)

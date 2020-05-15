@@ -7,18 +7,11 @@ import matplotlib.pyplot as plt
 import matplotlib.transforms as transforms
 import eyekit
 import tools
+import defaults
 
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
 plt.rcParams.update({'font.size': 7})
 
-methods = ['attach',  'chain',   'cluster', 'regress', 'segment', 'warp']
-colors  = ['#6B6B7F', '#E85A71', '#4EA1D3', '#FCBE32', '#17A363', '#7544D6']
-
-factors = {'noise':('Noise distortion', (0, 40)),
-           'slope':('Slope distortion', (-0.1, 0.1)),
-           'shift':('Shift distortion', (-0.2, 0.2)),
-           'regression_within':('Within-line regression', (0, 1)),
-           'regression_between':('Between-line regression', (0, 1))}
 
 def plot_results(layout, filepath, n_rows=2, figsize=None):
 	n_cols = len(layout) // n_rows
@@ -32,16 +25,16 @@ def plot_results(layout, filepath, n_rows=2, figsize=None):
 	for factor, (r, c) in zip(layout, np.ndindex((n_rows, n_cols))):
 		if factor == 'legend':
 			axes[r][c].axis('off')
-			axes[r][c].legend(legend_patches, methods, loc='center', frameon=False, markerscale=2)
+			axes[r][c].legend(legend_patches, defaults.algorithms, loc='center', frameon=False, markerscale=2)
 			continue
 		results = tools.unpickle('../data/algorithm_performance/%s.pkl'%factor)
 		results *= 100
-		factor_label, (factor_min_val, factor_max_val) = factors[factor]
+		factor_label, (factor_min_val, factor_max_val) = defaults.factors[factor]
 		factor_space = np.linspace(factor_min_val, factor_max_val, len(results[0]))
-		for method_i, method in enumerate(methods):
+		for method_i, method in enumerate(defaults.algorithms):
 			means = results[method_i, :].mean(axis=1)
-			staggered_means = means - method_i + (len(methods)-1)/2
-			line, = axes[r][c].plot(factor_space, staggered_means, color=colors[method_i], label=method, linewidth=1.2)
+			staggered_means = means - method_i + (len(defaults.algorithms)-1)/2
+			line, = axes[r][c].plot(factor_space, staggered_means, color=defaults.colors[method], label=method, linewidth=1.2)
 			if r == 0 and c == 0:
 				legend_patches.append(line)
 			axes[r][c].set_ylim(-5, 105)
@@ -59,7 +52,7 @@ def plot_results(layout, filepath, n_rows=2, figsize=None):
 		axes[r][c].axis('off')
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
-	tools.format_svg_labels(filepath, methods)
+	tools.format_svg_labels(filepath, defaults.algorithms)
 	if not filepath.endswith('.svg'):
 		tools.convert_svg(filepath, filepath)
 

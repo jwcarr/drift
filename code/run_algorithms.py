@@ -2,31 +2,28 @@
 Code for running the algorithms over the sample data
 '''
 
+import numpy as np
 from collections import defaultdict
 import json
 import eyekit
 import algorithms
 import tools
+import defaults
 
-methods = [('attach', {}),
-           ('chain', {'x_thresh':192, 'y_thresh':32}),
-           ('cluster', {}),
-           ('regress', {'k_bounds':(-0.1, 0.1), 'o_bounds':(-50, 50), 's_bounds':(1, 20)}),
-           ('segment', {}),
-           ('warp', {})]
-
-def run_algorithm(sample_data, passages, output_dir, method, **params):
+def run_algorithm(sample_data, passages, output_dir, method):
 	print(method.upper())
 	output_data = defaultdict(dict)
 	for passage_id, participant_data in sample_data.items():
 		print(passage_id)
-		line_Y = passages[passage_id].line_positions
 		for participant_id, fixations in participant_data.items():
 			print('-', participant_id)
-			fixation_XY = np.array(fixations, dtype=int)
-			fixation_XY = algorithms.__dict__[method](fixation_XY, line_Y, **params)
-			fixation_sequence = eyekit.FixationSequence(fixation_XY)
-			output_data[passage_id][participant_id] = fixation_sequence.tolist()
+			fixation_sequence = eyekit.FixationSequence(fixations)
+			fixation_XY = fixation_sequence.XYarray(include_discards=True)
+			algorithms.correct_drift(method, fixation_XY, passages[passage_id])
+			for fixation, (x, y) in zip(fixation_sequence, fixation_XY):
+				fixation.y = y
+
+			output_data[passage_id][participant_id] = fixation_sequence.tolist(include_discards=True)
 	with open(output_dir + '%s.json' % method, 'w') as file:
 		json.dump(output_data, file)
 
@@ -39,5 +36,5 @@ if __name__ == '__main__':
 
 	passages = tools.load_passages('../data/passages/')
 
-	for method, params in methods:
-		run_algorithm(sample_data, passages, '../data/fixations/', method, **params)
+	for method in defaults.algorithms:
+		run_algorithm(sample_data, passages, '../data/fixations/', method)
