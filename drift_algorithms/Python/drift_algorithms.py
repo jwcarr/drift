@@ -105,13 +105,11 @@ def segment(fixation_XY, line_Y):
 
 ######################################################################
 # WARP
-# The dynamic_time_warping function was adapted from:
-# https://github.com/talcs/simpledtw
 ######################################################################
 
 def warp(fixation_XY, character_XY):
-	warping_path = dynamic_time_warping(fixation_XY, character_XY)
-	for fixation_i, characters_mapped_to_fixation_i in enumerate(warping_path):
+	_, dtw_path = dynamic_time_warping(fixation_XY, character_XY)
+	for fixation_i, characters_mapped_to_fixation_i in enumerate(dtw_path):
 		candidate_Y = character_XY[characters_mapped_to_fixation_i, 1]
 		fixation_XY[fixation_i, 1] = mode(candidate_Y)
 	return fixation_XY
@@ -120,28 +118,33 @@ def mode(values):
 	values = list(values)
 	return max(set(values), key=values.count)
 
+######################################################################
+# Dynamic Time Warping adapted from https://github.com/talcs/simpledtw
+# This is used by the MATCHUP and WARP algorithms
+######################################################################
+
 def dynamic_time_warping(sequence1, sequence2):
 	n1 = len(sequence1)
 	n2 = len(sequence2)
-	cost_matrix = np.zeros((n1+1, n2+1))
-	cost_matrix[0, :] = np.inf
-	cost_matrix[:, 0] = np.inf
-	cost_matrix[0, 0] = 0
+	dtw_cost = np.zeros((n1+1, n2+1))
+	dtw_cost[0, :] = np.inf
+	dtw_cost[:, 0] = np.inf
+	dtw_cost[0, 0] = 0
 	for i in range(n1):
 		for j in range(n2):
-			cost = np.sqrt((sequence1[i,0] - sequence2[j,0])**2 + (sequence1[i,1] - sequence2[j,1])**2)
-			cost_matrix[i+1, j+1] = cost + min(cost_matrix[i, j+1], cost_matrix[i+1, j], cost_matrix[i, j])
-	cost_matrix = cost_matrix[1:, 1:]
-	warping_path = [[] for _ in range(n1)]
+			this_cost = np.sqrt(sum((sequence1[i] - sequence2[j])**2))
+			dtw_cost[i+1, j+1] = this_cost + min(dtw_cost[i, j+1], dtw_cost[i+1, j], dtw_cost[i, j])
+	dtw_cost = dtw_cost[1:, 1:]
+	dtw_path = [[] for _ in range(n1)]
 	while i > 0 or j > 0:
-		warping_path[i].append(j)
+		dtw_path[i].append(j)
 		possible_moves = [np.inf, np.inf, np.inf]
 		if i > 0 and j > 0:
-			possible_moves[0] = cost_matrix[i-1, j-1]
+			possible_moves[0] = dtw_cost[i-1, j-1]
 		if i > 0:
-			possible_moves[1] = cost_matrix[i-1, j]
+			possible_moves[1] = dtw_cost[i-1, j]
 		if j > 0:
-			possible_moves[2] = cost_matrix[i, j-1]
+			possible_moves[2] = dtw_cost[i, j-1]
 		best_move = np.argmin(possible_moves)
 		if best_move == 0:
 			i -= 1
@@ -150,5 +153,5 @@ def dynamic_time_warping(sequence1, sequence2):
 			i -= 1
 		else:
 			j -= 1
-	warping_path[0].append(0)
-	return warping_path
+	dtw_path[0].append(0)
+	return dtw_cost[-1, -1], dtw_path

@@ -121,9 +121,9 @@ segment <- function(fixation_XY, line_Y) {
 
 warp <- function(fixation_XY, character_XY) {
 	n <- nrow(fixation_XY)
-	warping_path <- dynamic_time_warping(fixation_XY, character_XY)
+	dtw <- dynamic_time_warping(fixation_XY, character_XY)
 	for (fixation_i in 1 : n) {
-		characters_mapped_to_fixation_i <- unlist(warping_path[[fixation_i]])
+		characters_mapped_to_fixation_i <- unlist(dtw$path[[fixation_i]])
 		candidate_Y <- character_XY[characters_mapped_to_fixation_i, 2]
 		fixation_XY[fixation_i, 2] <- mode(candidate_Y)
 	}
@@ -135,32 +135,37 @@ mode <- function(values) {
 	return(unique_values[which.max(tabulate(match(values, unique_values)))])
 }
 
+######################################################################
+# Dynamic Time Warping adapted from https://github.com/talcs/simpledtw
+# This is used by the MATCHUP and WARP algorithms
+######################################################################
+
 dynamic_time_warping <- function(sequence1, sequence2) {
 	n1 <- nrow(sequence1)
 	n2 <- nrow(sequence2)
-	cost_matrix <- matrix(nrow=n1+1, ncol=n2+1)
-	cost_matrix[1, ] <- Inf
-	cost_matrix[ ,1] <- Inf
-	cost_matrix[1,1] <- 0
+	dtw_cost <- matrix(nrow=n1+1, ncol=n2+1)
+	dtw_cost[1, ] <- Inf
+	dtw_cost[ ,1] <- Inf
+	dtw_cost[1,1] <- 0
 	for (i in 1 : n1) {
 		for (j in 1 : n2) {
-			cost <- sqrt((sequence1[i,1] - sequence2[j,1])^2 + (sequence1[i,2] - sequence2[j,2])^2)
-			cost_matrix[i+1, j+1] <- cost + min(cost_matrix[i, j+1], cost_matrix[i+1, j], cost_matrix[i, j])
+			this_cost <- sqrt(sum((sequence1[i,] - sequence2[j,])^2))
+			dtw_cost[i+1, j+1] <- this_cost + min(dtw_cost[i, j+1], dtw_cost[i+1, j], dtw_cost[i, j])
 		}
 	}
-	cost_matrix <- cost_matrix[2:(n1+1), 2:(n2+1)]
-	warping_path <- replicate(n1, list())
+	dtw_cost <- dtw_cost[2:(n1+1), 2:(n2+1)]
+	dtw_path <- replicate(n1, list())
 	while (i > 1 | j > 1) {
-		warping_path[[i]] <- append(warping_path[[i]], j)
+		dtw_path[[i]] <- append(dtw_path[[i]], j)
 		possible_moves <- c(Inf, Inf, Inf)
 		if (i > 1 & j > 1) {
-			possible_moves[1] <- cost_matrix[i-1, j-1]
+			possible_moves[1] <- dtw_cost[i-1, j-1]
 		}
 		if (i > 1) {
-			possible_moves[2] <- cost_matrix[i-1, j]
+			possible_moves[2] <- dtw_cost[i-1, j]
 		}
 		if (j > 1) {
-			possible_moves[3] <- cost_matrix[i, j-1]
+			possible_moves[3] <- dtw_cost[i, j-1]
 		}
 		best_move <- which.min(possible_moves)
 		if (best_move == 1) {
@@ -172,6 +177,6 @@ dynamic_time_warping <- function(sequence1, sequence2) {
 			j <- j - 1
 		}
 	}
-	warping_path[[1]] <- append(warping_path[[1]], 1)
-	return(warping_path)
+	dtw_path[[1]] <- append(dtw_path[[1]], 1)
+	return(list('cost' = dtw_cost[n1, n2], 'path' = dtw_path))
 }
