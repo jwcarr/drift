@@ -57,10 +57,10 @@ cluster <- function(fixation_XY, line_Y) {
 ######################################################################
 # REGRESS
 # This is an adaptation of FixAlign:
-# https://blogs.umass.edu/rdcl/resources/
 # Cohen, A. L. (2013). Software for the automatic correction of
-# recorded eye fixation locations in reading experiments. Behavior
-# Research Methods, 45, 679–683. doi:10.3758/s13428-012-0280-3
+#   recorded eye fixation locations in reading experiments. Behavior
+#   Research Methods, 45, 679–683. doi:10.3758/s13428-012-0280-3
+#   https://blogs.umass.edu/rdcl/resources/
 ######################################################################
 
 regress <- function(fixation_XY, line_Y, k_bounds=c(-0.1, 0.1), o_bounds=c(-50, 50), s_bounds=c(1, 20)) {
