@@ -51,6 +51,36 @@ def cluster(fixation_XY, line_Y):
 	return fixation_XY
 
 ######################################################################
+# MATCHUP
+# This is an implementation of the method reported in:
+# Lima Sanches, C., Kise, K., & Augereau, O. (2015). Eye gaze and text
+#   line matching for reading analysis. In Adjunct proceedings of the
+#   2015 ACM International Joint Conference on Pervasive and
+#   Ubiquitous Computing and proceedings of the 2015 ACM International
+#   Symposium on Wearable Computers (pp. 1227–1233). New York, NY:
+#   Association for Computing Machinery. doi:10.1145/2800835.2807936
+######################################################################
+
+def matchup(fixation_XY, line_Y, word_XY, x_thresh=512):
+	n = len(fixation_XY)
+	m = len(line_Y)
+	diff_X = np.diff(fixation_XY[:, 0])
+	end_line_indices = list(np.where(diff_X < -x_thresh)[0] + 1)
+	end_line_indices.append(n)
+	start_line_index = 0
+	for end_line_index in end_line_indices:
+		gaze_line = fixation_XY[start_line_index:end_line_index]
+		line_costs = np.zeros(m)
+		for line_i in range(m):
+			text_line = word_XY[np.where(word_XY[:, 1] == line_Y[line_i])]
+			dtw_cost, _ = dynamic_time_warping(gaze_line, text_line)
+			line_costs[line_i] = dtw_cost
+		line_i = np.argmin(line_costs)
+		fixation_XY[start_line_index:end_line_index, 1] = line_Y[line_i]
+		start_line_index = end_line_index
+	return fixation_XY
+
+######################################################################
 # REGRESS
 # This is an adaptation of FixAlign:
 # Cohen, A. L. (2013). Software for the automatic correction of
