@@ -61,7 +61,8 @@ def cluster(fixation_XY, line_Y):
 #   Association for Computing Machinery. doi:10.1145/2800835.2807936
 ######################################################################
 
-def matchup(fixation_XY, line_Y, word_XY, x_thresh=512):
+def matchup(fixation_XY, word_XY, x_thresh=512):
+	line_Y = np.unique(word_XY[:, 1])
 	n = len(fixation_XY)
 	m = len(line_Y)
 	diff_X = np.diff(fixation_XY[:, 0])

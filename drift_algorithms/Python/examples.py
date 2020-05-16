@@ -28,7 +28,7 @@ cluster_output = drift_algorithms.cluster(fixation_XY.copy(), line_Y)
 print('Output from the cluster algorithm')
 print(cluster_output)
 
-matchup_output = drift_algorithms.matchup(fixation_XY.copy(), line_Y, word_XY)
+matchup_output = drift_algorithms.matchup(fixation_XY.copy(), word_XY)
 print('Output from the matchup algorithm')
 print(matchup_output)
 

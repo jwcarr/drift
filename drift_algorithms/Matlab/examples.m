@@ -30,7 +30,7 @@ cluster_output = cluster(fixation_XY, line_Y);
 disp('Output from the cluster algorithm');
 disp(cluster_output);
 
-matchup_output = matchup(fixation_XY, line_Y, word_XY);
+matchup_output = matchup(fixation_XY, word_XY);
 disp('Output from the matchup algorithm');
 disp(matchup_output);
 

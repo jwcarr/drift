@@ -9,12 +9,13 @@
 %   Association for Computing Machinery. doi:10.1145/2800835.2807936
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function fixation_XY = matchup(fixation_XY, line_Y, word_XY, x_thresh)
+function fixation_XY = matchup(fixation_XY, word_XY, x_thresh)
 
 	if ~exist('x_thresh')
 		x_thresh = 512;
 	end
 
+	line_Y = unique(word_XY(:, 2));
 	n = size(fixation_XY, 1);
 	m = length(line_Y);
 	diff_X = diff(fixation_XY(:, 1));

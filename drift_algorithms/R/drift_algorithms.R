@@ -65,7 +65,8 @@ cluster <- function(fixation_XY, line_Y) {
 #   Association for Computing Machinery. doi:10.1145/2800835.2807936
 ######################################################################
 
-matchup <- function(fixation_XY, line_Y, word_XY, x_thresh=512) {
+matchup <- function(fixation_XY, word_XY, x_thresh=512) {
+	line_Y <- unique(word_XY[, 2])
 	n <- nrow(fixation_XY)
 	m <- length(line_Y)
 	diff_X <- diff(fixation_XY[, 1])

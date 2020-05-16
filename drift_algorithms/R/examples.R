@@ -27,7 +27,7 @@ cluster_output <- cluster(fixation_XY, line_Y)
 print('Output from the cluster algorithm')
 print(cluster_output)
 
-matchup_output <- matchup(fixation_XY, line_Y, word_XY)
+matchup_output <- matchup(fixation_XY, word_XY)
 print('Output from the matchup algorithm')
 print(matchup_output)
 
