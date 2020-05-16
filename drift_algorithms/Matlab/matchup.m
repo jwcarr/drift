@@ -11,7 +11,7 @@
 
 function fixation_XY = matchup(fixation_XY, word_XY, x_thresh)
 
-	if ~exist('x_thresh')
+	if ~exist('x_thresh', 'var')
 		x_thresh = 512;
 	end
 

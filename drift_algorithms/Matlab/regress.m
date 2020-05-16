@@ -9,13 +9,13 @@
 
 function fixation_XY = regress(fixation_XY, line_Y, k_bounds, o_bounds, s_bounds)
 
-	if ~exist('k_bounds')
+	if ~exist('k_bounds', 'var')
 		k_bounds = [-0.1, 0.1];
 	end
-	if ~exist('o_bounds')
+	if ~exist('o_bounds', 'var')
 		o_bounds = [-50, 50];
 	end
-	if ~exist('s_bounds')
+	if ~exist('s_bounds', 'var')
 		s_bounds = [1, 20];
 	end
 

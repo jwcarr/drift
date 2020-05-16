@@ -6,10 +6,10 @@
 
 function fixation_XY = chain(fixation_XY, line_Y, x_thresh, y_thresh)
 
-	if ~exist('x_thresh')
+	if ~exist('x_thresh', 'var')
 		x_thresh = 192;
 	end
-	if ~exist('y_thresh')
+	if ~exist('y_thresh', 'var')
 		y_thresh = 32;
 	end
 
