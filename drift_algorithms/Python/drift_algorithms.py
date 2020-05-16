@@ -72,10 +72,10 @@ def matchup(fixation_XY, word_XY, x_thresh=512):
 	for end_line_index in end_line_indices:
 		gaze_line = fixation_XY[start_line_index:end_line_index]
 		line_costs = np.zeros(m)
-		for line_i in range(m):
-			text_line = word_XY[np.where(word_XY[:, 1] == line_Y[line_i])]
+		for candidate_line_i in range(m):
+			text_line = word_XY[np.where(word_XY[:, 1] == line_Y[candidate_line_i])]
 			dtw_cost, _ = dynamic_time_warping(gaze_line, text_line)
-			line_costs[line_i] = dtw_cost
+			line_costs[candidate_line_i] = dtw_cost
 		line_i = np.argmin(line_costs)
 		fixation_XY[start_line_index:end_line_index, 1] = line_Y[line_i]
 		start_line_index = end_line_index

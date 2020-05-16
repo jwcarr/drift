@@ -76,10 +76,10 @@ matchup <- function(fixation_XY, word_XY, x_thresh=512) {
 	for (end_of_line in end_line_indices) {
 		gaze_line <- fixation_XY[start_of_line:end_of_line,]
 		line_costs <- integer(m)
-		for (line_i in 1 : m) {
-			text_line <- word_XY[which(word_XY[, 2] == line_Y[line_i]),]
+		for (candidate_line_i in 1 : m) {
+			text_line <- word_XY[which(word_XY[, 2] == line_Y[candidate_line_i]),]
 			dtw <- dynamic_time_warping(gaze_line, text_line)
-			line_costs[line_i] <- dtw$cost
+			line_costs[candidate_line_i] <- dtw$cost
 		}
 		line_i <- which.min(line_costs)
 		fixation_XY[start_of_line:end_of_line, 2] <- line_Y[line_i]
