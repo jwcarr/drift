@@ -11,13 +11,13 @@ def correct_drift(method, fixation_XY, passage):
 	elif method == 'cluster':
 		return cluster(fixation_XY, passage.line_positions)
 	elif method == 'matchup':
-		return matchup(fixation_XY, passage.line_positions, passage.word_centers())
+		return matchup(fixation_XY, passage.word_centers())
 	elif method == 'regress':
 		return regress(fixation_XY, passage.line_positions)
 	elif method == 'segment':
 		return segment(fixation_XY, passage.line_positions)
 	elif method == 'warp':
-		return warp(fixation_XY, passage.char_xy)
+		return warp(fixation_XY, passage.word_centers())
 	else:
 		raise ValueError('Invalid method')
 
@@ -105,10 +105,10 @@ def segment(fixation_XY, line_Y):
 			current_line_i += 1
 	return fixation_XY
 
-def warp(fixation_XY, character_XY):
-	_, warping_path = dynamic_time_warping(fixation_XY, character_XY)
-	for fixation_i, characters_mapped_to_fixation_i in enumerate(warping_path):
-		candidate_Y = character_XY[characters_mapped_to_fixation_i, 1]
+def warp(fixation_XY, word_XY):
+	_, warping_path = dynamic_time_warping(fixation_XY, word_XY)
+	for fixation_i, words_mapped_to_fixation_i in enumerate(warping_path):
+		candidate_Y = word_XY[words_mapped_to_fixation_i, 1]
 		fixation_XY[fixation_i, 1] = mode(candidate_Y)
 	return fixation_XY
 

@@ -140,10 +140,10 @@ def segment(fixation_XY, line_Y):
 # WARP
 ######################################################################
 
-def warp(fixation_XY, character_XY):
-	_, dtw_path = dynamic_time_warping(fixation_XY, character_XY)
-	for fixation_i, characters_mapped_to_fixation_i in enumerate(dtw_path):
-		candidate_Y = character_XY[characters_mapped_to_fixation_i, 1]
+def warp(fixation_XY, word_XY):
+	_, dtw_path = dynamic_time_warping(fixation_XY, word_XY)
+	for fixation_i, words_mapped_to_fixation_i in enumerate(dtw_path):
+		candidate_Y = word_XY[words_mapped_to_fixation_i, 1]
 		fixation_XY[fixation_i, 1] = mode(candidate_Y)
 	return fixation_XY
 

@@ -153,12 +153,12 @@ segment <- function(fixation_XY, line_Y) {
 # WARP
 ######################################################################
 
-warp <- function(fixation_XY, character_XY) {
+warp <- function(fixation_XY, word_XY) {
 	n <- nrow(fixation_XY)
-	dtw <- dynamic_time_warping(fixation_XY, character_XY)
+	dtw <- dynamic_time_warping(fixation_XY, word_XY)
 	for (fixation_i in 1 : n) {
-		characters_mapped_to_fixation_i <- unlist(dtw$path[[fixation_i]])
-		candidate_Y <- character_XY[characters_mapped_to_fixation_i, 2]
+		words_mapped_to_fixation_i <- unlist(dtw$path[[fixation_i]])
+		candidate_Y <- word_XY[words_mapped_to_fixation_i, 2]
 		fixation_XY[fixation_i, 2] <- mode(candidate_Y)
 	}
 	return(fixation_XY)
