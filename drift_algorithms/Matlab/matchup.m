@@ -5,8 +5,9 @@
 %   line matching for reading analysis. In Adjunct proceedings of the
 %   2015 ACM International Joint Conference on Pervasive and
 %   Ubiquitous Computing and proceedings of the 2015 ACM International
-%   Symposium on Wearable Computers (pp. 1227–1233). New York, NY:
-%   Association for Computing Machinery. doi:10.1145/2800835.2807936
+%   Symposium on Wearable Computers (pp. 1227–1233). Association for
+%   Computing Machinery.
+% https://doi.org/10.1145/2800835.2807936
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function fixation_XY = matchup(fixation_XY, word_XY, x_thresh)
