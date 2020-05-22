@@ -1,5 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SEGMENT
+%
+% Abdulin, E. R., & Komogortsev, O. V. (2015). Person verification via
+%   eye movement-driven text reading model, In 2015 IEEE 7th
+%   International Conference on Biometrics Theory, Applications and
+%   Systems. IEEE.
+%
+% https://doi.org/10.1109/BTAS.2015.7358786
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function fixation_XY = segment(fixation_XY, line_Y)

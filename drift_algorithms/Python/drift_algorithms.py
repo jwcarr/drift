@@ -13,7 +13,7 @@ def attach(fixation_XY, line_Y):
 
 ######################################################################
 # CHAIN
-# This is an adaptation of the chain method in popEye:
+# 
 # https://github.com/sascha2schroeder/popEye/
 ######################################################################
 
@@ -33,7 +33,7 @@ def chain(fixation_XY, line_Y, x_thresh=192, y_thresh=32):
 
 ######################################################################
 # CLUSTER
-# This is an adaptation of the cluster method in popEye:
+# 
 # https://github.com/sascha2schroeder/popEye/
 ######################################################################
 
@@ -52,13 +52,14 @@ def cluster(fixation_XY, line_Y):
 
 ######################################################################
 # MATCHUP
-# This is an implementation of the method reported in:
+#
 # Lima Sanches, C., Kise, K., & Augereau, O. (2015). Eye gaze and text
 #   line matching for reading analysis. In Adjunct proceedings of the
 #   2015 ACM International Joint Conference on Pervasive and
 #   Ubiquitous Computing and proceedings of the 2015 ACM International
 #   Symposium on Wearable Computers (pp. 1227–1233). Association for
 #   Computing Machinery.
+#
 # https://doi.org/10.1145/2800835.2807936
 ######################################################################
 
@@ -84,10 +85,11 @@ def matchup(fixation_XY, word_XY, x_thresh=512):
 
 ######################################################################
 # REGRESS
-# This is an adaptation of FixAlign reported in:
+#
 # Cohen, A. L. (2013). Software for the automatic correction of
 #   recorded eye fixation locations in reading experiments. Behavior
 #   Research Methods, 45(3), 679–683.
+#
 # https://doi.org/10.3758/s13428-012-0280-3
 # https://blogs.umass.edu/rdcl/resources/
 ######################################################################
@@ -121,6 +123,13 @@ def regress(fixation_XY, line_Y, k_bounds=(-0.1, 0.1), o_bounds=(-50, 50), s_bou
 
 ######################################################################
 # SEGMENT
+#
+# Abdulin, E. R., & Komogortsev, O. V. (2015). Person verification via
+#   eye movement-driven text reading model, In 2015 IEEE 7th
+#   International Conference on Biometrics Theory, Applications and
+#   Systems. IEEE.
+#
+# https://doi.org/10.1109/BTAS.2015.7358786
 ######################################################################
 
 def segment(fixation_XY, line_Y):

@@ -1,9 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % REGRESS
-% This is an adaptation of FixAlign reported in:
+%
 % Cohen, A. L. (2013). Software for the automatic correction of
 %   recorded eye fixation locations in reading experiments. Behavior
 %   Research Methods, 45(3), 679–683.
+%
 % https://doi.org/10.3758/s13428-012-0280-3
 % https://blogs.umass.edu/rdcl/resources/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
