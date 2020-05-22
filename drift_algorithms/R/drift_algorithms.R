@@ -162,6 +162,26 @@ segment <- function(fixation_XY, line_Y) {
 }
 
 ######################################################################
+# VandM
+######################################################################
+
+VandM <- function(fixation_XY, line_Y, sd_thresh=2) {
+	n <- nrow(fixation_XY)
+	diff_X <- diff(fixation_XY[, 1])
+	x_thresh <- median(diff_X) - sd_thresh * sd(diff_X)
+	end_line_indices <- which(diff_X < x_thresh)
+	end_line_indices <- append(end_line_indices, n)
+	start_of_line <- 1
+	for (end_of_line in end_line_indices) {
+		mean_y <- mean(fixation_XY[start_of_line:end_of_line, 2])
+		line_i <- which.min(abs(line_Y - mean_y))
+		fixation_XY[start_of_line:end_of_line, 2] <- line_Y[line_i]
+		start_of_line <- end_of_line + 1
+	}
+	return(fixation_XY)
+}
+
+######################################################################
 # WARP
 ######################################################################
 

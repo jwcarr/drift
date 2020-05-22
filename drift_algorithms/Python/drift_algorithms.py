@@ -150,6 +150,24 @@ def segment(fixation_XY, line_Y):
 	return fixation_XY
 
 ######################################################################
+# VandM
+######################################################################
+
+def VandM(fixation_XY, line_Y, sd_thresh=2):
+	n = len(fixation_XY)
+	diff_X = np.diff(fixation_XY[:, 0])
+	x_thresh = np.median(diff_X) - sd_thresh * np.std(diff_X)
+	end_line_indices = list(np.where(diff_X < x_thresh)[0] + 1)
+	end_line_indices.append(n)
+	start_of_line = 0
+	for end_of_line in end_line_indices:
+		mean_y = np.mean(fixation_XY[start_of_line:end_of_line, 1])
+		line_i = np.argmin(abs(line_Y - mean_y))
+		fixation_XY[start_of_line:end_of_line, 1] = line_Y[line_i]
+		start_of_line = end_of_line
+	return fixation_XY
+
+######################################################################
 # WARP
 ######################################################################
 

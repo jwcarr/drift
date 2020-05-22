@@ -39,6 +39,10 @@ segment_output = segment(fixation_XY, line_Y);
 disp('Output from the segment algorithm');
 disp(segment_output);
 
+VandM_output = VandM(fixation_XY, line_Y);
+disp('Output from the VandM algorithm');
+disp(VandM_output);
+
 warp_output = warp(fixation_XY, word_XY);
 disp('Output from the warp algorithm');
 disp(warp_output);
