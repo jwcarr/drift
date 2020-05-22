@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Dynamic Time Warping adapted from https://github.com/talcs/simpledtw
-% This is used by the MATCHUP and WARP algorithms
+% This is used by the IMITATE and WARP algorithms
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [dtw_cost, dtw_path] = dynamic_time_warping(sequence1, sequence2)
@@ -13,7 +13,7 @@ function [dtw_cost, dtw_path] = dynamic_time_warping(sequence1, sequence2)
 	dtw_cost(1, 1) = 0;
 	for i = 1 : n1
 		for j = 1 : n2
-			this_cost = sqrt((sequence1(i,1) - sequence2(j,1))^2 + (sequence1(i,2) - sequence2(j,2))^2);
+			this_cost = sqrt(sum((sequence1(i, :) - sequence2(j, :)).^2));
 			dtw_cost(i+1, j+1) = this_cost + min([dtw_cost(i, j+1), dtw_cost(i+1, j), dtw_cost(i, j)]);
 		end
 	end

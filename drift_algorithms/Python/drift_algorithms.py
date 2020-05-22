@@ -51,7 +51,7 @@ def cluster(fixation_XY, line_Y):
 	return fixation_XY
 
 ######################################################################
-# MATCHUP
+# IMITATE
 #
 # Lima Sanches, C., Kise, K., & Augereau, O. (2015). Eye gaze and text
 #   line matching for reading analysis. In Adjunct proceedings of the
@@ -63,24 +63,28 @@ def cluster(fixation_XY, line_Y):
 # https://doi.org/10.1145/2800835.2807936
 ######################################################################
 
-def matchup(fixation_XY, word_XY, x_thresh=512):
+def imitate(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3):
 	line_Y = np.unique(word_XY[:, 1])
 	n = len(fixation_XY)
-	m = len(line_Y)
 	diff_X = np.diff(fixation_XY[:, 0])
 	end_line_indices = list(np.where(diff_X < -x_thresh)[0] + 1)
 	end_line_indices.append(n)
-	start_line_index = 0
-	for end_line_index in end_line_indices:
-		gaze_line = fixation_XY[start_line_index:end_line_index]
-		line_costs = np.zeros(m)
-		for candidate_line_i in range(m):
+	start_of_line = 0
+	for end_of_line in end_line_indices:
+		gaze_line = fixation_XY[start_of_line:end_of_line]
+		mean_y = np.mean(gaze_line[:, 1])
+		lines_ordered_by_proximity = np.argsort(abs(line_Y - mean_y))
+		nearest_line_I = lines_ordered_by_proximity[:n_nearest_lines]
+		line_costs = np.zeros(n_nearest_lines)
+		for candidate_i in range(n_nearest_lines):
+			candidate_line_i = nearest_line_I[candidate_i]
 			text_line = word_XY[np.where(word_XY[:, 1] == line_Y[candidate_line_i])]
-			dtw_cost, _ = dynamic_time_warping(gaze_line, text_line)
-			line_costs[candidate_line_i] = dtw_cost
-		line_i = np.argmin(line_costs)
-		fixation_XY[start_line_index:end_line_index, 1] = line_Y[line_i]
-		start_line_index = end_line_index
+			dtw_cost, _ = dynamic_time_warping(gaze_line[:, 0:1], text_line[:, 0:1])
+			line_costs[candidate_i] = cost
+		line_i = nearest_line_I[np.argmin(line_costs)]
+		fixation_XY[start_of_line:end_of_line, 1] = line_Y[line_i]
+		start_of_line = end_of_line
+	return fixation_XY
 	return fixation_XY
 
 ######################################################################
@@ -162,7 +166,7 @@ def mode(values):
 
 ######################################################################
 # Dynamic Time Warping adapted from https://github.com/talcs/simpledtw
-# This is used by the MATCHUP and WARP algorithms
+# This is used by the IMITATE and WARP algorithms
 ######################################################################
 
 def dynamic_time_warping(sequence1, sequence2):

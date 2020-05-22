@@ -55,7 +55,7 @@ cluster <- function(fixation_XY, line_Y) {
 }
 
 ######################################################################
-# MATCHUP
+# IMITATE
 #
 # Lima Sanches, C., Kise, K., & Augereau, O. (2015). Eye gaze and text
 #   line matching for reading analysis. In Adjunct proceedings of the
@@ -67,23 +67,26 @@ cluster <- function(fixation_XY, line_Y) {
 # https://doi.org/10.1145/2800835.2807936
 ######################################################################
 
-matchup <- function(fixation_XY, word_XY, x_thresh=512) {
+imitate <- function(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3) {
 	line_Y <- unique(word_XY[, 2])
 	n <- nrow(fixation_XY)
-	m <- length(line_Y)
 	diff_X <- diff(fixation_XY[, 1])
 	end_line_indices <- which(diff_X < -x_thresh)
 	end_line_indices <- append(end_line_indices, n)
 	start_of_line <- 1
 	for (end_of_line in end_line_indices) {
 		gaze_line <- fixation_XY[start_of_line:end_of_line,]
-		line_costs <- integer(m)
-		for (candidate_line_i in 1 : m) {
+		mean_y <- mean(gaze_line[, 0])
+		lines_ordered_by_proximity <- order(abs(line_Y - mean_y))
+		nearest_line_I <- lines_ordered_by_proximity[1:n_nearest_lines]
+		line_costs <- integer(n_nearest_lines)
+		for (candidate_i in 1 : n_nearest_lines) {
+			candidate_line_i <- nearest_line_I[candidate_i]
 			text_line <- word_XY[which(word_XY[, 2] == line_Y[candidate_line_i]),]
-			dtw <- dynamic_time_warping(gaze_line, text_line)
-			line_costs[candidate_line_i] <- dtw$cost
+			dtw <- dynamic_time_warping(cbind(gaze_line[, 1]), cbind(text_line[, 1]))
+			line_costs[candidate_i] <- dtw$cost
 		}
-		line_i <- which.min(line_costs)
+		line_i <- nearest_line_I[which.min(line_costs)]
 		fixation_XY[start_of_line:end_of_line, 2] <- line_Y[line_i]
 		start_of_line <- end_of_line + 1
 	}
@@ -180,7 +183,7 @@ mode <- function(values) {
 
 ######################################################################
 # Dynamic Time Warping adapted from https://github.com/talcs/simpledtw
-# This is used by the MATCHUP and WARP algorithms
+# This is used by the IMITATE and WARP algorithms
 ######################################################################
 
 dynamic_time_warping <- function(sequence1, sequence2) {
