@@ -102,7 +102,7 @@ def plot_accuracy(results, filepath):
 
 def plot_accuracy_improvement(results, filepath):
 	fig, axis = plt.subplots(1, 1, figsize=(6.8, 2.5))
-	axis.plot([-1, 7], [0, 0], color='black', linewidth=1)
+	axis.plot([-1, len(results)+1], [0, 0], color='black', linewidth=1, zorder=0)
 	last_special_adult_result, last_special_kid_result = None, None
 	for algorithm, data in results.items():
 		i = defaults.algorithms.index(algorithm)
