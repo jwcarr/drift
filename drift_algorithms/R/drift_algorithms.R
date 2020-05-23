@@ -119,9 +119,8 @@ regress <- function(fixation_XY, line_Y, k_bounds=c(-0.1, 0.1), o_bounds=c(-50, 
 			fit_Y <- predicted_Y_from_slope + line_Y_plus_offset[line_i]
 			density[, line_i] <- log(dnorm(fixation_XY[, 2], fit_Y, s))
 		}
-		if (return_line_assignments) {
+		if (return_line_assignments)
 			return(apply(density, 1, which.max))
-		}
 		return(-sum(apply(density, 1, max)))
 	}
 
@@ -154,9 +153,8 @@ segment <- function(fixation_XY, line_Y) {
 	current_line_i <- 1
 	for (fixation_i in 1 : n) {
 		fixation_XY[fixation_i, 2] <- line_Y[current_line_i]
-		if (is.element(fixation_i, line_change_indices)) {
+		if (is.element(fixation_i, line_change_indices))
 			current_line_i <- current_line_i + 1
-		}
 	}
 	return(fixation_XY)
 }
@@ -224,24 +222,21 @@ dynamic_time_warping <- function(sequence1, sequence2) {
 	while (i > 1 | j > 1) {
 		dtw_path[[i]] <- append(dtw_path[[i]], j)
 		possible_moves <- c(Inf, Inf, Inf)
-		if (i > 1 & j > 1) {
+		if (i > 1 & j > 1)
 			possible_moves[1] <- dtw_cost[i-1, j-1]
-		}
-		if (i > 1) {
+		if (i > 1)
 			possible_moves[2] <- dtw_cost[i-1, j]
-		}
-		if (j > 1) {
+		if (j > 1)
 			possible_moves[3] <- dtw_cost[i, j-1]
-		}
 		best_move <- which.min(possible_moves)
 		if (best_move == 1) {
 			i <- i - 1
 			j <- j - 1
-		} else if (best_move == 2) {
-			i <- i - 1
-		} else {
-			j <- j - 1
 		}
+		else if (best_move == 2)
+			i <- i - 1
+		else
+			j <- j - 1
 	}
 	dtw_path[[1]] <- append(dtw_path[[1]], 1)
 	return(list('cost' = dtw_cost[n1, n2], 'path' = dtw_path))
