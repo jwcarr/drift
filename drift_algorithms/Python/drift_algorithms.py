@@ -85,6 +85,58 @@ def imitate(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3):
 		fixation_XY[start_of_line:end_of_line, 1] = line_Y[line_i]
 		start_of_line = end_of_line
 	return fixation_XY
+
+######################################################################
+# MERGE
+#
+# Špakov, O., Istance, H., Hyrskykari, A., Siirtola, H., & Räihä,
+#   K.-J. (2019). Improving the performance of eye trackers with
+#   limited spatial accuracy and low sampling rates for reading
+#   analysis by heuristic fixation-to-word mapping. Behavior Research
+#   Methods, 51(6), 2661–2687.
+#
+# https://doi.org/10.3758/s13428-018-1120-x
+# https://github.com/uta-gasp/sgwm
+######################################################################
+
+phases = [{'min_i':3, 'min_j':3, 'no_constraints':False}, # Phase 1
+          {'min_i':1, 'min_j':3, 'no_constraints':False}, # Phase 2
+          {'min_i':1, 'min_j':1, 'no_constraints':False}, # Phase 3
+          {'min_i':1, 'min_j':1, 'no_constraints':True}]  # Phase 4
+
+def merge(fixation_XY, line_Y, y_thresh=32, g_thresh=0.1, e_thresh=20):
+	n = len(fixation_XY)
+	m = len(line_Y)
+	diff_X = np.diff(fixation_XY[:, 0])
+	dist_Y = abs(np.diff(fixation_XY[:, 1]))
+	sequence_boundaries = list(np.where(np.logical_or(diff_X < 0, dist_Y > y_thresh))[0] + 1)
+	sequences = [list(range(start, end)) for start, end in zip([0]+sequence_boundaries, sequence_boundaries+[n])]
+	for phase in phases:
+		while len(sequences) > m:
+			candidate_mergers = []
+			for i in range(len(sequences)):
+				if len(sequences[i]) < phase['min_i']:
+					continue # first sequence too short, skip to next i
+				for j in range(i+1, len(sequences)):
+					if len(sequences[j]) < phase['min_j']:
+						continue # second sequence too short, skip to next j
+					candidate_XY = fixation_XY[sequences[i] + sequences[j]]
+					gradient, intercept = np.polyfit(candidate_XY[:, 0], candidate_XY[:, 1], 1)
+					residuals = candidate_XY[:, 1] - (gradient * candidate_XY[:, 0] + intercept)
+					error = np.sqrt(sum(residuals**2) / len(candidate_XY))
+					if phase['no_constraints'] or (abs(gradient) < g_thresh and error < e_thresh):
+						candidate_mergers.append((i, j, error))
+			if not candidate_mergers:
+				break # no possible mergers, break while and move to next phase
+			best_merger = np.argmin([merger[2] for merger in candidate_mergers])
+			merge_i, merge_j, _ = candidate_mergers[best_merger]
+			merged_sequence = sequences[merge_i] + sequences[merge_j]
+			sequences.append(merged_sequence)
+			del sequences[merge_j], sequences[merge_i]
+	mean_Y = [fixation_XY[sequence, 1].mean() for sequence in sequences]
+	ordered_sequence_indices = np.argsort(mean_Y)
+	for line_i, sequence_i in enumerate(ordered_sequence_indices):
+		fixation_XY[sequences[sequence_i], 1] = line_Y[line_i]
 	return fixation_XY
 
 ######################################################################

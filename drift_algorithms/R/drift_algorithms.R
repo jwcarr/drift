@@ -94,6 +94,76 @@ imitate <- function(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3) {
 }
 
 ######################################################################
+# MERGE
+#
+# Špakov, O., Istance, H., Hyrskykari, A., Siirtola, H., & Räihä,
+#   K.-J. (2019). Improving the performance of eye trackers with
+#   limited spatial accuracy and low sampling rates for reading
+#   analysis by heuristic fixation-to-word mapping. Behavior Research
+#   Methods, 51(6), 2661–2687.
+#
+# https://doi.org/10.3758/s13428-018-1120-x
+# https://github.com/uta-gasp/sgwm
+######################################################################
+
+phases <- list(list('min_i'=3, 'min_j'=3, 'no_constraints'=FALSE), # Phase 1
+	           list('min_i'=1, 'min_j'=3, 'no_constraints'=FALSE), # Phase 2
+	           list('min_i'=1, 'min_j'=1, 'no_constraints'=FALSE), # Phase 3
+	           list('min_i'=1, 'min_j'=1, 'no_constraints'=TRUE))  # Phase 4
+
+merge <- function(fixation_XY, line_Y, y_thresh=32, g_thresh=0.1, e_thresh=20) {
+	n <- nrow(fixation_XY)
+	m <- length(line_Y)
+	diff_X <- diff(fixation_XY[, 1])
+	dist_Y <- abs(diff(fixation_XY[, 2]))
+	sequence_boundaries <- which(diff_X < 0 | dist_Y > y_thresh)
+	sequence_boundaries <- append(sequence_boundaries, n)
+	sequences <- list()
+	start_of_sequence <- 1
+	for (end_of_sequence in sequence_boundaries) {
+		sequence <- list(start_of_sequence : end_of_sequence)
+		sequences <- append(sequences, sequence)
+		start_of_sequence <- end_of_sequence + 1
+	}
+	for (phase in phases) {
+		while (length(sequences) > m) {
+			candidate_mergers = matrix(nrow=0, ncol=3)
+			for (i in 1 : (length(sequences)-1)) {
+				if (length(sequences[[i]]) < phase$min_i)
+					next # first sequence too short, skip to next i
+				for (j in (i+1) : length(sequences)) {
+					if (length(sequences[[j]]) < phase$min_j)
+						next # second sequence too short, skip to next j
+					candidate_XY <- fixation_XY[unlist(c(sequences[[i]], sequences[[j]])),]
+					model <- lm(candidate_XY[,2] ~ candidate_XY[,1])
+					gradient <- abs(coef(model)[2])
+					error <- sqrt(sum(model$residuals^2) / nrow(candidate_XY))
+					if (phase$no_constraints | (gradient < g_thresh & error < e_thresh))
+						candidate_mergers <- rbind(candidate_mergers, c(i, j, error))
+				}
+			}
+			if (nrow(candidate_mergers) == 0)
+				break # no possible mergers, break while and move to next phase
+			best_merger <- which.min(candidate_mergers[, 3])
+			merge_i <- candidate_mergers[best_merger, 1]
+			merge_j <- candidate_mergers[best_merger, 2]
+			merged_sequence <- list(c(sequences[[merge_i]], sequences[[merge_j]]))
+			sequences <- append(sequences, merged_sequence)
+			sequences[[merge_j]] <- NULL ; sequences[[merge_i]] <- NULL
+		}
+	}
+	mean_Y <- integer(length(sequences))
+	for (sequence_i in 1 : length(sequences))
+		mean_Y[sequence_i] <- mean(fixation_XY[unlist(sequences[[sequence_i]]), 2])
+	ordered_sequence_indices <- order(mean_Y)
+	for (sequence_i in 1 : length(sequences)) {
+		line_i <- which(ordered_sequence_indices == sequence_i)
+		fixation_XY[unlist(sequences[[sequence_i]]), 2] <- line_Y[line_i]
+	}
+	return(fixation_XY)
+}
+
+######################################################################
 # REGRESS
 #
 # Cohen, A. L. (2013). Software for the automatic correction of

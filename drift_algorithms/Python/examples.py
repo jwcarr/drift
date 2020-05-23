@@ -29,6 +29,10 @@ imitate_output = drift_algorithms.imitate(fixation_XY.copy(), word_XY)
 print('Output from the imitate algorithm')
 print(imitate_output)
 
+merge_output = drift_algorithms.merge(fixation_XY.copy(), line_Y)
+print('Output from the merge algorithm')
+print(merge_output)
+
 regress_output = drift_algorithms.regress(fixation_XY.copy(), line_Y)
 print('Output from the regress algorithm')
 print(regress_output)

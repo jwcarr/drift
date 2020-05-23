@@ -28,6 +28,10 @@ imitate_output <- imitate(fixation_XY, word_XY)
 print('Output from the imitate algorithm')
 print(imitate_output)
 
+merge_output <- merge(fixation_XY, line_Y)
+print('Output from the merge algorithm')
+print(merge_output)
+
 regress_output <- regress(fixation_XY, line_Y)
 print('Output from the regress algorithm')
 print(regress_output)

@@ -31,6 +31,10 @@ imitate_output = imitate(fixation_XY, word_XY);
 disp('Output from the imitate algorithm');
 disp(imitate_output);
 
+merge_output = merge(fixation_XY, line_Y);
+disp('Output from the merge algorithm');
+disp(merge_output);
+
 regress_output = regress(fixation_XY, line_Y);
 disp('Output from the regress algorithm');
 disp(regress_output);
