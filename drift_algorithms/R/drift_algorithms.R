@@ -76,7 +76,7 @@ imitate <- function(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3) {
 	start_of_line <- 1
 	for (end_of_line in end_line_indices) {
 		gaze_line <- fixation_XY[start_of_line:end_of_line,]
-		mean_y <- mean(gaze_line[, 0])
+		mean_y <- mean(gaze_line[, 2])
 		lines_ordered_by_proximity <- order(abs(line_Y - mean_y))
 		nearest_line_I <- lines_ordered_by_proximity[1:n_nearest_lines]
 		line_costs <- integer(n_nearest_lines)
@@ -150,7 +150,7 @@ segment <- function(fixation_XY, line_Y) {
 	m <- length(line_Y)
 	diff_X <- diff(fixation_XY[, 1])
 	saccades_ordered_by_length <- order(diff_X)
-	line_change_indices <- saccades_ordered_by_length[1:m-1]
+	line_change_indices <- saccades_ordered_by_length[1:(m-1)]
 	current_line_i <- 1
 	for (fixation_i in 1 : n) {
 		fixation_XY[fixation_i, 2] <- line_Y[current_line_i]
