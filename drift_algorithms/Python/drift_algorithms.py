@@ -80,7 +80,7 @@ def imitate(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3):
 			candidate_line_i = nearest_line_I[candidate_i]
 			text_line = word_XY[np.where(word_XY[:, 1] == line_Y[candidate_line_i])]
 			dtw_cost, _ = dynamic_time_warping(gaze_line[:, 0:1], text_line[:, 0:1])
-			line_costs[candidate_i] = cost
+			line_costs[candidate_i] = dtw_cost
 		line_i = nearest_line_I[np.argmin(line_costs)]
 		fixation_XY[start_of_line:end_of_line, 1] = line_Y[line_i]
 		start_of_line = end_of_line
