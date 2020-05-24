@@ -55,7 +55,7 @@ cluster <- function(fixation_XY, line_Y) {
 }
 
 ######################################################################
-# IMITATE
+# COMPARE
 #
 # Lima Sanches, C., Kise, K., & Augereau, O. (2015). Eye gaze and text
 #   line matching for reading analysis. In Adjunct proceedings of the
@@ -67,7 +67,7 @@ cluster <- function(fixation_XY, line_Y) {
 # https://doi.org/10.1145/2800835.2807936
 ######################################################################
 
-imitate <- function(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3) {
+compare <- function(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3) {
 	line_Y <- unique(word_XY[, 2])
 	n <- nrow(fixation_XY)
 	diff_X <- diff(fixation_XY[, 1])
@@ -82,7 +82,7 @@ imitate <- function(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3) {
 		line_costs <- integer(n_nearest_lines)
 		for (candidate_i in 1 : n_nearest_lines) {
 			candidate_line_i <- nearest_line_I[candidate_i]
-			text_line <- word_XY[which(word_XY[, 2] == line_Y[candidate_line_i]),]
+			text_line <- word_XY[word_XY[, 2] == line_Y[candidate_line_i],]
 			dtw <- dynamic_time_warping(cbind(gaze_line[, 1]), cbind(text_line[, 1]))
 			line_costs[candidate_i] <- dtw$cost
 		}
@@ -127,7 +127,7 @@ merge <- function(fixation_XY, line_Y, y_thresh=32, g_thresh=0.1, e_thresh=20) {
 	}
 	for (phase in phases) {
 		while (length(sequences) > m) {
-			candidate_mergers = matrix(nrow=0, ncol=3)
+			candidate_mergers <- matrix(nrow=0, ncol=3)
 			for (i in 1 : (length(sequences)-1)) {
 				if (length(sequences[[i]]) < phase$min_i)
 					next # first sequence too short, skip to next i
@@ -271,7 +271,7 @@ mode <- function(values) {
 
 ######################################################################
 # Dynamic Time Warping adapted from https://github.com/talcs/simpledtw
-# This is used by the IMITATE and WARP algorithms
+# This is used by the COMPARE and WARP algorithms
 ######################################################################
 
 dynamic_time_warping <- function(sequence1, sequence2) {

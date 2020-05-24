@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% IMITATE
+% COMPARE
 %
 % Lima Sanches, C., Kise, K., & Augereau, O. (2015). Eye gaze and text
 %   line matching for reading analysis. In Adjunct proceedings of the
@@ -11,7 +11,7 @@
 % https://doi.org/10.1145/2800835.2807936
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function fixation_XY = imitate(fixation_XY, word_XY, x_thresh, n_nearest_lines)
+function fixation_XY = compare(fixation_XY, word_XY, x_thresh, n_nearest_lines)
 
 	if ~exist('x_thresh', 'var')
 		x_thresh = 512;

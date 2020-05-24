@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Dynamic Time Warping adapted from https://github.com/talcs/simpledtw
-% This is used by the IMITATE and WARP algorithms
+% This is used by the COMPARE and WARP algorithms
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [dtw_cost, dtw_path] = dynamic_time_warping(sequence1, sequence2)

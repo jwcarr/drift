@@ -18,8 +18,8 @@ def correct_drift(method, fixation_XY, passage, return_solution=False):
 		return chain(fixation_XY, passage.line_positions, return_solution=return_solution)
 	elif method == 'cluster':
 		return cluster(fixation_XY, passage.line_positions, return_solution=return_solution)
-	elif method == 'imitate':
-		return imitate(fixation_XY, passage.word_centers(), return_solution=return_solution)
+	elif method == 'compare':
+		return compare(fixation_XY, passage.word_centers(), return_solution=return_solution)
 	elif method == 'merge':
 		return merge(fixation_XY, passage.line_positions, return_solution=return_solution)
 	elif method == 'regress':
@@ -28,6 +28,8 @@ def correct_drift(method, fixation_XY, passage, return_solution=False):
 		return segment(fixation_XY, passage.line_positions, return_solution=return_solution)
 	elif method == 'VandM':
 		return VandM(fixation_XY, passage.line_positions, return_solution=return_solution)
+	elif method == 'split':
+		return split(fixation_XY, passage.line_positions, return_solution=return_solution)
 	elif method == 'warp':
 		return warp(fixation_XY, passage.word_centers(), return_solution=return_solution)
 	else:
@@ -65,7 +67,7 @@ def cluster(fixation_XY, line_Y, return_solution=False):
 		fixation_XY[fixation_i, 1] = line_Y[line_i]
 	return fixation_XY
 
-def imitate(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3, return_solution=False):
+def compare(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3, return_solution=False):
 	line_Y = np.unique(word_XY[:, 1])
 	n = len(fixation_XY)
 	diff_X = np.diff(fixation_XY[:, 0])
@@ -80,7 +82,7 @@ def imitate(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3, return_soluti
 		line_costs = np.zeros(n_nearest_lines)
 		for candidate_i in range(n_nearest_lines):
 			candidate_line_i = nearest_line_I[candidate_i]
-			text_line = word_XY[np.where(word_XY[:, 1] == line_Y[candidate_line_i])]
+			text_line = word_XY[word_XY[:, 1] == line_Y[candidate_line_i]]
 			dtw_cost, _ = dynamic_time_warping(gaze_line[:, 0:1], text_line[:, 0:1])
 			line_costs[candidate_i] = dtw_cost
 		line_i = nearest_line_I[np.argmin(line_costs)]

@@ -51,7 +51,7 @@ def cluster(fixation_XY, line_Y):
 	return fixation_XY
 
 ######################################################################
-# IMITATE
+# COMPARE
 #
 # Lima Sanches, C., Kise, K., & Augereau, O. (2015). Eye gaze and text
 #   line matching for reading analysis. In Adjunct proceedings of the
@@ -63,7 +63,7 @@ def cluster(fixation_XY, line_Y):
 # https://doi.org/10.1145/2800835.2807936
 ######################################################################
 
-def imitate(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3):
+def compare(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3):
 	line_Y = np.unique(word_XY[:, 1])
 	n = len(fixation_XY)
 	diff_X = np.diff(fixation_XY[:, 0])
@@ -78,7 +78,7 @@ def imitate(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3):
 		line_costs = np.zeros(n_nearest_lines)
 		for candidate_i in range(n_nearest_lines):
 			candidate_line_i = nearest_line_I[candidate_i]
-			text_line = word_XY[np.where(word_XY[:, 1] == line_Y[candidate_line_i])]
+			text_line = word_XY[word_XY[:, 1] == line_Y[candidate_line_i]]
 			dtw_cost, _ = dynamic_time_warping(gaze_line[:, 0:1], text_line[:, 0:1])
 			line_costs[candidate_i] = dtw_cost
 		line_i = nearest_line_I[np.argmin(line_costs)]
@@ -236,7 +236,7 @@ def mode(values):
 
 ######################################################################
 # Dynamic Time Warping adapted from https://github.com/talcs/simpledtw
-# This is used by the IMITATE and WARP algorithms
+# This is used by the COMPARE and WARP algorithms
 ######################################################################
 
 def dynamic_time_warping(sequence1, sequence2):

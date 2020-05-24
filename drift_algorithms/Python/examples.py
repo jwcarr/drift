@@ -7,7 +7,7 @@ fixation_XY = np.array([[395, 150], [479, 152], [619, 155], [670, 168], [726, 14
 # 1D array representing the Y coordinates of the lines of text
 line_Y = np.array([155, 219, 283, 347], dtype=int)
 
-# Matrix representing the XY coordinate of the centers of the words (only used by imitate and warp)
+# Matrix representing the XY coordinate of the centers of the words (only used by compare and warp)
 word_XY = np.array([[400, 155], [496, 155], [592, 155], [672, 155], [744, 155], [896, 155], [1080, 155], [392, 219], [496, 219], [592, 219], [704, 219], [808, 219], [896, 219], [1000, 219], [1120, 219], [384, 283], [496, 283], [640, 283], [720, 283], [824, 283], [952, 283], [1072, 283], [400, 347], [504, 347], [616, 347]], dtype=int)
 
 print('Original fixation sequence')
@@ -25,9 +25,9 @@ cluster_output = drift_algorithms.cluster(fixation_XY.copy(), line_Y)
 print('Output from the cluster algorithm')
 print(cluster_output)
 
-imitate_output = drift_algorithms.imitate(fixation_XY.copy(), word_XY)
-print('Output from the imitate algorithm')
-print(imitate_output)
+compare_output = drift_algorithms.compare(fixation_XY.copy(), word_XY)
+print('Output from the compare algorithm')
+print(compare_output)
 
 merge_output = drift_algorithms.merge(fixation_XY.copy(), line_Y)
 print('Output from the merge algorithm')

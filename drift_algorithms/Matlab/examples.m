@@ -9,7 +9,7 @@ fixation_XY = [395, 150; 479, 152; 619, 155; 670, 168; 726, 142; 912, 161; 1086,
 % Vector representing the Y coordinates of the lines of text
 line_Y = [155, 219, 283, 347];
 
-% Matrix representing the XY coordinate of the centers of the words (only used by imitate and warp)
+% Matrix representing the XY coordinate of the centers of the words (only used by compare and warp)
 word_XY = [400, 155; 496, 155; 592, 155; 672, 155; 744, 155; 896, 155; 1080, 155; 392, 219; 496, 219; 592, 219; 704, 219; 808, 219; 896, 219; 1000, 219; 1120, 219; 384, 283; 496, 283; 640, 283; 720, 283; 824, 283; 952, 283; 1072, 283; 400, 347; 504, 347; 616, 347];
 
 disp('Original fixation sequence');
@@ -27,9 +27,9 @@ cluster_output = cluster(fixation_XY, line_Y);
 disp('Output from the cluster algorithm');
 disp(cluster_output);
 
-imitate_output = imitate(fixation_XY, word_XY);
-disp('Output from the imitate algorithm');
-disp(imitate_output);
+compare_output = compare(fixation_XY, word_XY);
+disp('Output from the compare algorithm');
+disp(compare_output);
 
 merge_output = merge(fixation_XY, line_Y);
 disp('Output from the merge algorithm');
