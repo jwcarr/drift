@@ -40,9 +40,9 @@ segment_output <- segment(fixation_XY, line_Y)
 print('Output from the segment algorithm')
 print(segment_output)
 
-VandM_output <- VandM(fixation_XY, line_Y)
-print('Output from the VandM algorithm')
-print(VandM_output)
+split_output <- split(fixation_XY, line_Y)
+print('Output from the split algorithm')
+print(split_output)
 
 warp_output <- warp(fixation_XY, word_XY)
 print('Output from the warp algorithm')

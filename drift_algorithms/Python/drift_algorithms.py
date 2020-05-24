@@ -202,14 +202,16 @@ def segment(fixation_XY, line_Y):
 	return fixation_XY
 
 ######################################################################
-# VandM
+# SPLIT
 ######################################################################
 
-def VandM(fixation_XY, line_Y, sd_thresh=2):
+def split(fixation_XY, line_Y):
 	n = len(fixation_XY)
 	diff_X = np.diff(fixation_XY[:, 0])
-	x_thresh = np.median(diff_X) - sd_thresh * np.std(diff_X)
-	end_line_indices = list(np.where(diff_X < x_thresh)[0] + 1)
+	clusters = KMeans(2).fit_predict(diff_X.reshape(-1, 1))
+	centers = [diff_X[clusters == 0].mean(), diff_X[clusters == 1].mean()]
+	sweep_marker = np.argmin(centers)
+	end_line_indices = list(np.where(clusters == sweep_marker)[0] + 1)
 	end_line_indices.append(n)
 	start_of_line = 0
 	for end_of_line in end_line_indices:

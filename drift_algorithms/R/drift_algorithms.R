@@ -230,14 +230,15 @@ segment <- function(fixation_XY, line_Y) {
 }
 
 ######################################################################
-# VandM
+# SPLIT
 ######################################################################
 
-VandM <- function(fixation_XY, line_Y, sd_thresh=2) {
+split <- function(fixation_XY, line_Y) {
 	n <- nrow(fixation_XY)
 	diff_X <- diff(fixation_XY[, 1])
-	x_thresh <- median(diff_X) - sd_thresh * sd(diff_X)
-	end_line_indices <- which(diff_X < x_thresh)
+	clusters <- kmeans(diff_X, 2)
+	sweep_marker <- which.min(clusters$centers)
+	end_line_indices <- which(clusters$cluster == sweep_marker)
 	end_line_indices <- append(end_line_indices, n)
 	start_of_line <- 1
 	for (end_of_line in end_line_indices) {

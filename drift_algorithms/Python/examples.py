@@ -41,9 +41,9 @@ segment_output = drift_algorithms.segment(fixation_XY.copy(), line_Y)
 print('Output from the segment algorithm')
 print(segment_output)
 
-VandM_output = drift_algorithms.VandM(fixation_XY.copy(), line_Y)
-print('Output from the VandM algorithm')
-print(VandM_output)
+split_output = drift_algorithms.split(fixation_XY.copy(), line_Y)
+print('Output from the split algorithm')
+print(split_output)
 
 warp_output = drift_algorithms.warp(fixation_XY.copy(), word_XY)
 print('Output from the warp algorithm')

@@ -26,8 +26,6 @@ def correct_drift(method, fixation_XY, passage, return_solution=False):
 		return regress(fixation_XY, passage.line_positions, return_solution=return_solution)
 	elif method == 'segment':
 		return segment(fixation_XY, passage.line_positions, return_solution=return_solution)
-	elif method == 'VandM':
-		return VandM(fixation_XY, passage.line_positions, return_solution=return_solution)
 	elif method == 'split':
 		return split(fixation_XY, passage.line_positions, return_solution=return_solution)
 	elif method == 'warp':
@@ -167,11 +165,13 @@ def segment(fixation_XY, line_Y, return_solution=False):
 			current_line_i += 1
 	return fixation_XY
 
-def VandM(fixation_XY, line_Y, sd_thresh=2, return_solution=False):
+def split(fixation_XY, line_Y, return_solution=False):
 	n = len(fixation_XY)
 	diff_X = np.diff(fixation_XY[:, 0])
-	x_thresh = np.median(diff_X) - sd_thresh * np.std(diff_X)
-	end_line_indices = list(np.where(diff_X < x_thresh)[0] + 1)
+	clusters = KMeans(2).fit_predict(diff_X.reshape(-1, 1))
+	centers = [diff_X[clusters == 0].mean(), diff_X[clusters == 1].mean()]
+	sweep_marker = np.argmin(centers)
+	end_line_indices = list(np.where(clusters == sweep_marker)[0] + 1)
 	end_line_indices.append(n)
 	start_of_line = 0
 	for end_of_line in end_line_indices:

@@ -1,17 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% VandM
+% SPLIT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function fixation_XY = VandM(fixation_XY, line_Y, sd_thresh)
-
-	if ~exist('sd_thresh', 'var')
-		sd_thresh = 2;
-	end
+function fixation_XY = split(fixation_XY, line_Y)
 
 	n = size(fixation_XY, 1);
 	diff_X = diff(fixation_XY(:, 1));
-	x_thresh = median(diff_X) - sd_thresh * std(diff_X);
-	end_line_indices = find(diff_X < x_thresh).';
+	[clusters, centers] = kmeans(diff_X, 2);
+	[~, sweep_marker] = min(centers);
+	end_line_indices = find(clusters == sweep_marker).';
 	end_line_indices = [end_line_indices, n];
 	start_of_line = 1;
 	for end_of_line = end_line_indices
