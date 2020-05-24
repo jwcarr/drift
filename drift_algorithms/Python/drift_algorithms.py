@@ -113,8 +113,9 @@ def merge(fixation_XY, line_Y, y_thresh=32, g_thresh=0.1, e_thresh=20):
 	sequences = [list(range(start, end)) for start, end in zip([0]+sequence_boundaries, sequence_boundaries+[n])]
 	for phase in phases:
 		while len(sequences) > m:
-			candidate_mergers = []
-			for i in range(len(sequences)):
+			best_merger = None
+			best_error = np.inf
+			for i in range(len(sequences)-1):
 				if len(sequences[i]) < phase['min_i']:
 					continue # first sequence too short, skip to next i
 				for j in range(i+1, len(sequences)):
@@ -125,11 +126,12 @@ def merge(fixation_XY, line_Y, y_thresh=32, g_thresh=0.1, e_thresh=20):
 					residuals = candidate_XY[:, 1] - (gradient * candidate_XY[:, 0] + intercept)
 					error = np.sqrt(sum(residuals**2) / len(candidate_XY))
 					if phase['no_constraints'] or (abs(gradient) < g_thresh and error < e_thresh):
-						candidate_mergers.append((i, j, error))
-			if not candidate_mergers:
+						if error < best_error:
+							best_merger = (i, j)
+							best_error = error
+			if not best_merger:
 				break # no possible mergers, break while and move to next phase
-			best_merger = np.argmin([merger[2] for merger in candidate_mergers])
-			merge_i, merge_j, _ = candidate_mergers[best_merger]
+			merge_i, merge_j = best_merger
 			merged_sequence = sequences[merge_i] + sequences[merge_j]
 			sequences.append(merged_sequence)
 			del sequences[merge_j], sequences[merge_i]

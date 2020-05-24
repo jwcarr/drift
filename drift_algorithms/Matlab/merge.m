@@ -43,7 +43,8 @@ function fixation_XY = merge(fixation_XY, line_Y, y_thresh, g_thresh, e_thresh)
 	end
 	for phase = phases
 		while length(sequences) > m
-			candidate_mergers = zeros(0, 3);
+			best_merger = [];
+			best_error = inf;
 			for i = 1 : length(sequences)-1
 				if length(sequences{i}) < phase.min_i
 					continue; % first sequence too short, skip to next i
@@ -55,19 +56,20 @@ function fixation_XY = merge(fixation_XY, line_Y, y_thresh, g_thresh, e_thresh)
 					candidate_XY = fixation_XY([sequences{i}, sequences{j}], :);
 					coefficients = polyfit(candidate_XY(:, 1), candidate_XY(:, 2), 1);
 					residuals = candidate_XY(:, 2) - (coefficients(1) * candidate_XY(:, 1) + coefficients(2));
-					gradient = abs(coefficients(1));
-					error = sqrt(sum(residuals.^2) / size(candidate_XY, 1));
-					if phase.no_constraints || (abs(gradient) < g_thresh && error < e_thresh)
-						candidate_mergers = [candidate_mergers; [i, j, error]];
+					g = abs(coefficients(1));
+					e = sqrt(sum(residuals.^2) / size(candidate_XY, 1));
+					if phase.no_constraints || (g < g_thresh && e < e_thresh)
+						if e < best_error
+							best_merger = [i, j];
+							best_error = e;
+						end
 					end
 				end
 			end
-			if size(candidate_mergers, 1) == 0
+			if isempty(best_merger)
 				break; % no possible mergers, break while and move to next phase
 			end
-			[~, best_merger] = min(candidate_mergers(:, 3));
-			merge_i = candidate_mergers(best_merger, 1);
-			merge_j = candidate_mergers(best_merger, 2);
+			merge_i = best_merger(1); merge_j = best_merger(2);
 			merged_sequence = [sequences{merge_i}, sequences{merge_j}];
 			sequences = [sequences, merged_sequence];
 			sequences(merge_j) = []; sequences(merge_i) = [];

@@ -127,7 +127,8 @@ merge <- function(fixation_XY, line_Y, y_thresh=32, g_thresh=0.1, e_thresh=20) {
 	}
 	for (phase in phases) {
 		while (length(sequences) > m) {
-			candidate_mergers <- matrix(nrow=0, ncol=3)
+			best_merger <- c()
+			best_error <- Inf
 			for (i in 1 : (length(sequences)-1)) {
 				if (length(sequences[[i]]) < phase$min_i)
 					next # first sequence too short, skip to next i
@@ -138,15 +139,17 @@ merge <- function(fixation_XY, line_Y, y_thresh=32, g_thresh=0.1, e_thresh=20) {
 					model <- lm(candidate_XY[,2] ~ candidate_XY[,1])
 					gradient <- abs(coef(model)[2])
 					error <- sqrt(sum(model$residuals^2) / nrow(candidate_XY))
-					if (phase$no_constraints | (gradient < g_thresh & error < e_thresh))
-						candidate_mergers <- rbind(candidate_mergers, c(i, j, error))
+					if (phase$no_constraints | (gradient < g_thresh & error < e_thresh)) {
+						if (error < best_error) {
+							best_merger <- c(i, j)
+							best_error <- error
+						}
+					}
 				}
 			}
-			if (nrow(candidate_mergers) == 0)
+			if (length(best_merger) == 0)
 				break # no possible mergers, break while and move to next phase
-			best_merger <- which.min(candidate_mergers[, 3])
-			merge_i <- candidate_mergers[best_merger, 1]
-			merge_j <- candidate_mergers[best_merger, 2]
+			merge_i <- best_merger[1] ; merge_j <- best_merger[2]
 			merged_sequence <- list(c(sequences[[merge_i]], sequences[[merge_j]]))
 			sequences <- append(sequences, merged_sequence)
 			sequences[[merge_j]] <- NULL ; sequences[[merge_i]] <- NULL
