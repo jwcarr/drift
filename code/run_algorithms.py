@@ -19,8 +19,8 @@ def run_algorithm(sample_data, passages, output_dir, method):
 			print('-', participant_id)
 			fixation_sequence = eyekit.FixationSequence(fixations)
 			fixation_XY = fixation_sequence.XYarray(include_discards=True)
-			algorithms.correct_drift(method, fixation_XY, passages[passage_id])
-			for fixation, (x, y) in zip(fixation_sequence, fixation_XY):
+			correction = algorithms.correct_drift(method, fixation_XY, passages[passage_id])
+			for fixation, (x, y) in zip(fixation_sequence, correction):
 				fixation.y = y
 
 			output_data[passage_id][participant_id] = fixation_sequence.tolist(include_discards=True)

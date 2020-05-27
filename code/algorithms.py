@@ -12,6 +12,7 @@ from scipy.optimize import minimize
 from scipy.stats import norm
 
 def correct_drift(method, fixation_XY, passage, return_solution=False):
+	fixation_XY = fixation_XY.copy()
 	if method == 'attach':
 		return attach(fixation_XY, passage.line_positions, return_solution=return_solution)
 	elif method == 'chain':
