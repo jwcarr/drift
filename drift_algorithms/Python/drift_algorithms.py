@@ -110,7 +110,9 @@ def merge(fixation_XY, line_Y, y_thresh=32, g_thresh=0.1, e_thresh=20):
 	diff_X = np.diff(fixation_XY[:, 0])
 	dist_Y = abs(np.diff(fixation_XY[:, 1]))
 	sequence_boundaries = list(np.where(np.logical_or(diff_X < 0, dist_Y > y_thresh))[0] + 1)
-	sequences = [list(range(start, end)) for start, end in zip([0]+sequence_boundaries, sequence_boundaries+[n])]
+	sequence_starts = [0] + sequence_boundaries
+	sequence_ends = sequence_boundaries + [n]
+	sequences = [list(range(start, end)) for start, end in zip(sequence_starts, sequence_ends)]
 	for phase in phases:
 		while len(sequences) > m:
 			best_merger = None
@@ -129,7 +131,7 @@ def merge(fixation_XY, line_Y, y_thresh=32, g_thresh=0.1, e_thresh=20):
 						if error < best_error:
 							best_merger = (i, j)
 							best_error = error
-			if not best_merger:
+			if best_merger is None:
 				break # no possible mergers, break while and move to next phase
 			merge_i, merge_j = best_merger
 			merged_sequence = sequences[merge_i] + sequences[merge_j]
