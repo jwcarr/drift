@@ -53,6 +53,9 @@ def format_svg_labels(svg_file_path, monospace=[], arbitrary_replacements={}):
 	with open(svg_file_path, mode='r', encoding='utf-8') as file:
 		svg = file.read()
 	svg = re.sub(r'font-family:.*?;', 'font-family:Helvetica Neue;', svg)
+	for check in re.finditer('<text.*?✔</text>', svg):
+		if check:
+			svg = svg.replace(check.group(0), check.group(0).replace('Helvetica Neue', 'Menlo'))
 	for word in monospace:
 		for matched_line in re.finditer('<text.*?%s</text>'%word, svg):
 			if matched_line:
