@@ -5,7 +5,7 @@ Code for plotting the simulation results.
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.transforms as transforms
-import eyekit
+from matplotlib import gridspec
 import tools
 import defaults
 
@@ -13,7 +13,7 @@ plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
 plt.rcParams.update({'font.size': 7})
 
 
-def plot_results(layout, filepath, n_rows=2, figsize=None):
+def plot_results(filepath, layout, n_rows=2, figsize=None):
 	n_cols = len(layout) // n_rows
 	if len(layout) % n_rows:
 		n_cols += 1
@@ -57,7 +57,43 @@ def plot_results(layout, filepath, n_rows=2, figsize=None):
 		tools.convert_svg(filepath, filepath)
 
 
+def plot_invariance(filepath, show_percentages=False):
+	accuracy = np.zeros((len(defaults.algorithms), len(defaults.factors)), dtype=float)
+	invariance = np.zeros((len(defaults.algorithms), len(defaults.factors)), dtype=bool)
+	for f, factor in enumerate(defaults.factors):
+		results = tools.unpickle('../data/algorithm_performance/%s.pkl'%factor)
+		for a, algorithm in enumerate(defaults.algorithms):
+			accuracy[a, f] = results[a].mean() * 100
+			if np.all(results[a] == 1.0):
+				invariance[a, f] = True
+	fig = plt.figure(figsize=(3.3, 2))
+	gs = gridspec.GridSpec(1, 2, width_ratios=[20, 1])
+	heatmap, legend = plt.subplot(gs[0]), plt.subplot(gs[1])
+	im = heatmap.pcolor(accuracy, vmin=50, vmax=100, cmap='Greys')
+	plt.colorbar(im, cax=legend)
+	for (a, f), invariant in np.ndenumerate(invariance):
+		if invariant:
+			heatmap.text(f+0.5, a+0.5, '✔', color='white', ha='center', va='center', fontsize=12)
+		elif show_percentages:
+			heatmap.text(f+0.5, a+0.5, str(round(accuracy[a, f], 2)), color='white', ha='center', va='center')
+	heatmap.invert_yaxis()
+	heatmap.set_xticks(np.arange(5)+0.5)
+	heatmap.set_xticklabels(['Noise', 'Slope', 'Shift', 'Within', 'Between'])
+	heatmap.set_yticks(np.arange(9)+0.5)
+	heatmap.set_yticklabels(defaults.algorithms)
+	heatmap.tick_params(bottom=False, left=False)
+	legend.set_ylabel('Mean accuracy (%)', labelpad=-38)
+	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
+	fig.savefig(filepath, format='svg')
+	tools.format_svg_labels(filepath, defaults.algorithms)
+	if not filepath.endswith('.svg'):
+		tools.convert_svg(filepath, filepath)
+
+
 if __name__ == '__main__':
 
-	# plot_results(['noise', 'legend', 'slope', 'shift', 'regression_within', 'regression_between'], '../visuals/simulation_results.pdf', 3, (5.5, 7))
-	plot_results(['noise', 'legend', 'slope', 'shift', 'regression_within', 'regression_between'], '../manuscript/figs/simulation_results.eps', 3, (6.8, 7))
+	# plot_results('../visuals/simulation_results.pdf', ['noise', 'slope', 'shift', 'regression_within', 'regression_between', 'legend'], 2, (7, 5))
+	plot_results('../manuscript/figs/simulation_results.eps', ['noise', 'legend', 'slope', 'shift', 'regression_within', 'regression_between'], 3, (6.8, 7))
+	
+	# plot_invariance('../visuals/invariance.pdf')
+	plot_invariance('../manuscript/figs/simulation_invariance.eps')
