@@ -149,7 +149,7 @@ def regress(fixation_XY, line_Y, k_bounds=(-0.1, 0.1), o_bounds=(-50, 50), s_bou
 			return density.argmax(axis=1)
 		return -sum(density.max(axis=1))
 
-	best_fit = minimize(fit_lines, [0, 0, 0])
+	best_fit = minimize(fit_lines, [0, 0, 0], method='powell')
 	line_assignments = fit_lines(best_fit.x, True)
 	for fixation_i, line_i in enumerate(line_assignments):
 		fixation_XY[fixation_i, 1] = line_Y[line_i]
