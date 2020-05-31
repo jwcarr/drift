@@ -44,13 +44,14 @@ class ReadingScenario:
 		return eyekit.Passage(lines, first_character_position=(0, 0), character_spacing=self.character_spacing, line_spacing=self.line_spacing)
 
 	def _generate_line_sequence(self, passage, line_i, partial_reading=False, inherited_line_y_for_shift=None):
+		x_margin, y_margin = passage.first_character_position
 		max_line_width = passage.character_spacing * passage.n_cols
 		if partial_reading:
-			start_point = np.random.randint(0, max_line_width//2)
-			end_point = np.random.randint(max_line_width//2, max_line_width)
+			start_point = np.random.randint(0, max_line_width//2) + x_margin
+			end_point = np.random.randint(max_line_width//2, max_line_width) + x_margin
 		else:
-			start_point = 0
-			end_point = max_line_width
+			start_point = x_margin
+			end_point = max_line_width + x_margin
 		line_X = []
 		for word_i, word in enumerate(passage.iter_words(line_n=line_i)):
 			x_word_center = word[0].x + ((word[-1].x - word[0].x) / 2)
@@ -59,18 +60,18 @@ class ReadingScenario:
 			x_value = int(np.random.triangular(word[0].x, x_word_center, word[-1].x+1))
 			line_X.append(x_value)
 			if word_i > 0 and np.random.random() < self.regression_within:
-				x_regression = int(np.random.triangular(0, word[0].x, word[0].x))
+				x_regression = int(np.random.triangular(x_margin, word[0].x, word[0].x))
 				line_X.append(x_regression)
-		line_X = np.array(line_X, dtype=int)
-		line_y = passage.line_positions[line_i]
+		line_X = np.array(line_X, dtype=int) - x_margin
+		line_y = passage.line_positions[line_i] - y_margin
 		line_Y = np.random.normal(line_y, self.noise, len(line_X))
 		line_Y += line_X * self.slope
 		if inherited_line_y_for_shift:
-			line_Y += (inherited_line_y_for_shift) * self.shift
+			line_Y += (inherited_line_y_for_shift - y_margin) * self.shift
 		else:
 			line_Y += line_y * self.shift
 		line_Y = np.array(list(map(round, line_Y)), dtype=int)
-		return line_X, line_Y, [line_y]*len(line_Y)
+		return line_X + x_margin, line_Y + y_margin, [line_y]*len(line_Y)
 
 	def _generate_fixation_sequence(self, passage):
 		X, Y, intended_Y = [], [], []
