@@ -154,7 +154,7 @@ def multidimensional_scaling_analysis(algorithm_distances, methods, random_seed=
 	return methods, min_max_normalize(positions)
 
 def plot_analyses(ahc_solution, mds_solution, filepath):
-	fig, axes = plt.subplots(2, 1, figsize=(3.3, 5))
+	fig, axes = plt.subplots(1, 2, figsize=(6.8, 2.5))
 
 	# Plot AHC clustering
 	ahc_methods, linkage_matrix = ahc_solution
