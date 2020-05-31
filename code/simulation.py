@@ -90,14 +90,16 @@ class ReadingScenario:
 					intended_Y.insert(-rand_insert_point, ri)
 		return np.column_stack([X, Y]), np.array(intended_Y, dtype=int)
 
-	def simulate(self):
+	def simulate(self, passage=None):
 		'''
-		Generate a random passage and generate a fixation sequence over that
-		passage using the distortion, regression, and passage parameters of
-		the reading scenario. Returns the passage, fixation sequence, and the
-		"correct" lines numbers for each fixation.
+		Generates a fixation sequence over a passage using the distortion
+		and regression parameters of the reading scenario. If no passsage
+		is provided, a random one is generated according to the passage
+		parameters of the reading scenario. Returns the passage, fixation
+		sequence, and "correct" lines numbers.
 		'''
-		passage = self._generate_passage()
+		if passage is None:
+			passage = self._generate_passage()
 		fixation_XY, intended_Y = self._generate_fixation_sequence(passage)
 		return passage, fixation_XY, intended_Y
 
