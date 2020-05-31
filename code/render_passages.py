@@ -20,7 +20,8 @@ def render(passages, input_file, output_dir):
 			diagram = eyekit.Diagram(1920, 1080)
 			diagram.render_passage(passages[passage_id], 28, color='gray')
 			diagram.render_fixations(fixation_sequence, include_discards=True)
-			diagram.save(output_dir + '%s_%s.pdf' % (participant_id, passage_id), crop_to_passage=True)
+			diagram.crop_to_passage()
+			diagram.save(output_dir + '%s_%s.pdf' % (participant_id, passage_id))
 
 def comparison_render(passages, input_file1, input_file2, output_dir):
 	print('RENDERING: %s against %s' % (input_file1, input_file2))
@@ -34,12 +35,12 @@ def comparison_render(passages, input_file1, input_file2, output_dir):
 			print('-', participant_id)
 			fixation_sequence1 = eyekit.FixationSequence(fixations)
 			fixation_sequence2 = eyekit.FixationSequence(input_data2[passage_id][participant_id])
-
 			diagram = eyekit.Diagram(1920, 1080)
 			diagram.render_passage(passages[passage_id], 28, color='gray')
 			diagram.render_fixation_comparison(fixation_sequence1, fixation_sequence2, color_match='black', color_mismatch='red')
+			diagram.crop_to_passage()
 			output_path = output_dir + '%s_%s.pdf'%(participant_id, passage_id)
-			diagram.save(output_path, crop_to_passage=True)
+			diagram.save(output_path)
 
 
 if __name__ == '__main__':
