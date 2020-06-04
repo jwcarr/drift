@@ -23,5 +23,5 @@ good_algorithms = ['attach', 'chain', 'cluster', 'merge', 'regress', 'segment', 
 factors = {'noise':('Noise distortion', (0, 40)),
            'slope':('Slope distortion', (-0.1, 0.1)),
            'shift':('Shift distortion', (-0.2, 0.2)),
-           'regression_within':('Within-line regression', (0, 1)),
-           'regression_between':('Between-line regression', (0, 1))}
+           'regression_within':('Probability of within-line regression', (0, 1)),
+           'regression_between':('Probability of between-line regression', (0, 1))}
