@@ -13,7 +13,7 @@ plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
 plt.rcParams.update({'font.size': 7})
 
 
-def plot_results(filepath, layout, n_rows=2, figsize=None):
+def plot_results(filepath, layout, n_rows=2, figsize=None, stagger=0):
 	n_cols = len(layout) // n_rows
 	if len(layout) % n_rows:
 		n_cols += 1
@@ -25,7 +25,9 @@ def plot_results(filepath, layout, n_rows=2, figsize=None):
 	for factor, (r, c) in zip(layout, np.ndindex((n_rows, n_cols))):
 		if factor == 'legend':
 			axes[r][c].axis('off')
-			axes[r][c].legend(legend_patches, defaults.algorithms, loc='center', frameon=False, markerscale=2)
+			legend = axes[r][c].legend(legend_patches, defaults.algorithms, loc='center', frameon=False)
+			for line in legend.get_lines():
+				line.set_linewidth(2.5)
 			continue
 		results = tools.unpickle('../data/algorithm_performance/%s.pkl'%factor)
 		results *= 100
@@ -33,8 +35,9 @@ def plot_results(filepath, layout, n_rows=2, figsize=None):
 		factor_space = np.linspace(factor_min_val, factor_max_val, len(results[0]))
 		for method_i, method in enumerate(defaults.algorithms):
 			means = results[method_i, :].mean(axis=1)
-			staggered_means = means - method_i + (len(defaults.algorithms)-1)/2
-			line, = axes[r][c].plot(factor_space, staggered_means, color=defaults.colors[method], label=method, linewidth=1.2)
+			staggering = (method_i - (len(defaults.algorithms)-1) / 2) * stagger
+			staggered_means = means - staggering
+			line, = axes[r][c].plot(factor_space, staggered_means, color=defaults.colors[method], label=method, linewidth=1)
 			if r == 0 and c == 0:
 				legend_patches.append(line)
 			axes[r][c].set_ylim(-5, 105)
@@ -92,8 +95,8 @@ def plot_invariance(filepath, show_percentages=False):
 
 if __name__ == '__main__':
 
-	# plot_results('../visuals/simulation_results.pdf', ['noise', 'slope', 'shift', 'regression_within', 'regression_between', 'legend'], 2, (7, 5))
-	plot_results('../manuscript/figs/simulation_results.eps', ['noise', 'legend', 'slope', 'shift', 'regression_within', 'regression_between'], 3, (6.8, 7))
+	plot_results('../visuals/simulation_results.pdf', ['noise', 'slope', 'shift', 'regression_within', 'regression_between', 'legend'], 2, (7, 5), 0.75)
+	plot_results('../manuscript/figs/simulation_results.eps', ['noise', 'legend', 'slope', 'shift', 'regression_within', 'regression_between'], 3, (6.8, 7), 0.75)
 	
-	# plot_invariance('../visuals/invariance.pdf')
+	plot_invariance('../visuals/invariance.pdf')
 	plot_invariance('../manuscript/figs/simulation_invariance.eps')
