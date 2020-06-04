@@ -25,3 +25,13 @@ factors = {'noise':('Noise distortion', (0, 40)),
            'shift':('Shift distortion', (-0.2, 0.2)),
            'regression_within':('Probability of within-line regression', (0, 1)),
            'regression_between':('Probability of between-line regression', (0, 1))}
+
+lorem_ipsum_text = ['Lorem ipsum dolor sit amet, consectetur',
+                    'adipiscing elit, sed do eiusmod tempor',
+                    'incididunt ut labore.']
+
+lorem_ipsum_XY = [[395, 150], [479, 152], [619, 166], [670, 188], [726, 157], [899, 145],
+                  [401, 221], [499, 230], [594, 228], [655, 229], [806, 231], [896, 216],
+                  [379, 270], [472, 273], [553, 289], [645, 296]]
+
+illustration_colors  = ['#000000', '#E32823', '#205E84']
