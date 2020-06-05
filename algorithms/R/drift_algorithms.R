@@ -107,9 +107,9 @@ compare <- function(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3) {
 ######################################################################
 
 phases <- list(list('min_i'=3, 'min_j'=3, 'no_constraints'=FALSE), # Phase 1
-	           list('min_i'=1, 'min_j'=3, 'no_constraints'=FALSE), # Phase 2
-	           list('min_i'=1, 'min_j'=1, 'no_constraints'=FALSE), # Phase 3
-	           list('min_i'=1, 'min_j'=1, 'no_constraints'=TRUE))  # Phase 4
+               list('min_i'=1, 'min_j'=3, 'no_constraints'=FALSE), # Phase 2
+               list('min_i'=1, 'min_j'=1, 'no_constraints'=FALSE), # Phase 3
+               list('min_i'=1, 'min_j'=1, 'no_constraints'=TRUE))  # Phase 4
 
 merge <- function(fixation_XY, line_Y, y_thresh=32, g_thresh=0.1, e_thresh=20) {
 	n <- nrow(fixation_XY)
