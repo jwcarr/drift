@@ -1,9 +1,9 @@
 '''
 If you are looking for the drift algorithms, please check the
-drift_algorithms directory, which contains easier to read versions
-written in Python, Matlab, and R. This file contains Python versions
-of the algorithms that are slightly adapted to our evaluation
-pipelines.
+"algorithms" directory at the top level of this repo, which contains
+easier to read versions written in Python, Matlab, and R. This file
+contains versions of the algorithms that are adapted to our evaluation
+and visualization pipelines.
 '''
 
 import numpy as np
@@ -11,28 +11,16 @@ from sklearn.cluster import KMeans
 from scipy.optimize import minimize
 from scipy.stats import norm
 
-def correct_drift(method, fixation_XY, passage, return_solution=False):
+def correct_drift(method, fixation_XY, passage, return_solution=False, **params):
 	fixation_XY = fixation_XY.copy()
-	if method == 'attach':
-		return attach(fixation_XY, passage.line_positions, return_solution=return_solution)
-	elif method == 'chain':
-		return chain(fixation_XY, passage.line_positions, return_solution=return_solution)
-	elif method == 'cluster':
-		return cluster(fixation_XY, passage.line_positions, return_solution=return_solution)
-	elif method == 'compare':
-		return compare(fixation_XY, passage.word_centers(), return_solution=return_solution)
-	elif method == 'merge':
-		return merge(fixation_XY, passage.line_positions, return_solution=return_solution)
-	elif method == 'regress':
-		return regress(fixation_XY, passage.line_positions, return_solution=return_solution)
-	elif method == 'segment':
-		return segment(fixation_XY, passage.line_positions, return_solution=return_solution)
-	elif method == 'split':
-		return split(fixation_XY, passage.line_positions, return_solution=return_solution)
-	elif method == 'warp':
-		return warp(fixation_XY, passage.word_centers(), return_solution=return_solution)
+	if method in ['attach', 'chain', 'cluster', 'merge', 'regress', 'segment', 'split']:
+		second_argument = passage.line_positions
+	elif method in ['compare', 'warp']:
+		second_argument = passage.word_centers()
 	else:
 		raise ValueError('Invalid method')
+	function = globals()[method]
+	return function(fixation_XY, second_argument, return_solution=return_solution, **params)
 
 def attach(fixation_XY, line_Y, return_solution=False):
 	n = len(fixation_XY)
