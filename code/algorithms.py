@@ -27,6 +27,8 @@ def attach(fixation_XY, line_Y, return_solution=False):
 	for fixation_i in range(n):
 		line_i = np.argmin(abs(line_Y - fixation_XY[fixation_i, 1]))
 		fixation_XY[fixation_i, 1] = line_Y[line_i]
+	if return_solution:
+		return fixation_XY, None
 	return fixation_XY
 
 def chain(fixation_XY, line_Y, x_thresh=192, y_thresh=32, return_solution=False):
@@ -41,6 +43,8 @@ def chain(fixation_XY, line_Y, x_thresh=192, y_thresh=32, return_solution=False)
 		line_i = np.argmin(abs(line_Y - mean_y))
 		fixation_XY[start_of_chain:end_of_chain, 1] = line_Y[line_i]
 		start_of_chain = end_of_chain
+	if return_solution:
+		return fixation_XY, end_chain_indices
 	return fixation_XY
 
 def cluster(fixation_XY, line_Y, return_solution=False):
@@ -52,6 +56,8 @@ def cluster(fixation_XY, line_Y, return_solution=False):
 	for fixation_i, cluster_i in enumerate(clusters):
 		line_i = np.where(ordered_cluster_indices == cluster_i)[0][0]
 		fixation_XY[fixation_i, 1] = line_Y[line_i]
+	if return_solution:
+		return fixation_XY, (clusters, list(ordered_cluster_indices))
 	return fixation_XY
 
 def compare(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3, return_solution=False):
@@ -60,6 +66,7 @@ def compare(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3, return_soluti
 	diff_X = np.diff(fixation_XY[:, 0])
 	end_line_indices = list(np.where(diff_X < -x_thresh)[0] + 1)
 	end_line_indices.append(n)
+	solution = []
 	start_of_line = 0
 	for end_of_line in end_line_indices:
 		gaze_line = fixation_XY[start_of_line:end_of_line]
@@ -67,14 +74,21 @@ def compare(fixation_XY, word_XY, x_thresh=512, n_nearest_lines=3, return_soluti
 		lines_ordered_by_proximity = np.argsort(abs(line_Y - mean_y))
 		nearest_line_I = lines_ordered_by_proximity[:n_nearest_lines]
 		line_costs = np.zeros(n_nearest_lines)
+		text_lines = []
+		warping_paths = []
 		for candidate_i in range(n_nearest_lines):
 			candidate_line_i = nearest_line_I[candidate_i]
 			text_line = word_XY[word_XY[:, 1] == line_Y[candidate_line_i]]
-			dtw_cost, _ = dynamic_time_warping(gaze_line[:, 0:1], text_line[:, 0:1])
+			dtw_cost, warping_path = dynamic_time_warping(gaze_line[:, 0:1], text_line[:, 0:1])
 			line_costs[candidate_i] = dtw_cost
+			text_lines.append(text_line)
+			warping_paths.append(warping_path)
 		line_i = nearest_line_I[np.argmin(line_costs)]
+		solution.append((gaze_line.copy(), text_lines, warping_paths, line_costs))
 		fixation_XY[start_of_line:end_of_line, 1] = line_Y[line_i]
 		start_of_line = end_of_line
+	if return_solution:
+		return fixation_XY, solution
 	return fixation_XY
 
 phases = [{'min_i':3, 'min_j':3, 'no_constraints':False},
@@ -117,6 +131,8 @@ def merge(fixation_XY, line_Y, y_thresh=32, g_thresh=0.1, e_thresh=20, return_so
 	ordered_sequence_indices = np.argsort(mean_Y)
 	for line_i, sequence_i in enumerate(ordered_sequence_indices):
 		fixation_XY[sequences[sequence_i], 1] = line_Y[line_i]
+	if return_solution:
+		return fixation_XY, {line_i:sequences[sequence_i] for line_i, sequence_i in enumerate(ordered_sequence_indices)}
 	return fixation_XY
 
 def regress(fixation_XY, line_Y, k_bounds=(-0.1, 0.1), o_bounds=(-50, 50), s_bounds=(1, 20), return_solution=False):
@@ -141,6 +157,11 @@ def regress(fixation_XY, line_Y, k_bounds=(-0.1, 0.1), o_bounds=(-50, 50), s_bou
 	line_assignments = fit_lines(best_fit.x, True)
 	for fixation_i, line_i in enumerate(line_assignments):
 		fixation_XY[fixation_i, 1] = line_Y[line_i]
+	if return_solution:
+		k = k_bounds[0] + (k_bounds[1] - k_bounds[0]) * norm.cdf(best_fit.x[0])
+		o = o_bounds[0] + (o_bounds[1] - o_bounds[0]) * norm.cdf(best_fit.x[1])
+		s = s_bounds[0] + (s_bounds[1] - s_bounds[0]) * norm.cdf(best_fit.x[2])
+		return fixation_XY, ((k, o, s), line_assignments)
 	return fixation_XY
 
 def segment(fixation_XY, line_Y, return_solution=False):
@@ -154,6 +175,8 @@ def segment(fixation_XY, line_Y, return_solution=False):
 		fixation_XY[fixation_i, 1] = line_Y[current_line_i]
 		if fixation_i in line_change_indices:
 			current_line_i += 1
+	if return_solution:
+		return fixation_XY, line_change_indices
 	return fixation_XY
 
 def split(fixation_XY, line_Y, return_solution=False):
@@ -170,6 +193,8 @@ def split(fixation_XY, line_Y, return_solution=False):
 		line_i = np.argmin(abs(line_Y - mean_y))
 		fixation_XY[start_of_line:end_of_line, 1] = line_Y[line_i]
 		start_of_line = end_of_line
+	if return_solution:
+		return fixation_XY, end_line_indices
 	return fixation_XY
 
 def warp(fixation_XY, word_XY, return_solution=False):
