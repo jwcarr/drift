@@ -29,7 +29,7 @@ def plot_results(filepath, layout, n_rows=2, figsize=None, stagger=0):
 			for line in legend.get_lines():
 				line.set_linewidth(2.5)
 			continue
-		results = tools.unpickle('../data/algorithm_performance/%s.pkl'%factor)
+		results = tools.unpickle('../data/simulations/%s.pkl'%factor)
 		results *= 100
 		factor_label, (factor_min_val, factor_max_val) = defaults.factors[factor]
 		factor_space = np.linspace(factor_min_val, factor_max_val, len(results[0]))
@@ -64,7 +64,7 @@ def plot_invariance(filepath, show_percentages=False):
 	accuracy = np.zeros((len(defaults.algorithms), len(defaults.factors)), dtype=float)
 	invariance = np.zeros((len(defaults.algorithms), len(defaults.factors)), dtype=bool)
 	for f, factor in enumerate(defaults.factors):
-		results = tools.unpickle('../data/algorithm_performance/%s.pkl'%factor)
+		results = tools.unpickle('../data/simulations/%s.pkl'%factor)
 		for a, algorithm in enumerate(defaults.algorithms):
 			accuracy[a, f] = results[a].mean() * 100
 			if np.all(results[a] == 1.0):
