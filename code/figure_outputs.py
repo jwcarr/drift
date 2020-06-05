@@ -23,6 +23,8 @@ for i, row in enumerate(figure_layout):
 		diagram.crop_to_passage(40)
 		diagram.set_label('<tspan style="font-family:Menlo">%s</tspan>' % algorithm)
 		diagrams[-1].append(diagram)
+eyekit.diagram.combine_diagrams(diagrams, '../visuals/outputs_adult.pdf',
+	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
 eyekit.diagram.combine_diagrams(diagrams, '../manuscript/figs/outputs_adult.eps',
 	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
 
@@ -41,5 +43,7 @@ for i, row in enumerate(figure_layout):
 		diagram.crop_to_passage(40)
 		diagram.set_label('<tspan style="font-family:Menlo">%s</tspan>' % algorithm)
 		diagrams[-1].append(diagram)
+eyekit.diagram.combine_diagrams(diagrams, '../visuals/outputs_child.pdf',
+	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
 eyekit.diagram.combine_diagrams(diagrams, '../manuscript/figs/outputs_child.eps',
 	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)

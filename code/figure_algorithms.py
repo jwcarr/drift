@@ -184,5 +184,7 @@ figure_layout = [[attach,  chain, cluster],
                  [compare, merge, regress],
                  [segment, split, warp   ]]
 
-eyekit.diagram.combine_diagrams(figure_layout, '../manuscript/figs/algorithm_illustrations.eps',
+eyekit.diagram.combine_diagrams(figure_layout, '../visuals/illustration_algorithms.pdf',
+	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
+eyekit.diagram.combine_diagrams(figure_layout, '../manuscript/figs/illustration_algorithms.eps',
 	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)

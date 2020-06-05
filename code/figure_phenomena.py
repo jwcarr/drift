@@ -33,5 +33,7 @@ figure_layout = [[noise_diagram],
                  [within_diagram],
                  [between_diagram]]
 
-eyekit.diagram.combine_diagrams(figure_layout, '../manuscript/figs/simulated_phenomena_.eps',
+eyekit.diagram.combine_diagrams(figure_layout, '../visuals/illustration_phenomena.pdf',
+	diagram_width=83, v_padding=3, h_padding=3, e_padding=1)
+eyekit.diagram.combine_diagrams(figure_layout, '../manuscript/figs/illustration_phenomena.eps',
 	diagram_width=83, v_padding=3, h_padding=3, e_padding=1)

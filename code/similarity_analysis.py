@@ -214,5 +214,5 @@ if __name__ == '__main__':
 	mds_solution = multidimensional_scaling_analysis(algorithm_distances, defaults.good_algorithms, random_seed=91)
 
 	# Plot the analyses
-	plot_analyses(ahc_solution, mds_solution, '../visuals/algorithm_analysis.pdf')
-	plot_analyses(ahc_solution, mds_solution, '../manuscript/figs/algorithm_analysis.eps')
+	plot_analyses(ahc_solution, mds_solution, '../visuals/results_similarity.pdf')
+	plot_analyses(ahc_solution, mds_solution, '../manuscript/figs/results_similarity.eps')

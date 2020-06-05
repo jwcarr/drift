@@ -20,5 +20,7 @@ child.crop_to_passage(40)
 child.set_label('Reading trial by a child')
 
 figure_layout = [[adult, child]]
-eyekit.diagram.combine_diagrams(figure_layout, '../manuscript/figs/dataset_examples.eps',
+eyekit.diagram.combine_diagrams(figure_layout, '../visuals/illustration_examples.pdf',
+	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
+eyekit.diagram.combine_diagrams(figure_layout, '../manuscript/figs/illustration_examples.eps',
 	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)

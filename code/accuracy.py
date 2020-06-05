@@ -150,10 +150,10 @@ if __name__ == '__main__':
 		alg_results, IDs = compare_outputs('gold', algorithm)
 		results[algorithm] = alg_results
 
-	plot_accuracy(results, '../visuals/accuracy_results.pdf')
-	plot_accuracy(results, '../manuscript/figs/accuracy_results.eps')
+	plot_accuracy(results, '../visuals/results_accuracy.pdf')
+	plot_accuracy(results, '../manuscript/figs/results_accuracy.eps')
 
 	improvement_results = calculate_improvement(results)
 
-	plot_accuracy_improvement(improvement_results, '../visuals/improvement_results.pdf')
-	plot_accuracy_improvement(improvement_results, '../manuscript/figs/improvement_results.eps')
+	plot_accuracy_improvement(improvement_results, '../visuals/results_improvement.pdf')
+	plot_accuracy_improvement(improvement_results, '../manuscript/figs/results_improvement.eps')
