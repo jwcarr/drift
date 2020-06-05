@@ -1,15 +1,17 @@
-Algorithms for the automated correction of eye tracking calibration error in multiline reading experiments
-==========================================================================================================
+Algorithms for the automated correction of vertical drift in eye tracking data
+==============================================================================
 
-The top-level structure of the repo is:
+This repo contains the analytical code and supporting data for a paper on vertical drift correction algorithms that we are currently preparing for submission to *Behavior Research Methods*. The top-level structure of the repo is:
 
-- `code/`: All Python code used for the model and analysis
+- `algorithms/`: Matlab/Octave, Python, and R implementations of the drift correction algorithms.
 
-- `data/`: Raw data files 
+- `code/`: Python code used to analyze the algorithms (using simulated and natural datasets).
 
-- `manuscript/`: LaTeX source and EPS figures for the manuscript
+- `data/`: Various unprocessed and processed data files explained in more detail below.
 
-- `visuals/`: Various visualizations
+- `manuscript/`: LaTeX source and postscript figures for the manuscript.
+
+- `visuals/`: Various visualizations and illustrations, including corrections of all 48 trials by all algorithms.
 
 
 Data
@@ -17,13 +19,13 @@ Data
 
 The data is organized into four directories:
 
-- `algorithm_performance/`: Pickled numpy arrays which store the simulated performance results.
+- `fixations/`: The original fixation sequences for the 48 sample trials are stored in `sample.json`. Each of the other JSON files corresponds to an algorithmic or human correction.
 
-- `fixations/`: The original fixation sequences for the 48 sample trials are stored in sample.json. Each of the other 9 JSON files corresponds to an algorithmic or human correction.
-
-- `manual_corrections/`: Manual corrections performed by the two correctors plus the gold standard correction. Each file is a reading trial, and files are nammed by participant ID and passage ID. Each line in these files corresponds to a fixation (duration, x-coordinate, y-coordinate, and line assignment (0 is used to represent discard)).
+- `manual_corrections/`: Manual corrections performed by the two correctors plus the gold standard correction. Each file is a reading trial, and files are named by participant ID and passage ID. Each line in these files corresponds to a fixation (duration, x-coordinate, y-coordinate, and line assignment (0 is used to represent discard)).
 
 - `passages/`: The text of each of the 12 passages.
+
+- `simulations/`: Pickled numpy arrays which store the simulated performance results.
 
 
 License
