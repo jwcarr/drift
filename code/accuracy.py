@@ -30,7 +30,6 @@ def compare_outputs(method1, method2):
 	with open('../data/fixations/%s.json'%method2) as file:
 		data2 = json.load(file)
 	results = {'adults':[], 'kids':[], 'adults_IDs':[], 'kids_IDs':[]}
-	IDs = []
 	for passage_id, participant_data in data1.items():
 		for participant_id, fixations in participant_data.items():
 			line_assignments1 = line_assignments(fixations)
@@ -42,8 +41,7 @@ def compare_outputs(method1, method2):
 			else:
 				results['adults'].append(percentage)
 				results['adults_IDs'].append(participant_id)
-			IDs.append(participant_id)
-	return results, IDs
+	return results
 
 def calculate_improvement(results):
 	improvement_results = {}
@@ -145,10 +143,7 @@ def plot_accuracy_improvement(results, filepath):
 
 if __name__ == '__main__':
 
-	results = {}
-	for algorithm in defaults.algorithms:
-		alg_results, IDs = compare_outputs('gold', algorithm)
-		results[algorithm] = alg_results
+	results = {compare_outputs('gold', algorithm) for algorithm in defaults.algorithms}
 
 	plot_accuracy(results, '../visuals/results_accuracy.pdf')
 	plot_accuracy(results, '../manuscript/figs/results_accuracy.eps')
