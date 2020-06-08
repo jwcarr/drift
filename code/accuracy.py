@@ -12,6 +12,8 @@ import defaults
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
 plt.rcParams.update({'font.size': 7})
 
+SPECIAL_ADULT = '8'
+SPECIAL_KID = '204'
 
 def percentage_match(line_assignments1, line_assignments2):
 	matches = line_assignments1 == line_assignments2
@@ -57,83 +59,63 @@ def calculate_improvement(results):
 		improvement_results[algorithm] = {'adults': improvement_adults, 'kids':improvement_kids, 'adults_IDs':results[algorithm]['adults_IDs'], 'kids_IDs':results[algorithm]['kids_IDs']}
 	return improvement_results
 
-def plot_accuracy(results, filepath):
+def plot_median_lines(axis, data, x_position, n_algorithms):
+	adult_median = np.median(data['adults'])
+	kid_median = np.median(data['kids'])
+	offsets = ('bottom', 'top') if adult_median > kid_median else ('top', 'bottom')
+	shrink_offset = 0
+	if n_algorithms == 8:
+		shrink_offset = 0.037
+	axis.plot([x_position-0.166, x_position+0.162-shrink_offset], [adult_median, adult_median], color='black', linewidth=2)
+	axis.text(x_position+0.2-shrink_offset, adult_median, str(round(adult_median, 1)) + '%', ha='left', va=offsets[0], color='black', fontsize=7)
+	axis.plot([x_position-0.185, x_position+0.185], [kid_median, kid_median], color='black', linewidth=2, linestyle='--')
+	axis.text(x_position+0.2-shrink_offset, kid_median, str(round(kid_median, 1)) + '%', ha='left', va=offsets[1], color='black', fontsize=7)
+
+def scatter_with_specials(axis, data, x_position, color, last_special_adult_result, last_special_kid_result):
+	special_adult = data['adults_IDs'].index(SPECIAL_ADULT)
+	special_kid = data['kids_IDs'].index(SPECIAL_KID)
+	special_adult_result = data['adults'][special_adult]
+	special_kid_result = data['kids'][special_kid]
+	remaining_adult_results = data['adults'][:special_adult] + data['adults'][special_adult+1:]
+	remaining_kid_results = data['kids'][:special_kid] + data['kids'][special_kid+1:]
+	axis.scatter(np.random.normal(x_position, 0.07, len(remaining_adult_results)), remaining_adult_results, edgecolors=color, facecolors='none', s=8, linewidths=0.5)
+	axis.scatter(np.random.normal(x_position, 0.07, len(remaining_kid_results)),   remaining_kid_results,   edgecolors=color, facecolors='none', s=8, linewidths=0.5, marker='^')
+	axis.scatter(x_position, special_adult_result, color=color, s=8)
+	axis.scatter(x_position, special_kid_result, color=color, s=8, marker='^')
+	if last_special_adult_result:
+		axis.plot([x_position-1, x_position], [last_special_adult_result, special_adult_result], color='#BBBBBB', linestyle='--', linewidth=0.5, zorder=0)
+	if last_special_kid_result:
+		axis.plot([x_position-1, x_position], [last_special_kid_result, special_kid_result], color='#BBBBBB', linestyle='--', linewidth=0.5, zorder=0)
+	return special_adult_result, special_kid_result
+
+def plot_legend(axis, legend_x, legend_y):
+	axis.scatter([legend_x], [legend_y], marker='o', edgecolors='black', facecolors='none', s=8, linewidths=0.5, transform=axis.transAxes)
+	axis.plot([legend_x+0.0115, legend_x+0.0383], [legend_y, legend_y], color='black', linewidth=1.5, transform=axis.transAxes)
+	axis.text(legend_x+0.05, legend_y, 'Adults', ha='left', va='center', fontsize=7, transform=axis.transAxes)
+	legend_y -= 0.05
+	axis.scatter([legend_x], [legend_y], marker='^', edgecolors='black', facecolors='none', s=8, linewidths=0.5, transform=axis.transAxes)
+	axis.plot([legend_x+0.01, legend_x+0.04], [legend_y, legend_y], color='black', linewidth=1.5, linestyle='--', transform=axis.transAxes)
+	axis.text(legend_x+0.05, legend_y, 'Children', ha='left', va='center', fontsize=7, transform=axis.transAxes)
+
+def plot_results(results, filepath, y_label, y_limits):
 	fig, axis = plt.subplots(1, 1, figsize=(6.8, 2.5))
-	last_special_adult_result, last_special_kid_result = None, None
-	for algorithm, data in results.items():
-		i = defaults.algorithms.index(algorithm)
-
-		special_adult = data['adults_IDs'].index('8')
-		special_kid = data['kids_IDs'].index('204')
-		special_adult_result = data['adults'][special_adult]
-		special_kid_result = data['kids'][special_kid]
-		remaining_adult_results = data['adults'][:special_adult] + data['adults'][special_adult+1:]
-		remaining_kid_results = data['kids'][:special_kid] + data['kids'][special_kid+1:]
-
-		axis.scatter(np.random.normal(i, 0.075, len(remaining_adult_results)), remaining_adult_results, edgecolors=defaults.colors[algorithm], facecolors='none', s=8, linewidths=0.5)
-		axis.scatter(np.random.normal(i, 0.075, len(remaining_kid_results)),   remaining_kid_results,   edgecolors=defaults.colors[algorithm], facecolors='none', s=8, linewidths=0.5, marker='^')
-		axis.scatter(i, special_adult_result, color=defaults.colors[algorithm], s=8)
-		axis.scatter(i, special_kid_result, color=defaults.colors[algorithm], s=8, marker='^')
-
-		if last_special_adult_result:
-			axis.plot([i-1, i], [last_special_adult_result, special_adult_result], color='#BBBBBB', linestyle='--', linewidth=0.5, zorder=0)
-		if last_special_kid_result:
-			axis.plot([i-1, i], [last_special_kid_result, special_kid_result], color='#BBBBBB', linestyle='--', linewidth=0.5, zorder=0)
-
-		median = np.median(data['adults'] + data['kids'])
-		axis.plot([i-0.185, i+0.185], [median, median], color='black', linewidth=2)
-		axis.text(i+0.25, median, str(round(median, 1)) + '%', ha='left', va='center', color='black', fontsize=7)
-
-		last_special_adult_result, last_special_kid_result = special_adult_result, special_kid_result
-
-	axis.set_ylabel('Accuracy of algorithmic correction (%)')
-	axis.set_ylim(-5, 105)
-	axis.set_xlim(-0.5, i+0.7)
-	axis.set_xticks(list(range(len(results))))
+	if y_limits[0] < 0:
+		axis.plot([-1, len(results)], [0, 0], color='black', linewidth=0.5)
+	special_adult, special_kid = None, None
+	x_labels = []
+	for x_position, (algorithm, data) in enumerate(results.items()):
+		color = defaults.colors[algorithm]
+		special_adult, special_kid = scatter_with_specials(axis, data, x_position, color, special_adult, special_kid)
+		plot_median_lines(axis, data, x_position, len(results))
+		x_labels.append(algorithm)
+	plot_legend(axis, 0.87, 0.1)
+	offset = (y_limits[1] - y_limits[0]) / 20
+	axis.set_ylim(y_limits[0]-offset, y_limits[1]+offset)
+	axis.set_xlim(-0.5, len(x_labels)-0.3)
+	axis.set_xticks(list(range(len(x_labels))))
 	axis.tick_params(bottom=False)
-	axis.set_xticklabels(defaults.algorithms)
-	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
-	fig.savefig(filepath, format='svg')
-	tools.format_svg_labels(filepath, defaults.algorithms)
-	if not filepath.endswith('.svg'):
-		tools.convert_svg(filepath, filepath)
-
-def plot_accuracy_improvement(results, filepath):
-	fig, axis = plt.subplots(1, 1, figsize=(6.8, 2.5))
-	axis.plot([-1, len(results)+1], [0, 0], color='black', linewidth=1, zorder=0)
-	last_special_adult_result, last_special_kid_result = None, None
-	for algorithm, data in results.items():
-		i = defaults.algorithms.index(algorithm)
-
-		special_adult = data['adults_IDs'].index('8')
-		special_kid = data['kids_IDs'].index('204')
-		special_adult_result = data['adults'][special_adult]
-		special_kid_result = data['kids'][special_kid]
-		remaining_adult_results = data['adults'][:special_adult] + data['adults'][special_adult+1:]
-		remaining_kid_results = data['kids'][:special_kid] + data['kids'][special_kid+1:]
-
-		axis.scatter(np.random.normal(i, 0.075, len(remaining_adult_results)), remaining_adult_results, edgecolors=defaults.colors[algorithm], facecolors='none', s=8, linewidths=0.5)
-		axis.scatter(np.random.normal(i, 0.075, len(remaining_kid_results)),   remaining_kid_results,   edgecolors=defaults.colors[algorithm], facecolors='none', s=8, linewidths=0.5, marker='^')
-		axis.scatter(i, special_adult_result, color=defaults.colors[algorithm], s=8, linewidths=0.5)
-		axis.scatter(i, special_kid_result, color=defaults.colors[algorithm], s=8, linewidths=0.5, marker='^')
-
-		if last_special_adult_result:
-			axis.plot([i-1, i], [last_special_adult_result, special_adult_result], color='gray', linestyle='--', linewidth=0.5, zorder=0)
-		if last_special_kid_result:
-			axis.plot([i-1, i], [last_special_kid_result, special_kid_result], color='gray', linestyle='--', linewidth=0.5, zorder=0)
-
-		median = np.median(data['adults'] + data['kids'])
-		axis.plot([i-0.185, i+0.185], [median, median], color='black', linewidth=2)
-		axis.text(i+0.25, median, str(round(median, 1)) + 'pp', ha='left', va='bottom', color='black', fontsize=7)
-
-		last_special_adult_result, last_special_kid_result = special_adult_result, special_kid_result
-
-	axis.set_ylabel('Percentage point improvement in accuracy')
-	axis.set_ylim(-88, 88)
-	axis.set_xlim(0.5, i+0.7)
-	axis.set_xticks(list(range(1, len(results)+1)))
-	axis.tick_params(bottom=False)
-	axis.set_xticklabels(defaults.true_algorithms)
+	axis.set_xticklabels(x_labels)
+	axis.set_ylabel(y_label)
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
 	tools.format_svg_labels(filepath, defaults.algorithms)
@@ -143,12 +125,11 @@ def plot_accuracy_improvement(results, filepath):
 
 if __name__ == '__main__':
 
-	results = {compare_outputs('gold', algorithm) for algorithm in defaults.algorithms}
+	accuracy_results = {algorithm : compare_outputs('gold', algorithm) for algorithm in defaults.algorithms}
+	improvement_results = calculate_improvement(accuracy_results)
 
-	plot_accuracy(results, '../visuals/results_accuracy.pdf')
-	plot_accuracy(results, '../manuscript/figs/results_accuracy.eps')
+	plot_results(accuracy_results, '../visuals/results_accuracy.pdf', 'Accuracy of algorithmic correction (%)', (0, 100))
+	plot_results(accuracy_results, '../manuscript/figs/results_accuracy.eps', 'Accuracy of algorithmic correction (%)', (0, 100))
 
-	improvement_results = calculate_improvement(results)
-
-	plot_accuracy_improvement(improvement_results, '../visuals/results_improvement.pdf')
-	plot_accuracy_improvement(improvement_results, '../manuscript/figs/results_improvement.eps')
+	plot_results(improvement_results, '../visuals/results_improvement.pdf', 'Percentage point improvement in accuracy', (-80, 80))
+	plot_results(improvement_results, '../manuscript/figs/results_improvement.eps', 'Percentage point improvement in accuracy', (-80, 80))
