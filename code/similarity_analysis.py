@@ -169,6 +169,9 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 	dendrogram.adjust(7, 2)
 	dendrogram.adjust(13, -8)
 	dendrogram.plot(axes[0])
+	for node, label in [(8, 'Sequential'), (13, 'Positional'), (10, 'Relative'), (11, 'Absolute')]:
+		x, y = dendrogram.node_points[node]
+		axes[0].text(x+3, y, label, ha='left', va='center')
 	inches_from_origin = (fig.dpi_scale_trans + transforms.ScaledTranslation(0, 1, axes[0].transAxes))
 	axes[0].text(0.1, -0.1, '(A)', fontsize=8, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
 	
@@ -211,7 +214,7 @@ if __name__ == '__main__':
 	ahc_solution = hierarchical_clustering_analysis(algorithm_distances, defaults.good_algorithms)
 
 	# Compute the multidimensional scaling solution
-	mds_solution = multidimensional_scaling_analysis(algorithm_distances, defaults.good_algorithms, random_seed=91)
+	mds_solution = multidimensional_scaling_analysis(algorithm_distances, defaults.good_algorithms+['gold'], random_seed=11)
 
 	# Plot the analyses
 	plot_analyses(ahc_solution, mds_solution, '../visuals/results_similarity.pdf')
