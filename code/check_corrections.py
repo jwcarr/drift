@@ -14,7 +14,7 @@ from os import listdir, path
 import json
 import eyekit
 import tools
-import defaults
+import globals
 
 
 def iter_correction_path(correction_path):
@@ -89,11 +89,11 @@ def compare_two_corrections(correction1_file_path, correction2_file_path):
 				if fixation1[3]:
 					line_assignment1 = 0
 				else:
-					line_assignment1 = defaults.y_to_line_mapping[fixation1[1]]
+					line_assignment1 = globals.y_to_line_mapping[fixation1[1]]
 				if fixation2[3]:
 					line_assignment2 = 0
 				else:
-					line_assignment2 = defaults.y_to_line_mapping[fixation2[1]]
+					line_assignment2 = globals.y_to_line_mapping[fixation2[1]]
 				if line_assignment1 != line_assignment2:
 					if line_assignment1 == 0 or line_assignment2 == 0:
 						print(' - Fixation %i: JC says %i, VP says %i (difference in discarding)'%((i+1), line_assignment1, line_assignment2))

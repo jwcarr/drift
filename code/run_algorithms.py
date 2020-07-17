@@ -8,7 +8,7 @@ import json
 import eyekit
 import algorithms
 import tools
-import defaults
+import globals
 
 def run_algorithm(sample_data, passages, output_dir, method):
 	print(method.upper())
@@ -22,7 +22,6 @@ def run_algorithm(sample_data, passages, output_dir, method):
 			correction = algorithms.correct_drift(method, fixation_XY, passages[passage_id])
 			for fixation, (x, y) in zip(fixation_sequence, correction):
 				fixation.y = y
-
 			output_data[passage_id][participant_id] = fixation_sequence.tolist(include_discards=True)
 	with open(output_dir + '%s.json' % method, 'w') as file:
 		json.dump(output_data, file)
@@ -36,5 +35,5 @@ if __name__ == '__main__':
 
 	passages = tools.load_passages('../data/passages/')
 
-	for method in defaults.algorithms:
+	for method in globals.algorithms:
 		run_algorithm(sample_data, passages, '../data/fixations/', method)

@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 import tools
-import defaults
+import globals
 
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
 plt.rcParams.update({'font.size': 7})
@@ -23,7 +23,7 @@ def line_assignments(fixations):
 	line_assignments = np.zeros(len(fixations), dtype=int)
 	for i, fixation in enumerate(fixations):
 		if fixation[3] == False:
-			line_assignments[i] = defaults.y_to_line_mapping[fixation[1]]
+			line_assignments[i] = globals.y_to_line_mapping[fixation[1]]
 	return line_assignments
 
 def compare_outputs(method1, method2):
@@ -49,7 +49,7 @@ def calculate_improvement(results):
 	improvement_results = {}
 	attach_adults = np.array(results['attach']['adults'], dtype=float)
 	attach_kids = np.array(results['attach']['kids'], dtype=float)
-	for algorithm in defaults.true_algorithms:
+	for algorithm in globals.true_algorithms:
 		assert results[algorithm]['adults_IDs'] == results['attach']['adults_IDs']
 		assert results[algorithm]['kids_IDs'] == results['attach']['kids_IDs']
 		alg_adults = np.array(results[algorithm]['adults'], dtype=float)
@@ -103,7 +103,7 @@ def plot_results(results, filepath, y_label, y_limits, y_unit):
 	special_adult, special_kid = None, None
 	x_labels = []
 	for x_position, (algorithm, data) in enumerate(results.items()):
-		color = defaults.colors[algorithm]
+		color = globals.colors[algorithm]
 		special_adult, special_kid = scatter_with_specials(axis, data, x_position, color, special_adult, special_kid)
 		plot_median_lines(axis, data, x_position, y_unit)
 		x_labels.append(algorithm)
@@ -117,18 +117,18 @@ def plot_results(results, filepath, y_label, y_limits, y_unit):
 	axis.set_ylabel(y_label)
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
-	tools.format_svg_labels(filepath, defaults.algorithms)
+	tools.format_svg_labels(filepath, globals.algorithms)
 	if not filepath.endswith('.svg'):
 		tools.convert_svg(filepath, filepath)
 
 
 if __name__ == '__main__':
 
-	accuracy_results = {algorithm : compare_outputs('gold', algorithm) for algorithm in defaults.algorithms}
+	accuracy_results = {algorithm : compare_outputs('gold', algorithm) for algorithm in globals.algorithms}
 	improvement_results = calculate_improvement(accuracy_results)
 
 	plot_results(accuracy_results, '../visuals/results_accuracy.pdf', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
-	plot_results(accuracy_results, '../manuscript/figs/results_accuracy.eps', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
+	# plot_results(accuracy_results, '../manuscript/figs/results_accuracy.eps', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
 
 	plot_results(improvement_results, '../visuals/results_improvement.pdf', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
-	plot_results(improvement_results, '../manuscript/figs/results_improvement.eps', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
+	# plot_results(improvement_results, '../manuscript/figs/results_improvement.eps', 'Percentage point improvement in accuracy', (-80, 80), 'pp')

@@ -1,7 +1,7 @@
 import eyekit
 import algorithms
 import tools
-import defaults
+import globals
 
 data = tools.load_data('../data/fixations/sample.json')
 passages = tools.load_passages('../data/passages/')
@@ -13,8 +13,8 @@ word_XY = passages['1B'].word_centers()
 
 diagram = eyekit.Diagram(1920, 1080)
 diagram.render_passage(passages['1B'], 28, color='gray')
-diagram.render_fixations(eyekit.FixationSequence(word_XY), include_discards=True, color=defaults.illustration_colors[1])
-diagram.render_fixations(fixation_sequence, include_discards=True, color=defaults.illustration_colors[2])
+diagram.render_fixations(eyekit.FixationSequence(word_XY), include_discards=True, color=globals.illustration_colors[1])
+diagram.render_fixations(fixation_sequence, include_discards=True, color=globals.illustration_colors[2])
 for fixation, mapped_words in zip(fixation_sequence, solution):
 	for word_i in mapped_words:
 		word_x, word_y = word_XY[word_i]

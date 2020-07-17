@@ -1,6 +1,6 @@
 import eyekit
 import simulation
-import defaults
+import globals
 
 
 def run_and_visualize(passage, label, **params):
@@ -15,7 +15,7 @@ def run_and_visualize(passage, label, **params):
 	return diagram
 
 
-passage = eyekit.Passage(defaults.lorem_ipsum_text,
+passage = eyekit.Passage(globals.lorem_ipsum_text,
 	                     first_character_position=(368, 155),
 	                     character_spacing=16,
 	                     line_spacing=64,

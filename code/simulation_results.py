@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.transforms as transforms
 from matplotlib import gridspec
 import tools
-import defaults
+import globals
 
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
 plt.rcParams.update({'font.size': 7})
@@ -25,19 +25,19 @@ def plot_results(filepath, layout, n_rows=2, figsize=None, stagger=0):
 	for factor, (r, c) in zip(layout, np.ndindex((n_rows, n_cols))):
 		if factor == 'legend':
 			axes[r][c].axis('off')
-			legend = axes[r][c].legend(legend_patches, defaults.algorithms, loc='center', frameon=False)
+			legend = axes[r][c].legend(legend_patches, globals.algorithms, loc='center', frameon=False)
 			for line in legend.get_lines():
 				line.set_linewidth(2.5)
 			continue
 		results = tools.unpickle('../data/simulations/%s.pkl'%factor)
 		results *= 100
-		factor_label, (factor_min_val, factor_max_val) = defaults.factors[factor]
+		factor_label, (factor_min_val, factor_max_val) = globals.factors[factor]
 		factor_space = np.linspace(factor_min_val, factor_max_val, len(results[0]))
-		for method_i, method in enumerate(defaults.algorithms):
+		for method_i, method in enumerate(globals.algorithms):
 			means = results[method_i, :].mean(axis=1)
-			staggering = (method_i - (len(defaults.algorithms)-1) / 2) * stagger
+			staggering = (method_i - (len(globals.algorithms)-1) / 2) * stagger
 			staggered_means = means - staggering
-			line, = axes[r][c].plot(factor_space, staggered_means, color=defaults.colors[method], label=method, linewidth=1)
+			line, = axes[r][c].plot(factor_space, staggered_means, color=globals.colors[method], label=method, linewidth=1)
 			if r == 0 and c == 0:
 				legend_patches.append(line)
 			axes[r][c].set_ylim(-5, 105)
@@ -55,17 +55,17 @@ def plot_results(filepath, layout, n_rows=2, figsize=None, stagger=0):
 		axes[r][c].axis('off')
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
-	tools.format_svg_labels(filepath, defaults.algorithms)
+	tools.format_svg_labels(filepath, globals.algorithms)
 	if not filepath.endswith('.svg'):
 		tools.convert_svg(filepath, filepath)
 
 
 def plot_invariance(filepath, show_percentages=False):
-	accuracy = np.zeros((len(defaults.algorithms), len(defaults.factors)), dtype=float)
-	invariance = np.zeros((len(defaults.algorithms), len(defaults.factors)), dtype=bool)
-	for f, factor in enumerate(defaults.factors):
+	accuracy = np.zeros((len(globals.algorithms), len(globals.factors)), dtype=float)
+	invariance = np.zeros((len(globals.algorithms), len(globals.factors)), dtype=bool)
+	for f, factor in enumerate(globals.factors):
 		results = tools.unpickle('../data/simulations/%s.pkl'%factor)
-		for a, algorithm in enumerate(defaults.algorithms):
+		for a, algorithm in enumerate(globals.algorithms):
 			accuracy[a, f] = results[a].mean() * 100
 			if np.all(results[a] == 1.0):
 				invariance[a, f] = True
@@ -83,12 +83,12 @@ def plot_invariance(filepath, show_percentages=False):
 	heatmap.set_xticks(np.arange(5)+0.5)
 	heatmap.set_xticklabels(['Noise', 'Slope', 'Shift', 'Within', 'Between'])
 	heatmap.set_yticks(np.arange(9)+0.5)
-	heatmap.set_yticklabels(defaults.algorithms)
+	heatmap.set_yticklabels(globals.algorithms)
 	heatmap.tick_params(bottom=False, left=False)
 	legend.set_ylabel('Mean accuracy (%)', labelpad=-38)
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
-	tools.format_svg_labels(filepath, defaults.algorithms)
+	tools.format_svg_labels(filepath, globals.algorithms)
 	if not filepath.endswith('.svg'):
 		tools.convert_svg(filepath, filepath)
 

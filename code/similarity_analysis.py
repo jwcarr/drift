@@ -11,7 +11,7 @@ from scipy.spatial import distance
 from scipy.cluster import hierarchy
 import json
 import tools
-import defaults
+import globals
 from algorithms import dynamic_time_warping
 
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
@@ -159,7 +159,7 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 	# Plot AHC clustering
 	ahc_methods, linkage_matrix = ahc_solution
 	method_names = {i:method for i, method in enumerate(ahc_methods)}
-	dendrogram = Dendrogram(linkage_matrix, method_names, defaults.colors)
+	dendrogram = Dendrogram(linkage_matrix, method_names, globals.colors)
 	dendrogram.adjust(0, -2) # Manual adjustments for prettiness
 	dendrogram.adjust(1, 2)
 	dendrogram.adjust(2, -2)
@@ -180,7 +180,7 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 	mn, mx = positions[:, 0].min(), positions[:, 0].max()
 	offset = (mx - mn) * 0.1
 	furthest_method_to_right = mds_methods[np.argmax(positions[:, 0])]
-	axes[1].scatter(positions[:, 0], positions[:, 1], color=[defaults.colors[m] for m in mds_methods])
+	axes[1].scatter(positions[:, 0], positions[:, 1], color=[globals.colors[m] for m in mds_methods])
 	for label, position in zip(mds_methods, positions):
 		if label == furthest_method_to_right:
 			axes[1].text(position[0]-offset/3, position[1], label, va='center', ha='right')
@@ -197,7 +197,7 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
-	tools.format_svg_labels(filepath, monospace=defaults.algorithms, arbitrary_replacements={'gold':'Gold standard', 'JC':'Jon', 'VP':'Vale'})
+	tools.format_svg_labels(filepath, monospace=globals.algorithms, arbitrary_replacements={'gold':'Gold standard', 'JC':'Jon', 'VP':'Vale'})
 	if not filepath.endswith('.svg'):
 		tools.convert_svg(filepath, filepath)
 
@@ -205,16 +205,16 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 if __name__ == '__main__':
 
 	# Measure pairwise distances between methods and pickle the distance matrix
-	# make_algorithmic_distance_matrix(defaults.algorithms+['gold'], '../data/algorithm_distances.pkl')
+	# make_algorithmic_distance_matrix(globals.algorithms+['gold'], '../data/algorithm_distances.pkl')
 
 	# Load the distance matrix created in the above step
 	algorithm_distances = tools.unpickle('../data/algorithm_distances.pkl')
 
 	# Compute the hierarchical clustering solution
-	ahc_solution = hierarchical_clustering_analysis(algorithm_distances, defaults.good_algorithms)
+	ahc_solution = hierarchical_clustering_analysis(algorithm_distances, globals.good_algorithms)
 
 	# Compute the multidimensional scaling solution
-	mds_solution = multidimensional_scaling_analysis(algorithm_distances, defaults.good_algorithms+['gold'], random_seed=11)
+	mds_solution = multidimensional_scaling_analysis(algorithm_distances, globals.good_algorithms+['gold'], random_seed=11)
 
 	# Plot the analyses
 	plot_analyses(ahc_solution, mds_solution, '../visuals/results_similarity.pdf')
