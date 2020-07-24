@@ -145,7 +145,7 @@ If the final fixation on line~$i$ were mapped to the first word on line~$i+1$, t
 
 \subsection{Summary}
 
-In this section we have described nine algorithms for aligning a fixation sequence to a multiline text, each of which takes a fundamentally different approach. A summary of the information utilized by the algorithms is provided in Table~\ref{table_information_utilized}; each algorithm uses at~least one piece of information about the fixations and at~least one piece of information about the passage, and some also rely on additional parameters set by the user or built-in heuristics.
+In this section we have described nine algorithms for aligning a fixation sequence to a multiline text, each of which takes a fundamentally different approach. A summary of the information utilized by the algorithms is provided in Table~\ref{table1}; each algorithm uses at~least one piece of information about the fixations and at~least one piece of information about the passage, and some also rely on additional parameters set by the user or built-in heuristics.
 
 	\begin{table}
 	\begin{center}
@@ -165,7 +165,7 @@ In this section we have described nine algorithms for aligning a fixation sequen
 	\texttt{split}   & \checkmark & \checkmark & \checkmark & & \checkmark & & & \\
 	\texttt{warp}    & \checkmark & \checkmark & \checkmark & & \checkmark & \checkmark & & \\ \hline
 	\end{tabular}
-	\label{table_information_utilized}
+	\label{table1}
 	\end{threeparttable}
 	\end{center}
 	\end{table}
@@ -189,12 +189,12 @@ Broadly speaking, the algorithms proceed in three stages: grouping, assignment, 
 	\texttt{split}   & Split fixation sequence into subsequences based on best candidate return sweeps & Assign subsequences to closest text lines \\
 	\texttt{warp}    & Map fixations to word centers by finding a monotonically increasing mapping with minimal cost, effectively resulting in $m$ subsequences & Assign fixations to the lines that their mapped words belong to, effectively assigning subsequences to text lines in chronological order \\ \hline
 	\end{tabular}
-	\label{table_algorithm_gist}
+	\label{table2}
 	\end{threeparttable}
 	\end{center}
 	\end{table}
 
-In the assignment stage, the previously identified groups are assigned to text lines. If the grouping stage is \textit{not} guaranteed to produce $m$ groups, then assignment must be based on absolute position (or similarity in the case of \texttt{compare}, although it still uses absolute position to select neighboring lines to compare to). If the grouping stage \textit{is} guaranteed to produce $m$ groups, then they can be assigned to text lines based on order; this generally allows for better handling of vertical drift because absolute position is ignored. In the case of \texttt{cluster}, \texttt{merge}, and \texttt{regress}, which produce unordered groups at the grouping stage, groups are matched to text lines based on the order in which they are positioned vertically (i.e., mean \textit{y}~value). In the case of \texttt{segment} and \texttt{warp}, the groups are assigned to text lines in chronological order, which is only possible because these two algorithms produce subsequences that inherit the order of the original fixation sequence. An overview of the grouping and assignment methods is provided in Table~\ref{table_algorithm_gist} for quick reference.
+In the assignment stage, the previously identified groups are assigned to text lines. If the grouping stage is \textit{not} guaranteed to produce $m$ groups, then assignment must be based on absolute position (or similarity in the case of \texttt{compare}, although it still uses absolute position to select neighboring lines to compare to). If the grouping stage \textit{is} guaranteed to produce $m$ groups, then they can be assigned to text lines based on order; this generally allows for better handling of vertical drift because absolute position is ignored. In the case of \texttt{cluster}, \texttt{merge}, and \texttt{regress}, which produce unordered groups at the grouping stage, groups are matched to text lines based on the order in which they are positioned vertically (i.e., mean \textit{y}~value). In the case of \texttt{segment} and \texttt{warp}, the groups are assigned to text lines in chronological order, which is only possible because these two algorithms produce subsequences that inherit the order of the original fixation sequence. An overview of the grouping and assignment methods is provided in Table~\ref{table2} for quick reference.
 
 Finally, in the update stage, the original fixation sequence is modified to reflect the line assignments identified in the previous stage. In the versions of the algorithms reported in this paper, we always use the same update approach: The \textit{y}~values of the fixations are adjusted to the \textit{y}~values of the assigned lines, while the \textit{x}~values and the order of the fixations are always left untouched. In principle, however, there are other ways of performing the update stage (e.g., retaining the original \textit{y}-axis variance or discarding ambiguous fixations).
 
@@ -210,7 +210,7 @@ In each simulation, we generate a passage of ``Lorem ipsum'' dummy text consisti
 
 	\begin{equation}
 	f_y = \mathcal{N}(l_y, d_\mathrm{noise}) + f_x d_\mathrm{slope} + l_y d_\mathrm{shift},
-	\label{equation_distortion}
+	\label{equation1}
 	\end{equation}
 
 \noindent where $l_y$ is the vertical center point of the intended line---the \textit{y}~value that the reader is targeting. This models three types of distortion: noise, slope, and shift. Additionally, we simulate two types of regression that are characteristic of normal reading behavior and can disrupt algorithmic correction. Together, these five phenomena are illustrated in Fig.~\ref{fig04} and described below.
@@ -236,11 +236,11 @@ The shift distortion parameter, $d_\mathrm{shift}$, controls the extent to which
 
 \subsubsection{Within-Line Regression}
 
-As mentioned above, we also consider the effects of two types of regression. The first of these is within-line regressions, which is where the reader momentarily jumps back to a previous point in the current line. The extent to which the reader performs within-line regressions is formalized by a probability. If this probability is set to 1, the reader will perform a regressed fixation after every normal fixation, doubling the number of fixations on the line; if the parameter is set to 0, the reader will never perform a regression within the line. The \textit{x}~position of the regressed fixation is located randomly between the start of the line and the current fixation with longer regressions being linearly less probable than shorter regressions. The \textit{y}~value of the regressed fixation follows Equation~\ref{equation_distortion}.
+As mentioned above, we also consider the effects of two types of regression. The first of these is within-line regressions, which is where the reader momentarily jumps back to a previous point in the current line. The extent to which the reader performs within-line regressions is formalized by a probability. If this probability is set to 1, the reader will perform a regressed fixation after every normal fixation, doubling the number of fixations on the line; if the parameter is set to 0, the reader will never perform a regression within the line. The \textit{x}~position of the regressed fixation is located randomly between the start of the line and the current fixation with longer regressions being linearly less probable than shorter regressions. The \textit{y}~value of the regressed fixation follows Equation~\ref{equation1}.
 
 \subsubsection{Between-Line Regression}
 
-The second type of regression, between-line regressions, is where the reader rereads text from a previous line. Between-line regressions are expressed in terms of the probability that the reader will go back to a previous line at some point during reading of the current line. Once the regression is completed, the reader returns to the point in the passage before the regression occurred. If the parameter is set to 1, the reader will reread part of a previous line for every line they read; if it is set to 0, the reader will never perform a regression to a previous line. When a between-line regression occurs, the previous line is determined randomly, with more recent lines linearly more probable than less recent lines; the section of the previous line is determined randomly by two uniformly distributed \textit{x}~values. The \textit{y}~values of the regressed fixations follow Equation~\ref{equation_distortion}.
+The second type of regression, between-line regressions, is where the reader rereads text from a previous line. Between-line regressions are expressed in terms of the probability that the reader will go back to a previous line at some point during reading of the current line. Once the regression is completed, the reader returns to the point in the passage before the regression occurred. If the parameter is set to 1, the reader will reread part of a previous line for every line they read; if it is set to 0, the reader will never perform a regression to a previous line. When a between-line regression occurs, the previous line is determined randomly, with more recent lines linearly more probable than less recent lines; the section of the previous line is determined randomly by two uniformly distributed \textit{x}~values. The \textit{y}~values of the regressed fixations follow Equation~\ref{equation1}.
 
 \subsection{Results}
 
