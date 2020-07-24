@@ -218,4 +218,4 @@ if __name__ == '__main__':
 
 	# Plot the analyses
 	plot_analyses(ahc_solution, mds_solution, '../visuals/results_similarity.pdf')
-	plot_analyses(ahc_solution, mds_solution, '../manuscript/figs/results_similarity.eps')
+	plot_analyses(ahc_solution, mds_solution, '../manuscript/figs/fig12_double_column.eps')

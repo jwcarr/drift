@@ -22,5 +22,5 @@ child.set_label('Reading trial by a child')
 figure_layout = [[adult, child]]
 eyekit.diagram.combine_diagrams(figure_layout, '../visuals/illustration_examples.pdf',
 	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
-eyekit.diagram.combine_diagrams(figure_layout, '../manuscript/figs/illustration_examples.eps',
+eyekit.diagram.combine_diagrams(figure_layout, '../manuscript/figs/fig01_double_column.eps',
 	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)

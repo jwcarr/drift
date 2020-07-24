@@ -25,7 +25,7 @@ for i, row in enumerate(figure_layout):
 		diagrams[-1].append(diagram)
 eyekit.diagram.combine_diagrams(diagrams, '../visuals/outputs_adult.pdf',
 	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
-eyekit.diagram.combine_diagrams(diagrams, '../manuscript/figs/outputs_adult.eps',
+eyekit.diagram.combine_diagrams(diagrams, '../manuscript/figs/fig09_double_column.eps',
 	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
 
 # Child example
@@ -45,5 +45,5 @@ for i, row in enumerate(figure_layout):
 		diagrams[-1].append(diagram)
 eyekit.diagram.combine_diagrams(diagrams, '../visuals/outputs_child.pdf',
 	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
-eyekit.diagram.combine_diagrams(diagrams, '../manuscript/figs/outputs_child.eps',
+eyekit.diagram.combine_diagrams(diagrams, '../manuscript/figs/fig10_double_column.eps',
 	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)

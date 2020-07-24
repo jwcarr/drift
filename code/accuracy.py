@@ -128,7 +128,7 @@ if __name__ == '__main__':
 	improvement_results = calculate_improvement(accuracy_results)
 
 	plot_results(accuracy_results, '../visuals/results_accuracy.pdf', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
-	# plot_results(accuracy_results, '../manuscript/figs/results_accuracy.eps', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
+	plot_results(accuracy_results, '../manuscript/figs/fig08_double_column.eps', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
 
 	plot_results(improvement_results, '../visuals/results_improvement.pdf', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
-	# plot_results(improvement_results, '../manuscript/figs/results_improvement.eps', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
+	plot_results(improvement_results, '../manuscript/figs/fig11_double_column.eps', 'Percentage point improvement in accuracy', (-80, 80), 'pp')

@@ -24,5 +24,5 @@ diagram.crop_to_passage(40)
 figure_layout = [[diagram]]
 eyekit.diagram.combine_diagrams(figure_layout, '../visuals/illustration_warp.pdf',
 	diagram_width=83, v_padding=3, h_padding=3, e_padding=1, auto_letter=False)
-eyekit.diagram.combine_diagrams(figure_layout, '../manuscript/figs/illustration_warp.eps',
+eyekit.diagram.combine_diagrams(figure_layout, '../manuscript/figs/fig03_single_column.eps',
 	diagram_width=83, v_padding=3, h_padding=3, e_padding=1, auto_letter=False)
