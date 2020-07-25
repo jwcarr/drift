@@ -44,7 +44,7 @@ cluster <- function(fixation_XY, line_Y) {
 	n <- nrow(fixation_XY)
 	m <- length(line_Y)
 	fixation_Y <- fixation_XY[, 2]
-	clusters <- kmeans(fixation_Y, m)
+	clusters <- kmeans(fixation_Y, m, nstart=100, iter.max=300)
 	ordered_cluster_indices <- order(clusters$centers)
 	for (fixation_i in 1 : n) {
 		cluster_i <- clusters$cluster[fixation_i]
@@ -239,7 +239,7 @@ segment <- function(fixation_XY, line_Y) {
 split <- function(fixation_XY, line_Y) {
 	n <- nrow(fixation_XY)
 	diff_X <- diff(fixation_XY[, 1])
-	clusters <- kmeans(diff_X, 2)
+	clusters <- kmeans(diff_X, 2, nstart=10, iter.max=300)
 	sweep_marker <- which.min(clusters$centers)
 	end_line_indices <- which(clusters$cluster == sweep_marker)
 	end_line_indices <- append(end_line_indices, n)

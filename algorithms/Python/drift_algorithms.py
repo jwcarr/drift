@@ -42,7 +42,7 @@ from sklearn.cluster import KMeans
 def cluster(fixation_XY, line_Y):
 	m = len(line_Y)
 	fixation_Y = fixation_XY[:, 1].reshape(-1, 1)
-	clusters = KMeans(m).fit_predict(fixation_Y)
+	clusters = KMeans(m, n_init=100, max_iter=300).fit_predict(fixation_Y)
 	centers = [fixation_Y[clusters == i].mean() for i in range(m)]
 	ordered_cluster_indices = np.argsort(centers)
 	for fixation_i, cluster_i in enumerate(clusters):
@@ -212,7 +212,7 @@ def segment(fixation_XY, line_Y):
 def split(fixation_XY, line_Y):
 	n = len(fixation_XY)
 	diff_X = np.diff(fixation_XY[:, 0])
-	clusters = KMeans(2).fit_predict(diff_X.reshape(-1, 1))
+	clusters = KMeans(2, n_init=10, max_iter=300).fit_predict(diff_X.reshape(-1, 1))
 	centers = [diff_X[clusters == 0].mean(), diff_X[clusters == 1].mean()]
 	sweep_marker = np.argmin(centers)
 	end_line_indices = list(np.where(clusters == sweep_marker)[0] + 1)

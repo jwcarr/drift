@@ -6,7 +6,7 @@ function fixation_XY = split(fixation_XY, line_Y)
 
 	n = size(fixation_XY, 1);
 	diff_X = diff(fixation_XY(:, 1));
-	[clusters, centers] = kmeans(diff_X, 2);
+	[clusters, centers] = kmeans(diff_X, 2, 'Replicates', 10, 'MaxIter', 300);
 	[~, sweep_marker] = min(centers);
 	end_line_indices = find(clusters == sweep_marker).';
 	end_line_indices = [end_line_indices, n];
