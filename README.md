@@ -28,6 +28,22 @@ The data is organized into four directories:
 - `simulations/`: Pickled numpy arrays which store the simulated performance results.
 
 
+Dependencies
+------------
+
+The code in this repo was written for Python 3.8.5 with the following packages:
+
+- cairosvg 2.4.2
+- eyekit 0.1.5
+- lorem 0.1.1
+- matplotlib 3.3.1
+- numpy 1.19.1
+- scikit-learn 0.23.2
+- scipy 1.5.2
+
+The Matlab/Octave and R versions of the algorithms were tested under Matlab 9.8.0, Octave 5.2.0, and R 3.5.2.
+
+
 License
 -------
 
