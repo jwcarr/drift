@@ -6,7 +6,6 @@ from sys import stdout
 import numpy as np
 import eyekit
 import lorem
-from tools import pickle
 import algorithms
 import globals
 
@@ -144,4 +143,5 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 
 	results = simulate_factor(args.factor, args.n_gradations, args.n_sims)
-	pickle(results, '%s/%s.pkl' % (args.output_dir, args.factor))
+	with open('%s/%s.pkl' % (args.output_dir, args.factor), mode='wb') as file:
+		pickle.dump(results, file)

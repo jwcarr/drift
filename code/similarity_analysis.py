@@ -3,14 +3,14 @@ Code for comparing the algorithmic outputs in an MDS and hierarchical
 clustering analysis.
 '''
 
+import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.transforms as transforms
 from sklearn.manifold import MDS
 from scipy.spatial import distance
 from scipy.cluster import hierarchy
-import json
-import tools
+import eyekit
 import globals
 from algorithms import dynamic_time_warping
 
@@ -103,17 +103,14 @@ class Dendrogram:
 
 
 def algorithmic_output_distance(method1, method2):
-	with open('../data/fixations/%s.json'%method1) as file:
-		data1 = json.load(file)
-	with open('../data/fixations/%s.json'%method2) as file:
-		data2 = json.load(file)
+	data1 = eyekit.io.read('../data/fixations/%s.json'%method1)
+	data2 = eyekit.io.read('../data/fixations/%s.json'%method2)
 	results = []
-	for passage_id, participant_data in data1.items():
-		for participant_id, fixations in participant_data.items():
-			fixation_XY1 = np.array([(f[0], f[1]) for f in fixations if not f[3]], dtype=int)
-			fixation_XY2 = np.array([(f[0], f[1]) for f in data2[passage_id][participant_id] if not f[3]], dtype=int)
-			cost, _ = dynamic_time_warping(fixation_XY1, fixation_XY2)
-			results.append(cost)
+	for trial_id, trial in data1.items():
+		fixation_XY1 = np.array([f.xy for f in trial['fixations'] if not f.discarded], dtype=int)
+		fixation_XY2 = np.array([f.xy for f in data2[trial_id]['fixations'] if not f.discarded], dtype=int)
+		cost, _ = dynamic_time_warping(fixation_XY1, fixation_XY2)
+		results.append(cost)
 	return np.median(results)
 
 def make_algorithmic_distance_matrix(methods, filepath):
@@ -125,7 +122,8 @@ def make_algorithmic_distance_matrix(methods, filepath):
 			distance = algorithmic_output_distance(methods[m1], methods[m2])
 			distances.append(distance)
 	matrix = distance.squareform(distances, 'tomatrix')
-	tools.pickle((methods, matrix), filepath)
+	with open(filepath, mode='wb') as file:
+		pickle.dump((methods, matrix), file)
 
 def min_max_normalize(positions):
 	for i in range(positions.shape[1]):
@@ -197,9 +195,9 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
-	tools.format_svg_labels(filepath, monospace=globals.algorithms, arbitrary_replacements={'gold':'Gold standard', 'JC':'Jon', 'VP':'Vale'})
+	globals.format_svg_labels(filepath, monospace=globals.algorithms, arbitrary_replacements={'gold':'Gold standard', 'JC':'Jon', 'VP':'Vale'})
 	if not filepath.endswith('.svg'):
-		tools.convert_svg(filepath, filepath)
+		eyekit.image.convert_svg(filepath, filepath)
 
 
 if __name__ == '__main__':
@@ -208,7 +206,8 @@ if __name__ == '__main__':
 	# make_algorithmic_distance_matrix(globals.algorithms+['gold'], '../data/algorithm_distances.pkl')
 
 	# Load the distance matrix created in the above step
-	algorithm_distances = tools.unpickle('../data/algorithm_distances.pkl')
+	with open('../data/algorithm_distances.pkl', mode='rb') as file:
+		algorithm_distances = pickle.load(file)
 
 	# Compute the hierarchical clustering solution
 	ahc_solution = hierarchical_clustering_analysis(algorithm_distances, globals.good_algorithms)

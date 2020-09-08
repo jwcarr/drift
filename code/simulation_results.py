@@ -2,11 +2,12 @@
 Code for plotting the simulation results.
 '''
 
+import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.transforms as transforms
 from matplotlib import gridspec
-import tools
+import eyekit
 import globals
 
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
@@ -29,7 +30,8 @@ def plot_results(filepath, layout, n_rows=2, figsize=None, stagger=0):
 			for line in legend.get_lines():
 				line.set_linewidth(2.5)
 			continue
-		results = tools.unpickle('../data/simulations/%s.pkl'%factor)
+		with open('../data/simulations/%s.pkl'%factor, mode='rb') as file:
+			results = pickle.load(file)
 		results *= 100
 		factor_label, (factor_min_val, factor_max_val) = globals.factors[factor]
 		factor_space = np.linspace(factor_min_val, factor_max_val, len(results[0]))
@@ -55,16 +57,17 @@ def plot_results(filepath, layout, n_rows=2, figsize=None, stagger=0):
 		axes[r][c].axis('off')
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
-	tools.format_svg_labels(filepath, globals.algorithms)
+	globals.format_svg_labels(filepath, globals.algorithms)
 	if not filepath.endswith('.svg'):
-		tools.convert_svg(filepath, filepath)
+		eyekit.image.convert_svg(filepath, filepath)
 
 
 def plot_invariance(filepath, show_percentages=False):
 	accuracy = np.zeros((len(globals.algorithms), len(globals.factors)), dtype=float)
 	invariance = np.zeros((len(globals.algorithms), len(globals.factors)), dtype=bool)
 	for f, factor in enumerate(globals.factors):
-		results = tools.unpickle('../data/simulations/%s.pkl'%factor)
+		with open('../data/simulations/%s.pkl'%factor, mode='rb') as file:
+			results = pickle.load(file)
 		for a, algorithm in enumerate(globals.algorithms):
 			accuracy[a, f] = results[a].mean() * 100
 			if np.all(results[a] == 1.0):
@@ -88,9 +91,9 @@ def plot_invariance(filepath, show_percentages=False):
 	legend.set_ylabel('Mean accuracy (%)', labelpad=-38)
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
-	tools.format_svg_labels(filepath, globals.algorithms)
+	globals.format_svg_labels(filepath, globals.algorithms)
 	if not filepath.endswith('.svg'):
-		tools.convert_svg(filepath, filepath)
+		eyekit.image.convert_svg(filepath, filepath)
 
 
 if __name__ == '__main__':

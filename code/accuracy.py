@@ -5,8 +5,7 @@ against the gold standard manual correction.
 
 import matplotlib.pyplot as plt
 import numpy as np
-import json
-import tools
+import eyekit
 import globals
 
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
@@ -21,28 +20,25 @@ def percentage_match(line_assignments1, line_assignments2):
 
 def line_assignments(fixations):
 	line_assignments = np.zeros(len(fixations), dtype=int)
-	for i, fixation in enumerate(fixations):
-		if fixation[3] == False:
-			line_assignments[i] = globals.y_to_line_mapping[fixation[1]]
+	for i, fixation in enumerate(fixations.iter_with_discards()):
+		if not fixation.discarded:
+			line_assignments[i] = globals.y_to_line_mapping[fixation.y]
 	return line_assignments
 
 def compare_outputs(method1, method2):
-	with open('../data/fixations/%s.json'%method1) as file:
-		data1 = json.load(file)
-	with open('../data/fixations/%s.json'%method2) as file:
-		data2 = json.load(file)
+	data1 = eyekit.io.read('../data/fixations/%s.json'%method1)
+	data2 = eyekit.io.read('../data/fixations/%s.json'%method2)
 	results = {'adults':[], 'kids':[], 'adults_IDs':[], 'kids_IDs':[]}
-	for passage_id, participant_data in data1.items():
-		for participant_id, fixations in participant_data.items():
-			line_assignments1 = line_assignments(fixations)
-			line_assignments2 = line_assignments(data2[passage_id][participant_id])
-			percentage = percentage_match(line_assignments1, line_assignments2)
-			if int(participant_id) > 100:
-				results['kids'].append(percentage)
-				results['kids_IDs'].append(participant_id)
-			else:
-				results['adults'].append(percentage)
-				results['adults_IDs'].append(participant_id)
+	for trial_id, trial in data1.items():
+		line_assignments1 = line_assignments(trial['fixations'])
+		line_assignments2 = line_assignments(data2[trial_id]['fixations'])
+		percentage = percentage_match(line_assignments1, line_assignments2)
+		if trial['age_group'] == 'adult':
+			results['adults'].append(percentage)
+			results['adults_IDs'].append(trial['participant_id'])
+		elif trial['age_group'] == 'child':
+			results['kids'].append(percentage)
+			results['kids_IDs'].append(trial['participant_id'])
 	return results
 
 def calculate_improvement(results):
@@ -117,9 +113,9 @@ def plot_results(results, filepath, y_label, y_limits, y_unit):
 	axis.set_ylabel(y_label)
 	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
 	fig.savefig(filepath, format='svg')
-	tools.format_svg_labels(filepath, globals.algorithms)
+	globals.format_svg_labels(filepath, globals.algorithms)
 	if not filepath.endswith('.svg'):
-		tools.convert_svg(filepath, filepath)
+		eyekit.image.convert_svg(filepath, filepath)
 
 
 if __name__ == '__main__':
