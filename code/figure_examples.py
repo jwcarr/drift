@@ -1,26 +1,25 @@
 import eyekit
-import tools
 
-data = tools.load_data('../data/fixations/sample.json')
-passages = tools.load_passages('../data/passages/')
+data = eyekit.io.read('../data/fixations/sample.json')
+passages = eyekit.io.load_texts('../data/passages.json')
 
-adult_fixation_sequence = eyekit.FixationSequence(data['1B']['8'])
-child_fixation_sequence = eyekit.FixationSequence(data['4A']['204'])
+adult_fixation_sequence = data['trial_5']['fixations']  #   8, 1B
+child_fixation_sequence = data['trial_30']['fixations'] # 204, 4A
 
-adult = eyekit.Diagram(1920, 1080)
-adult.render_passage(passages['1B'], 28, color='gray')
+adult = eyekit.Image(1920, 1080)
+adult.render_text(passages['1B'], color='gray')
 adult.render_fixations(adult_fixation_sequence, include_discards=True)
-adult.crop_to_passage(40)
+adult.crop_to_text(50)
 adult.set_label('Reading trial by an adult')
 
-child = eyekit.Diagram(1920, 1080)
-child.render_passage(passages['4A'], 28, color='gray')
+child = eyekit.Image(1920, 1080)
+child.render_text(passages['4A'], color='gray')
 child.render_fixations(child_fixation_sequence, include_discards=True)
-child.crop_to_passage(40)
+child.crop_to_text(50)
 child.set_label('Reading trial by a child')
 
 figure_layout = [[adult, child]]
-eyekit.diagram.combine_diagrams(figure_layout, '../visuals/illustration_examples.pdf',
-	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
-eyekit.diagram.combine_diagrams(figure_layout, '../manuscript/figs/fig01_double_column.eps',
-	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
+eyekit.image.combine_images(figure_layout, '../visuals/illustration_examples.pdf',
+	image_width=174, v_padding=3, h_padding=3, e_padding=1)
+eyekit.image.combine_images(figure_layout, '../manuscript/figs/fig01_double_column.eps',
+	image_width=174, v_padding=3, h_padding=3, e_padding=1)

@@ -1,49 +1,48 @@
 import eyekit
-import tools
 
 figure_layout = [['attach',  'chain', 'cluster'],
                  ['compare', 'merge', 'regress'],
                  ['segment', 'split', 'warp'   ]]
 
-passages = tools.load_passages('../data/passages/')
-gold_data = tools.load_data('../data/fixations/gold.json')
+passages = eyekit.io.load_texts('../data/passages.json')
+gold_data = eyekit.io.read('../data/fixations/gold.json')
 
 # Adult example
 
-gold_fixation_sequence = eyekit.FixationSequence(gold_data['1B']['8'])
+gold_fixation_sequence = gold_data['trial_5']['fixations']
 diagrams = []
 for i, row in enumerate(figure_layout):
 	diagrams.append([])
 	for j, algorithm in enumerate(row):
-		data = tools.load_data('../data/fixations/%s.json'%algorithm)
-		fixation_sequence = eyekit.FixationSequence(data['1B']['8'])
-		diagram = eyekit.Diagram(1920, 1080)
-		diagram.render_passage(passages['1B'], 28, color='gray')
+		data = eyekit.io.read('../data/fixations/%s.json'%algorithm)
+		fixation_sequence = data['trial_5']['fixations']
+		diagram = eyekit.Image(1920, 1080)
+		diagram.render_text(passages['1B'], color='gray')
 		diagram.render_fixation_comparison(gold_fixation_sequence, fixation_sequence)
-		diagram.crop_to_passage(40)
+		diagram.crop_to_text(50)
 		diagram.set_label('<tspan style="font-family:Menlo">%s</tspan>' % algorithm)
 		diagrams[-1].append(diagram)
-eyekit.diagram.combine_diagrams(diagrams, '../visuals/outputs_adult.pdf',
-	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
-eyekit.diagram.combine_diagrams(diagrams, '../manuscript/figs/fig09_double_column.eps',
-	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
+eyekit.image.combine_images(diagrams, '../visuals/outputs_adult.pdf',
+	image_width=174, v_padding=3, h_padding=3, e_padding=1)
+eyekit.image.combine_images(diagrams, '../manuscript/figs/fig09_double_column.eps',
+	image_width=174, v_padding=3, h_padding=3, e_padding=1)
 
 # Child example
 
-gold_fixation_sequence = eyekit.FixationSequence(gold_data['4A']['204'])
+gold_fixation_sequence = gold_data['trial_30']['fixations']
 diagrams = []
 for i, row in enumerate(figure_layout):
 	diagrams.append([])
 	for j, algorithm in enumerate(row):
-		data = tools.load_data('../data/fixations/%s.json'%algorithm)
-		fixation_sequence = eyekit.FixationSequence(data['4A']['204'])
-		diagram = eyekit.Diagram(1920, 1080)
-		diagram.render_passage(passages['4A'], 28, color='gray')
+		data = eyekit.io.read('../data/fixations/%s.json'%algorithm)
+		fixation_sequence = data['trial_30']['fixations']
+		diagram = eyekit.Image(1920, 1080)
+		diagram.render_text(passages['4A'], color='gray')
 		diagram.render_fixation_comparison(gold_fixation_sequence, fixation_sequence)
-		diagram.crop_to_passage(40)
+		diagram.crop_to_text(50)
 		diagram.set_label('<tspan style="font-family:Menlo">%s</tspan>' % algorithm)
 		diagrams[-1].append(diagram)
-eyekit.diagram.combine_diagrams(diagrams, '../visuals/outputs_child.pdf',
-	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
-eyekit.diagram.combine_diagrams(diagrams, '../manuscript/figs/fig10_double_column.eps',
-	diagram_width=174, v_padding=3, h_padding=3, e_padding=1)
+eyekit.image.combine_images(diagrams, '../visuals/outputs_child.pdf',
+	image_width=174, v_padding=3, h_padding=3, e_padding=1)
+eyekit.image.combine_images(diagrams, '../manuscript/figs/fig10_double_column.eps',
+	image_width=174, v_padding=3, h_padding=3, e_padding=1)

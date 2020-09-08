@@ -1,8 +1,5 @@
-from os import listdir, path
 import pickle as _pickle
 import re
-import json
-import cairosvg
 import eyekit
 
 def pickle(obj, file_path):
@@ -12,36 +9,6 @@ def pickle(obj, file_path):
 def unpickle(file_path):
 	with open(file_path, mode='rb') as file:
 		return _pickle.load(file)
-
-def load_passages(passages_dir):
-	passages = {}
-	for passage_file in listdir(passages_dir):
-		if not passage_file.endswith('.txt'):
-			continue
-		passage_id, _ = passage_file.split('.')
-		passage_path = path.join(passages_dir, passage_file)
-		passages[passage_id] = eyekit.Passage(passage_path,
-			first_character_position=(368, 155),
-			character_spacing=16,
-			line_spacing=64,
-			pad_lines_with_spaces=True)
-	return passages
-
-def load_data(data_file):
-	with open(data_file) as file:
-		data = json.load(file)
-	return data
-
-def convert_svg(svg_file_path, out_file_path, png_width=1000):
-	filename, extension = path.splitext(out_file_path)
-	if extension == '.pdf':
-		cairosvg.svg2pdf(url=svg_file_path, write_to=out_file_path)
-	elif extension == '.eps':
-		cairosvg.svg2ps(url=svg_file_path, write_to=out_file_path)
-	elif extension == '.png':
-		cairosvg.svg2png(url=svg_file_path, write_to=out_file_path, dpi=300)
-	else:
-		raise ValueError('Cannot save to this format. Use either .pdf, .eps, or .png')
 
 def format_svg_labels(svg_file_path, monospace=[], arbitrary_replacements={}):
 	'''
