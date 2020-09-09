@@ -16,7 +16,7 @@ def correct_drift(method, fixation_XY, passage, return_solution=False, **params)
 	if method in ['attach', 'chain', 'cluster', 'merge', 'regress', 'segment', 'split']:
 		second_argument = passage.line_positions
 	elif method in ['compare', 'warp']:
-		second_argument = passage.word_centers()
+		second_argument = passage.word_centers
 	else:
 		raise ValueError('Invalid method')
 	function = globals()[method]

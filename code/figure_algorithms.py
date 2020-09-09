@@ -52,7 +52,7 @@ def visualize_cluster(passage, fixation_sequence):
 
 def visualize_compare(passage, fixation_sequence):
 	_, solution = algorithms.correct_drift('compare', fixation_sequence.XYarray(), passage, return_solution=True, x_thresh=300)
-	word_XY = passage.word_centers()
+	word_XY = passage.word_centers
 	diagram = eyekit.Image(1920, 1080)
 	diagram.render_text(passage, color='gray')
 	gaze_line = solution[0][0]
@@ -145,10 +145,10 @@ def visualize_split(passage, fixation_sequence):
 
 def visualize_warp(passage, fixation_sequence):
 	_, solution = algorithms.correct_drift('warp', fixation_sequence.XYarray(), passage, return_solution=True)
-	word_XY = passage.word_centers()
+	word_XY = passage.word_centers
 	diagram = eyekit.Image(1920, 1080)
 	diagram.render_text(passage, color='gray')
-	for word in passage.word_centers():
+	for word in passage.word_centers:
 		diagram.draw_circle(word, 5.641895835477563, color='gray')
 	for fixation, mapped_words in zip(fixation_sequence, solution):
 		for word_i in mapped_words:

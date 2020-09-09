@@ -9,7 +9,7 @@ for fixation in data['trial_5']['fixations']:
 	fixation.duration = 100
 corrected_fixation_sequence, solution = algorithms.correct_drift('warp', data['trial_5']['fixations'].XYarray(), passages['1B'], return_solution=True)
 corrected_fixation_sequence = eyekit.FixationSequence(corrected_fixation_sequence)
-word_XY = passages['1B'].word_centers()
+word_XY = passages['1B'].word_centers
 
 diagram = eyekit.Image(1920, 1080)
 diagram.render_text(passages['1B'], color='gray')
