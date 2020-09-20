@@ -24,7 +24,7 @@ if __name__ == '__main__':
 	correctors = ['JC', 'VP']
 
 	data = eyekit.io.read('../data/fixations/sample.json')
-	passages = eyekit.io.load_texts('../data/passages.json')
+	passages = eyekit.io.read('../data/passages.json')
 
 	for trial_id, trial in data.items():
 		create_visualization(trial['fixations'], trial['participant_id'], trial['passage_id'])

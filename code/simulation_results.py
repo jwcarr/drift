@@ -7,7 +7,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.transforms as transforms
 from matplotlib import gridspec
-import eyekit
 import globals
 
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
@@ -59,7 +58,7 @@ def plot_results(filepath, layout, n_rows=2, figsize=None, stagger=0):
 	fig.savefig(filepath, format='svg')
 	globals.format_svg_labels(filepath, globals.algorithms)
 	if not filepath.endswith('.svg'):
-		eyekit.image.convert_svg(filepath, filepath)
+		globals.convert_svg(filepath, filepath)
 
 
 def plot_invariance(filepath, show_percentages=False):
@@ -93,7 +92,7 @@ def plot_invariance(filepath, show_percentages=False):
 	fig.savefig(filepath, format='svg')
 	globals.format_svg_labels(filepath, globals.algorithms)
 	if not filepath.endswith('.svg'):
-		eyekit.image.convert_svg(filepath, filepath)
+		globals.convert_svg(filepath, filepath)
 
 
 if __name__ == '__main__':

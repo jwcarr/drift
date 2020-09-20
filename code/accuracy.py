@@ -115,7 +115,7 @@ def plot_results(results, filepath, y_label, y_limits, y_unit):
 	fig.savefig(filepath, format='svg')
 	globals.format_svg_labels(filepath, globals.algorithms)
 	if not filepath.endswith('.svg'):
-		eyekit.image.convert_svg(filepath, filepath)
+		globals.convert_svg(filepath, filepath)
 
 
 if __name__ == '__main__':

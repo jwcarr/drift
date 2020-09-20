@@ -3,7 +3,7 @@ import algorithms
 import globals
 
 data = eyekit.io.read('../data/fixations/sample.json')
-passages = eyekit.io.load_texts('../data/passages.json')
+passages = eyekit.io.read('../data/passages.json')
 
 for fixation in data['trial_5']['fixations']:
 	fixation.duration = 100
@@ -22,7 +22,7 @@ for fixation, mapped_words in zip(data['trial_5']['fixations'], solution):
 diagram.crop_to_text(50)
 
 figure_layout = [[diagram]]
-eyekit.image.combine_images(figure_layout, '../visuals/illustration_warp_.pdf',
+eyekit.image.make_figure(figure_layout, '../visuals/illustration_warp.pdf',
 	image_width=83, v_padding=3, h_padding=3, e_padding=1, auto_letter=False)
-eyekit.image.combine_images(figure_layout, '../manuscript/figs/fig03_single_column_.eps',
+eyekit.image.make_figure(figure_layout, '../manuscript/figs/fig03_single_column_.eps',
 	image_width=83, v_padding=3, h_padding=3, e_padding=1, auto_letter=False)

@@ -11,11 +11,11 @@ def run_and_visualize(passage, label, **params):
 	diagram.render_text(passage, color='gray')
 	diagram.render_fixations(fixation_sequence, color='black')
 	diagram.crop_to_text(30)
-	diagram.set_label(label)
+	diagram.set_caption(label)
 	return diagram
 
 
-passage = eyekit.Text(globals.lorem_ipsum_text, first_character_position=(368, 155), character_spacing=16, line_spacing=64, fontsize=28)
+passage = eyekit.TextBlock(globals.lorem_ipsum_text, position=(360, 149), font_name='Courier New', font_size=26.667, line_height=64, adjust_bbox=-7)
 
 noise_diagram = run_and_visualize(passage, 'Noise', noise=20.0)
 slope_diagram = run_and_visualize(passage, 'Slope (downward)', noise=2.0, slope=0.1)
@@ -29,7 +29,7 @@ figure_layout = [[noise_diagram],
                  [within_diagram],
                  [between_diagram]]
 
-eyekit.image.combine_images(figure_layout, '../visuals/illustration_phenomena.pdf',
+eyekit.image.make_figure(figure_layout, '../visuals/illustration_phenomena.pdf',
 	image_width=83, v_padding=3, h_padding=3, e_padding=1)
-eyekit.image.combine_images(figure_layout, '../manuscript/figs/fig04_single_column.eps',
+eyekit.image.make_figure(figure_layout, '../manuscript/figs/fig04_single_column.eps',
 	image_width=83, v_padding=3, h_padding=3, e_padding=1)

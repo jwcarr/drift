@@ -1,4 +1,6 @@
+from os import path
 import re
+import cairosvg
 
 def format_svg_labels(svg_file_path, monospace=[], arbitrary_replacements={}):
 	'''
@@ -21,6 +23,21 @@ def format_svg_labels(svg_file_path, monospace=[], arbitrary_replacements={}):
 		svg = svg.replace(find, replace)
 	with open(svg_file_path, mode='w', encoding='utf-8') as file:
 		file.write(svg)
+
+def convert_svg(svg_file_path, out_file_path):
+	'''
+	Convert an SVG file into PDF, EPS, or PNG. This function is
+	essentially a wrapper around CairoSVG.
+	'''
+	_, extension = path.splitext(out_file_path)
+	if extension == '.pdf':
+		cairosvg.svg2pdf(url=svg_file_path, write_to=out_file_path)
+	elif extension == '.eps':
+		cairosvg.svg2ps(url=svg_file_path, write_to=out_file_path)
+	elif extension == '.png':
+		cairosvg.svg2png(url=svg_file_path, write_to=out_file_path)
+	else:
+		raise ValueError('Cannot save to this format. Use either .pdf, .eps, or .png')
 
 
 y_to_line_mapping = {155:1, 219:2, 283:3, 347:4, 411:5, 475:6, 539:7, 603:8, 667:9, 731:10, 795:11, 859:12, 923:13}

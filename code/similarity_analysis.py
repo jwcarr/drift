@@ -197,7 +197,7 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 	fig.savefig(filepath, format='svg')
 	globals.format_svg_labels(filepath, monospace=globals.algorithms, arbitrary_replacements={'gold':'Gold standard', 'JC':'Jon', 'VP':'Vale'})
 	if not filepath.endswith('.svg'):
-		eyekit.image.convert_svg(filepath, filepath)
+		globals.convert_svg(filepath, filepath)
 
 
 if __name__ == '__main__':

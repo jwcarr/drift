@@ -51,6 +51,7 @@ def make_corrected_file(correction_path, participant_data, passages, corrected_f
 				else:
 					new_y = passages[trial['passage_id']].line_positions[l-1]
 					new_trial['fixations'].append((fixation.x, int(new_y), fixation.duration, False))
+		new_trial['fixations'] = eyekit.FixationSequence(new_trial['fixations'])
 		new_dataset[trial_id] = new_trial
 	eyekit.io.write(new_dataset, corrected_file_path)
 
@@ -78,7 +79,7 @@ def compare_two_corrections(correction1_file_path, correction2_file_path):
 
 if __name__ == '__main__':
 
-	passages = eyekit.io.load_texts('../data/passages.json')
+	passages = eyekit.io.read('../data/passages.json')
 	participant_data = eyekit.io.read('../data/fixations/sample.json')
 
 	# Step 1: Check validity of JC's correction and make JSON file

@@ -40,11 +40,11 @@ class ReadingScenario:
 				# because a one-word final line can be problematic for merge
 				# since it cannot create sequences with one fixation.
 				lines[-1] = 'lorem ' + lines[-1]
-		return eyekit.Text(lines, first_character_position=(0, 0), character_spacing=self.character_spacing, line_spacing=self.line_spacing, fontsize=28)
+		return eyekit.TextBlock(lines, position=(0, 0), font_name='Courier New', font_size=26.667, line_height=64.0, adjust_bbox=-7)
 
 	def _generate_line_sequence(self, passage, line_i, partial_reading=False, inherited_line_y_for_shift=None):
-		x_margin, y_margin = passage.first_character_position
-		max_line_width = passage.character_spacing * passage.n_cols
+		x_margin, y_margin = passage.x_tl, passage.y_tl
+		max_line_width = passage.width
 		if partial_reading:
 			start_point = np.random.randint(0, max_line_width//2) + x_margin
 			end_point = np.random.randint(max_line_width//2, max_line_width) + x_margin
@@ -52,17 +52,18 @@ class ReadingScenario:
 			start_point = x_margin
 			end_point = max_line_width + x_margin
 		line_X = []
-		for word_i, word in enumerate(passage.words()):
-			if word.r != line_i:
-				continue
-			x_word_center = word.center[0]
-			if x_word_center < start_point or x_word_center > end_point:
-				continue
-			x_value = int(np.random.triangular(word[0].x, x_word_center, word[-1].x+1))
-			line_X.append(x_value)
-			if word_i > 0 and np.random.random() < self.regression_within:
-				x_regression = int(np.random.triangular(x_margin, word[0].x+1, word[0].x+1))
-				line_X.append(x_regression)
+		for line_n in range(passage.n_rows):
+			for word_i, word in enumerate(passage.words(line_n=line_n)):
+				if line_n != line_i:
+					continue
+				x_word_center = word.center[0]
+				if x_word_center < start_point or x_word_center > end_point:
+					continue
+				x_value = int(np.random.triangular(word[0].x, x_word_center, word[-1].x+1))
+				line_X.append(x_value)
+				if word_i > 0 and np.random.random() < self.regression_within:
+					x_regression = int(np.random.triangular(x_margin, word[0].x+1, word[0].x+1))
+					line_X.append(x_regression)
 		line_X = np.array(line_X, dtype=int) - x_margin
 		line_y = passage.line_positions[line_i] - y_margin
 		line_Y = np.random.normal(line_y, self.noise, len(line_X))

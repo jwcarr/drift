@@ -4,7 +4,7 @@ figure_layout = [['attach',  'chain', 'cluster'],
                  ['compare', 'merge', 'regress'],
                  ['segment', 'split', 'warp'   ]]
 
-passages = eyekit.io.load_texts('../data/passages.json')
+passages = eyekit.io.read('../data/passages.json')
 gold_data = eyekit.io.read('../data/fixations/gold.json')
 
 # Adult example
@@ -20,11 +20,11 @@ for i, row in enumerate(figure_layout):
 		diagram.render_text(passages['1B'], color='gray')
 		diagram.render_fixation_comparison(gold_fixation_sequence, fixation_sequence)
 		diagram.crop_to_text(50)
-		diagram.set_label('<tspan style="font-family:Menlo">%s</tspan>' % algorithm)
+		diagram.set_caption('<tspan style="font-family:Menlo">%s</tspan>' % algorithm)
 		diagrams[-1].append(diagram)
-eyekit.image.combine_images(diagrams, '../visuals/outputs_adult.pdf',
+eyekit.image.make_figure(diagrams, '../visuals/outputs_adult.pdf',
 	image_width=174, v_padding=3, h_padding=3, e_padding=1)
-eyekit.image.combine_images(diagrams, '../manuscript/figs/fig09_double_column.eps',
+eyekit.image.make_figure(diagrams, '../manuscript/figs/fig09_double_column.eps',
 	image_width=174, v_padding=3, h_padding=3, e_padding=1)
 
 # Child example
@@ -40,9 +40,9 @@ for i, row in enumerate(figure_layout):
 		diagram.render_text(passages['4A'], color='gray')
 		diagram.render_fixation_comparison(gold_fixation_sequence, fixation_sequence)
 		diagram.crop_to_text(50)
-		diagram.set_label('<tspan style="font-family:Menlo">%s</tspan>' % algorithm)
+		diagram.set_caption('<tspan style="font-family:Menlo">%s</tspan>' % algorithm)
 		diagrams[-1].append(diagram)
-eyekit.image.combine_images(diagrams, '../visuals/outputs_child.pdf',
+eyekit.image.make_figure(diagrams, '../visuals/outputs_child.pdf',
 	image_width=174, v_padding=3, h_padding=3, e_padding=1)
-eyekit.image.combine_images(diagrams, '../manuscript/figs/fig10_double_column.eps',
+eyekit.image.make_figure(diagrams, '../manuscript/figs/fig10_double_column.eps',
 	image_width=174, v_padding=3, h_padding=3, e_padding=1)
