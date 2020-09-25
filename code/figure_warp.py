@@ -12,17 +12,17 @@ corrected_fixation_sequence = eyekit.FixationSequence(corrected_fixation_sequenc
 word_XY = passages['1B'].word_centers
 
 diagram = eyekit.Image(1920, 1080)
-diagram.render_text(passages['1B'], color='gray')
-diagram.render_fixations(eyekit.FixationSequence(word_XY), include_discards=True, color=globals.illustration_colors[1])
-diagram.render_fixations(data['trial_5']['fixations'], include_discards=True, color=globals.illustration_colors[2])
+diagram.draw_text_block(passages['1B'], color='gray')
+diagram.draw_fixation_sequence(eyekit.FixationSequence(word_XY), color=globals.illustration_colors[1])
+diagram.draw_fixation_sequence(data['trial_5']['fixations'], color=globals.illustration_colors[2])
 for fixation, mapped_words in zip(data['trial_5']['fixations'], solution):
 	for word_i in mapped_words:
 		word_x, word_y = word_XY[word_i]
 		diagram.draw_line(fixation.xy, (word_x, word_y), 'black', dashed=True)
-diagram.crop_to_text(50)
 
-figure_layout = [[diagram]]
-eyekit.image.make_figure(figure_layout, '../visuals/illustration_warp.pdf',
-	image_width=83, v_padding=3, h_padding=3, e_padding=1, auto_letter=False)
-eyekit.image.make_figure(figure_layout, '../manuscript/figs/fig03_single_column_.eps',
-	image_width=83, v_padding=3, h_padding=3, e_padding=1, auto_letter=False)
+fig = eyekit.Figure()
+fig.add_image(diagram)
+fig.set_crop_margin(3)
+fig.set_auto_letter(False)
+fig.save('../visuals/_illustration_warp.pdf', 83)
+# fig.save('../manuscript/figs/fig03_single_column_.eps', 83)

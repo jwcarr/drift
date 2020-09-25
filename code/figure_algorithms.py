@@ -7,29 +7,27 @@ def visualize_attach(passage, fixation_sequence):
 	corrected_sequence, solution = algorithms.correct_drift('attach', fixation_sequence.XYarray(), passage, return_solution=True)
 	corrected_sequence = eyekit.FixationSequence(corrected_sequence)
 	diagram = eyekit.Image(1920, 1080)
-	diagram.render_text(passage, color='gray')
+	diagram.draw_text_block(passage, color='gray')
 	for fixation, fixation2 in zip(fixation_sequence, corrected_sequence):
 		color = globals.illustration_colors[globals.y_to_line_mapping[fixation2.y]-1]
-		diagram.draw_circle(*fixation.xy, 5.641895835477563, color)
-		diagram.draw_line(fixation.xy, fixation2.xy, color)
-	diagram.crop_to_text(30)
-	diagram.set_caption('<tspan style="font-family:Menlo">attach</tspan>')
+		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=color)
+		diagram.draw_line(fixation.xy, fixation2.xy, color=color, stroke_width=2)
+	diagram.set_caption('attach')
 	return diagram
 
 def visualize_chain(passage, fixation_sequence):
 	corrected_sequence, solution = algorithms.correct_drift('chain', fixation_sequence.XYarray(), passage, return_solution=True, x_thresh=100)
 	corrected_sequence = eyekit.FixationSequence(corrected_sequence)
 	diagram = eyekit.Image(1920, 1080)
-	diagram.render_text(passage, color='gray')
+	diagram.draw_text_block(passage, color='gray')
 	prev = None
 	for i, (fixation, fixation2) in enumerate(zip(fixation_sequence, corrected_sequence)):
 		color = globals.illustration_colors[globals.y_to_line_mapping[fixation2.y]-1]
-		diagram.draw_circle(*fixation.xy, 5.641895835477563, color)
+		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=color)
 		if prev and i not in solution:
-			diagram.draw_line(prev.xy, fixation.xy, color)
+			diagram.draw_line(prev.xy, fixation.xy, color, stroke_width=2)
 		prev = fixation
-	diagram.crop_to_text(30)
-	diagram.set_caption('<tspan style="font-family:Menlo">chain</tspan>')
+	diagram.set_caption('chain')
 	return diagram
 
 def visualize_cluster(passage, fixation_sequence):
@@ -37,24 +35,23 @@ def visualize_cluster(passage, fixation_sequence):
 	corrected_sequence = eyekit.FixationSequence(corrected_sequence)
 	clusters, ordered_cluster_indices = solution
 	diagram = eyekit.Image(1920, 1080)
-	diagram.render_text(passage, color='gray')
+	diagram.draw_text_block(passage, color='gray')
 	for fixation, cluster_i in zip(fixation_sequence, clusters):
 		line_i = ordered_cluster_indices.index(cluster_i)
-		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=globals.illustration_colors[line_i])
+		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=globals.illustration_colors[line_i])
 	for line_i, cluster_i in enumerate(ordered_cluster_indices):
 		fixations_in_cluster = np.where(clusters == cluster_i)[0]
 		y_values = [fixation_sequence[int(f)].y for f in fixations_in_cluster]
 		mn, mx = min(y_values), max(y_values)
 		diagram.draw_rectangle(344, mn, 656, mx-mn, color=globals.illustration_colors[line_i], dashed=True)
-	diagram.crop_to_text(30)
-	diagram.set_caption('<tspan style="font-family:Menlo">cluster</tspan>')
+	diagram.set_caption('cluster')
 	return diagram
 
 def visualize_compare(passage, fixation_sequence):
 	_, solution = algorithms.correct_drift('compare', fixation_sequence.XYarray(), passage, return_solution=True, x_thresh=300)
 	word_XY = passage.word_centers
 	diagram = eyekit.Image(1920, 1080)
-	diagram.render_text(passage, color='gray')
+	diagram.draw_text_block(passage, color='gray')
 	gaze_line = solution[0][0]
 	text_lines = solution[0][1]
 	warp_paths = solution[0][2]
@@ -63,34 +60,32 @@ def visualize_compare(passage, fixation_sequence):
 		for fixation, mapped_words in zip(gaze_line, warp_path):
 			for word_i in mapped_words:
 				word_x, word_y = text_line[word_i]
-				diagram.draw_circle(word_x, word_y, 5.641895835477563, color='gray')
-				diagram.draw_line(tuple(fixation), (word_x, fixation[1]), color=globals.illustration_colors[color_i])
+				diagram.draw_circle(word_x, word_y, 5.641895835477563, color=None, fill_color='gray')
+				diagram.draw_line(tuple(fixation), (word_x, fixation[1]), color=globals.illustration_colors[color_i], stroke_width=2)
 		for fixation in gaze_line:
-			diagram.draw_circle(*tuple(fixation), 5.641895835477563, color='black')
-		diagram.draw_text(1000, text_line[0][1], int(line_costs[color_i]), color=globals.illustration_colors[color_i], align='end', style={'font-size':'30', 'font-family':'Helvetica Neue', 'font-weight':'bold'})
+			diagram.draw_circle(*tuple(fixation), 5.641895835477563, color=None, fill_color='black')
+		diagram.draw_annotation(1000, text_line[0][1], str(int(line_costs[color_i])), color=globals.illustration_colors[color_i], font_size=30, font_face='Helvetica Neue')
 		gaze_line[:, 1] += 64
-	diagram.crop_to_text(30)
-	diagram.set_caption('<tspan style="font-family:Menlo">compare</tspan> (gaze line 1)')
+	diagram.set_caption('compare (gaze line 1)')
 	return diagram
 
 def visualize_merge(passage, fixation_sequence):
 	corrected_sequence, solution = algorithms.correct_drift('merge', fixation_sequence.XYarray(), passage, return_solution=True)
 	corrected_sequence = eyekit.FixationSequence(corrected_sequence)
 	diagram = eyekit.Image(1920, 1080)
-	diagram.render_text(passage, color='gray')
+	diagram.draw_text_block(passage, color='gray')
 	for line_i, sequence in solution.items():
 		color = globals.illustration_colors[line_i]
-		diagram.draw_circle(*fixation_sequence[sequence[0]].xy, 5.641895835477563, color)
+		diagram.draw_circle(*fixation_sequence[sequence[0]].xy, 5.641895835477563, color=None, fill_color=color)
 		for i in range(1, len(sequence)):
-			diagram.draw_line(fixation_sequence[sequence[i-1]].xy, fixation_sequence[sequence[i]].xy, color)
-			diagram.draw_circle(*fixation_sequence[sequence[i]].xy, 5.641895835477563, color)
+			diagram.draw_line(fixation_sequence[sequence[i-1]].xy, fixation_sequence[sequence[i]].xy, color, stroke_width=2)
+			diagram.draw_circle(*fixation_sequence[sequence[i]].xy, 5.641895835477563, color=None, fill_color=color)
 		fixation_XY = fixation_sequence.XYarray()[sequence]
 		k, intercept = np.polyfit(fixation_XY[:, 0], fixation_XY[:, 1], 1)
 		start = (344, intercept+(344*k))
 		end = (1000, intercept+(1000*k))
-		diagram.draw_line(start, end, color=color, dashed=True)
-	diagram.crop_to_text(30)
-	diagram.set_caption('<tspan style="font-family:Menlo">merge</tspan> (final merged sequences)')
+		diagram.draw_line(start, end, color=color, dashed=True, stroke_width=2)
+	diagram.set_caption('merge (final merged sequences)')
 	return diagram
 
 def visualize_regress(passage, fixation_sequence):
@@ -100,85 +95,81 @@ def visualize_regress(passage, fixation_sequence):
 	(k, o, s), line_numbers = solution
 	start_points[:, 1] = start_points[:, 1] + o
 	diagram = eyekit.Image(1920, 1080)
-	diagram.render_text(passage, color='gray')
+	diagram.draw_text_block(passage, color='gray')
 	for start_point, color in zip(start_points, globals.illustration_colors):
 		start = (344, start_point[1]+(344*k))
 		end = (1000, start_point[1]+(1000*k))
-		diagram.draw_line(start, end, color=color, dashed=True)
+		diagram.draw_line(start, end, color=color, dashed=True, stroke_width=2)
 	for fixation, line_i in zip(fixation_sequence, line_numbers):
-		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=globals.illustration_colors[line_i])
+		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=globals.illustration_colors[line_i])
 		predicted_y = (fixation.x * k) + passage.line_positions[line_i] + o
-		diagram.draw_line(fixation.xy, (fixation.x, predicted_y), color=globals.illustration_colors[line_i])
-	diagram.crop_to_text(30)
-	diagram.set_caption('<tspan style="font-family:Menlo">regress</tspan>')
+		diagram.draw_line(fixation.xy, (fixation.x, predicted_y), color=globals.illustration_colors[line_i], stroke_width=2)
+	diagram.set_caption('regress')
 	return diagram
 
 def visualize_segment(passage, fixation_sequence):
 	corrected_sequence, solution = algorithms.correct_drift('segment', fixation_sequence.XYarray(), passage, return_solution=True)
 	corrected_sequence = eyekit.FixationSequence(corrected_sequence)
 	diagram = eyekit.Image(1920, 1080)
-	diagram.render_text(passage, color='gray')
+	diagram.draw_text_block(passage, color='gray')
 	for i, line_change_i in enumerate(solution):
 		fxn = int(line_change_i)
-		diagram.draw_line(fixation_sequence[fxn].xy, fixation_sequence[fxn+1].xy, 'black')
+		diagram.draw_line(fixation_sequence[fxn].xy, fixation_sequence[fxn+1].xy, 'black', stroke_width=2)
 	for fixation, fixation2 in zip(fixation_sequence, corrected_sequence):
 		color = globals.illustration_colors[globals.y_to_line_mapping[fixation2.y]-1]
-		diagram.draw_circle(*fixation.xy, 5.641895835477563, color)
-	diagram.crop_to_text(30)
-	diagram.set_caption('<tspan style="font-family:Menlo">segment</tspan>')
+		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=color)
+	diagram.set_caption('segment')
 	return diagram
 
 def visualize_split(passage, fixation_sequence):
 	corrected_sequence, solution = algorithms.correct_drift('split', fixation_sequence.XYarray(), passage, return_solution=True)
 	corrected_sequence = eyekit.FixationSequence(corrected_sequence)
 	diagram = eyekit.Image(1920, 1080)
-	diagram.render_text(passage, color='gray')
+	diagram.draw_text_block(passage, color='gray')
 	for i, line_change_i in enumerate(solution[:-1]):
 		fxn = int(line_change_i) - 1
-		diagram.draw_line(fixation_sequence[fxn].xy, fixation_sequence[fxn+1].xy, 'black')
+		diagram.draw_line(fixation_sequence[fxn].xy, fixation_sequence[fxn+1].xy, 'black', stroke_width=2)
 	for fixation, fixation2 in zip(fixation_sequence, corrected_sequence):
 		color = globals.illustration_colors[globals.y_to_line_mapping[fixation2.y]-1]
-		diagram.draw_circle(*fixation.xy, 5.641895835477563, color)
-	diagram.crop_to_text(30)
-	diagram.set_caption('<tspan style="font-family:Menlo">split</tspan>')
+		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=color)
+	diagram.set_caption('split')
 	return diagram
 
 def visualize_warp(passage, fixation_sequence):
 	_, solution = algorithms.correct_drift('warp', fixation_sequence.XYarray(), passage, return_solution=True)
 	word_XY = passage.word_centers
 	diagram = eyekit.Image(1920, 1080)
-	diagram.render_text(passage, color='gray')
+	diagram.draw_text_block(passage, color='gray')
 	for word in passage.word_centers:
-		diagram.draw_circle(*word, 5.641895835477563, color='gray')
+		diagram.draw_circle(*word, 5.641895835477563, color=None, fill_color='gray')
 	for fixation, mapped_words in zip(fixation_sequence, solution):
 		for word_i in mapped_words:
 			word_x, word_y = word_XY[word_i]
 			color = globals.illustration_colors[globals.y_to_line_mapping[word_y]-1]
-			diagram.draw_circle(*fixation.xy, 5.641895835477563, color)
-			diagram.draw_line(fixation.xy, (word_x, word_y), color)
-	diagram.crop_to_text(30)
-	diagram.set_caption('<tspan style="font-family:Menlo">warp</tspan>')
+			diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=color)
+			diagram.draw_line(fixation.xy, (word_x, word_y), color, stroke_width=2)
+	diagram.set_caption('warp')
 	return diagram
 
 
-passage = eyekit.TextBlock(globals.lorem_ipsum_text, position=(360, 149), font_name='Courier New', font_size=26.667, line_height=64, adjust_bbox=-7)
+passage = eyekit.TextBlock(globals.lorem_ipsum_text, position=(360, 161), font_face='Courier New', font_size=26.667, line_height=64)
 fixation_sequence = eyekit.FixationSequence(globals.lorem_ipsum_XY)
 
-attach = visualize_attach(passage, fixation_sequence)
-chain = visualize_chain(passage, fixation_sequence)
-cluster = visualize_cluster(passage, fixation_sequence)
-compare = visualize_compare(passage, fixation_sequence)
-merge = visualize_merge(passage, fixation_sequence)
-regress = visualize_regress(passage, fixation_sequence)
-segment = visualize_segment(passage, fixation_sequence)
-split = visualize_split(passage, fixation_sequence)
-warp = visualize_warp(passage, fixation_sequence)
+fig = eyekit.Figure(3, 3)
+fig.add_image(visualize_attach(passage, fixation_sequence))
+fig.add_image(visualize_chain(passage, fixation_sequence))
+fig.add_image(visualize_cluster(passage, fixation_sequence))
+fig.add_image(visualize_compare(passage, fixation_sequence))
+fig.add_image(visualize_merge(passage, fixation_sequence))
+fig.add_image(visualize_regress(passage, fixation_sequence))
+fig.add_image(visualize_segment(passage, fixation_sequence))
+fig.add_image(visualize_split(passage, fixation_sequence))
+fig.add_image(visualize_warp(passage, fixation_sequence))
+fig.set_crop_margin(2)
+fig.set_caption_font('Helvetica')
+fig.save('../visuals/_illustration_algorithms.pdf', 174)
 
-figure_layout = [[attach,  chain, cluster],
-                 [compare, merge, regress],
-                 [segment, split, warp   ]]
+	# image_width=174, v_padding=3, h_padding=3, e_padding=1)
 
-eyekit.image.make_figure(figure_layout, '../visuals/illustration_algorithms.pdf',
-	image_width=174, v_padding=3, h_padding=3, e_padding=1)
-eyekit.image.make_figure(figure_layout, '../manuscript/figs/fig02_double_column.eps',
-	image_width=174, v_padding=3, h_padding=3, e_padding=1)
+# eyekit.image.make_figure(figure_layout, '../manuscript/figs/fig02_double_column.eps',
+# 	image_width=174, v_padding=3, h_padding=3, e_padding=1)

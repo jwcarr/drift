@@ -40,7 +40,7 @@ class ReadingScenario:
 				# because a one-word final line can be problematic for merge
 				# since it cannot create sequences with one fixation.
 				lines[-1] = 'lorem ' + lines[-1]
-		return eyekit.TextBlock(lines, position=(0, 0), font_name='Courier New', font_size=26.667, line_height=64.0, adjust_bbox=-7)
+		return eyekit.TextBlock(lines, position=(0, 0), font_face='Courier New', font_size=26.667, line_height=64.0)
 
 	def _generate_line_sequence(self, passage, line_i, partial_reading=False, inherited_line_y_for_shift=None):
 		x_margin, y_margin = passage.x_tl, passage.y_tl
