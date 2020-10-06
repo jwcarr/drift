@@ -54,7 +54,7 @@ def plot_results(filepath, layout, n_rows=2, figsize=None, stagger=0):
 		axis.set_yticklabels([])
 	for r, c in list(np.ndindex((n_rows, n_cols)))[len(layout):]:
 		axes[r][c].axis('off')
-	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
+	fig.tight_layout(pad=0.5, h_pad=1, w_pad=1)
 	fig.savefig(filepath, format='svg')
 	globals.format_svg_labels(filepath, globals.algorithms)
 	if not filepath.endswith('.svg'):
@@ -88,7 +88,7 @@ def plot_invariance(filepath, show_percentages=False):
 	heatmap.set_yticklabels(globals.algorithms)
 	heatmap.tick_params(bottom=False, left=False)
 	legend.set_ylabel('Mean accuracy (%)', labelpad=-38)
-	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
+	fig.tight_layout(pad=0.5, h_pad=1, w_pad=1)
 	fig.savefig(filepath, format='svg')
 	globals.format_svg_labels(filepath, globals.algorithms)
 	if not filepath.endswith('.svg'):

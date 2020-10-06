@@ -152,7 +152,7 @@ def multidimensional_scaling_analysis(algorithm_distances, methods, random_seed=
 	return methods, min_max_normalize(positions)
 
 def plot_analyses(ahc_solution, mds_solution, filepath):
-	fig, axes = plt.subplots(1, 2, figsize=(6.8, 2.5))
+	fig, axes = plt.subplots(2, 1, figsize=(3.3, 5))
 
 	# Plot AHC clustering
 	ahc_methods, linkage_matrix = ahc_solution
@@ -172,6 +172,7 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 		axes[0].text(x+3, y, label, ha='left', va='center')
 	inches_from_origin = (fig.dpi_scale_trans + transforms.ScaledTranslation(0, 1, axes[0].transAxes))
 	axes[0].text(0.1, -0.1, '(A)', fontsize=8, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
+	axes[0].set_xlim(-3, 76)
 	
 	# Plot MDS solution
 	mds_methods, positions = mds_solution
@@ -193,7 +194,7 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 	inches_from_origin = (fig.dpi_scale_trans + transforms.ScaledTranslation(0, 1, axes[1].transAxes))
 	axes[1].text(0.1, -0.1, '(B)', fontsize=8, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
 
-	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
+	fig.tight_layout(pad=0.5, h_pad=1, w_pad=1)
 	fig.savefig(filepath, format='svg')
 	globals.format_svg_labels(filepath, monospace=globals.algorithms, arbitrary_replacements={'gold':'Gold standard', 'JC':'Jon', 'VP':'Vale'})
 	if not filepath.endswith('.svg'):
@@ -217,4 +218,4 @@ if __name__ == '__main__':
 
 	# Plot the analyses
 	plot_analyses(ahc_solution, mds_solution, '../visuals/results_similarity.pdf')
-	plot_analyses(ahc_solution, mds_solution, '../manuscript/figs/fig12_double_column.eps')
+	plot_analyses(ahc_solution, mds_solution, '../manuscript/figs/fig13_single_column.eps')
