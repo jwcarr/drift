@@ -4,6 +4,7 @@ against the gold standard manual correction.
 '''
 
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
 import numpy as np
 import eyekit
 import globals
@@ -111,12 +112,42 @@ def plot_results(results, filepath, y_label, y_limits, y_unit):
 	axis.tick_params(bottom=False)
 	axis.set_xticklabels(x_labels)
 	axis.set_ylabel(y_label)
-	fig.tight_layout(pad=0.1, h_pad=0.5, w_pad=0.5)
+	fig.tight_layout(pad=0.5, h_pad=1, w_pad=1)
 	fig.savefig(filepath, format='svg')
 	globals.format_svg_labels(filepath, globals.algorithms)
 	if not filepath.endswith('.svg'):
 		globals.convert_svg(filepath, filepath)
 
+def plot_proportion_above(accuracy_results, filepath, target_accuracy=95):
+	prop_adults = []
+	prop_kids = []
+	colors = []
+	for algorithm, results in accuracy_results.items():
+		prop_adult = len(np.where(np.array(results['adults']) >= target_accuracy)[0]) / len(results['adults'])
+		prop_kid = len(np.where(np.array(results['kids']) >= target_accuracy)[0]) / len(results['kids'])
+		prop_adults.append(prop_adult)
+		prop_kids.append(prop_kid)
+		colors.append(globals.colors[algorithm])
+	positions = np.arange(0, 27, 3)
+	fig, axis = plt.subplots(1, 1, figsize=(3.3, 2.5))
+	axis.bar(positions, prop_adults, color=colors, width=0.9)
+	axis.bar(positions+1, prop_kids, color=[pseudo_alpha(color) for color in colors], width=0.9)
+	axis.set_ylabel(f'Proportion of trials above {target_accuracy}% accuracy')
+	axis.set_ylim(0, 1)
+	axis.set_xticks(positions+0.5)
+	axis.set_xticklabels(accuracy_results.keys(), rotation=20, font='Menlo')
+	axis.tick_params(bottom=False)
+	axis.legend(handles=[Patch(facecolor='#000000', label='Adults'), Patch(facecolor=pseudo_alpha('#000000'), label='Children')], frameon=False, fontsize=7)
+	fig.tight_layout(pad=0.5, h_pad=1, w_pad=1)
+	fig.savefig(filepath, format='svg')
+	globals.format_svg_labels(filepath, globals.algorithms)
+	if not filepath.endswith('.svg'):
+		globals.convert_svg(filepath, filepath)
+
+def pseudo_alpha(color, opacity=0.5):
+	r, g, b = tuple(bytes.fromhex(color[1:]))
+	rgb = r/255, g/255, b/255
+	return tuple([value * opacity - opacity + 1 for value in rgb])
 
 if __name__ == '__main__':
 
@@ -128,3 +159,6 @@ if __name__ == '__main__':
 
 	plot_results(improvement_results, '../visuals/results_improvement.pdf', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
 	plot_results(improvement_results, '../manuscript/figs/fig11_double_column.eps', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
+
+	plot_proportion_above(accuracy_results, '../visuals/results_proportion.pdf')
+	plot_proportion_above(accuracy_results, '../manuscript/figs/fig12_single_column.eps')
