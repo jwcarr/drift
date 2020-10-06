@@ -12,7 +12,7 @@ def visualize_attach(passage, fixation_sequence):
 		color = globals.illustration_colors[globals.y_to_line_mapping[fixation2.y]-1]
 		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=color)
 		diagram.draw_line(fixation.xy, fixation2.xy, color=color, stroke_width=2)
-	diagram.set_caption('attach')
+	diagram.set_caption('attach', font_face='Menlo', font_size=8)
 	return diagram
 
 def visualize_chain(passage, fixation_sequence):
@@ -27,7 +27,7 @@ def visualize_chain(passage, fixation_sequence):
 		if prev and i not in solution:
 			diagram.draw_line(prev.xy, fixation.xy, color, stroke_width=2)
 		prev = fixation
-	diagram.set_caption('chain')
+	diagram.set_caption('chain', font_face='Menlo', font_size=8)
 	return diagram
 
 def visualize_cluster(passage, fixation_sequence):
@@ -44,7 +44,7 @@ def visualize_cluster(passage, fixation_sequence):
 		y_values = [fixation_sequence[int(f)].y for f in fixations_in_cluster]
 		mn, mx = min(y_values), max(y_values)
 		diagram.draw_rectangle(344, mn, 656, mx-mn, color=globals.illustration_colors[line_i], dashed=True)
-	diagram.set_caption('cluster')
+	diagram.set_caption('cluster', font_face='Menlo', font_size=8)
 	return diagram
 
 def visualize_compare(passage, fixation_sequence):
@@ -60,13 +60,13 @@ def visualize_compare(passage, fixation_sequence):
 		for fixation, mapped_words in zip(gaze_line, warp_path):
 			for word_i in mapped_words:
 				word_x, word_y = text_line[word_i]
-				diagram.draw_circle(word_x, word_y, 5.641895835477563, color=None, fill_color='gray')
+				# diagram.draw_circle(word_x, word_y, 5.641895835477563, color=None, fill_color='gray')
 				diagram.draw_line(tuple(fixation), (word_x, fixation[1]), color=globals.illustration_colors[color_i], stroke_width=2)
 		for fixation in gaze_line:
 			diagram.draw_circle(*tuple(fixation), 5.641895835477563, color=None, fill_color='black')
-		diagram.draw_annotation(1000, text_line[0][1], str(int(line_costs[color_i])), color=globals.illustration_colors[color_i], font_size=30, font_face='Helvetica Neue')
+		diagram.draw_annotation(950, text_line[0][1], str(int(line_costs[color_i])), color=globals.illustration_colors[color_i], font_size=30, font_face='Helvetica Neue bold')
 		gaze_line[:, 1] += 64
-	diagram.set_caption('compare (gaze line 1)')
+	diagram.set_caption('compare', font_face='Menlo', font_size=8)
 	return diagram
 
 def visualize_merge(passage, fixation_sequence):
@@ -85,7 +85,7 @@ def visualize_merge(passage, fixation_sequence):
 		start = (344, intercept+(344*k))
 		end = (1000, intercept+(1000*k))
 		diagram.draw_line(start, end, color=color, dashed=True, stroke_width=2)
-	diagram.set_caption('merge (final merged sequences)')
+	diagram.set_caption('merge', font_face='Menlo', font_size=8)
 	return diagram
 
 def visualize_regress(passage, fixation_sequence):
@@ -104,7 +104,7 @@ def visualize_regress(passage, fixation_sequence):
 		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=globals.illustration_colors[line_i])
 		predicted_y = (fixation.x * k) + passage.line_positions[line_i] + o
 		diagram.draw_line(fixation.xy, (fixation.x, predicted_y), color=globals.illustration_colors[line_i], stroke_width=2)
-	diagram.set_caption('regress')
+	diagram.set_caption('regress', font_face='Menlo', font_size=8)
 	return diagram
 
 def visualize_segment(passage, fixation_sequence):
@@ -118,7 +118,7 @@ def visualize_segment(passage, fixation_sequence):
 	for fixation, fixation2 in zip(fixation_sequence, corrected_sequence):
 		color = globals.illustration_colors[globals.y_to_line_mapping[fixation2.y]-1]
 		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=color)
-	diagram.set_caption('segment')
+	diagram.set_caption('segment', font_face='Menlo', font_size=8)
 	return diagram
 
 def visualize_split(passage, fixation_sequence):
@@ -132,23 +132,23 @@ def visualize_split(passage, fixation_sequence):
 	for fixation, fixation2 in zip(fixation_sequence, corrected_sequence):
 		color = globals.illustration_colors[globals.y_to_line_mapping[fixation2.y]-1]
 		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=color)
-	diagram.set_caption('split')
+	diagram.set_caption('split', font_face='Menlo', font_size=8)
 	return diagram
 
 def visualize_warp(passage, fixation_sequence):
 	_, solution = algorithms.correct_drift('warp', fixation_sequence.XYarray(), passage, return_solution=True)
-	word_XY = passage.word_centers
+	word_XY = np.array(passage.word_centers, dtype=int)
 	diagram = eyekit.Image(1920, 1080)
 	diagram.draw_text_block(passage, color='gray')
-	for word in passage.word_centers:
-		diagram.draw_circle(*word, 5.641895835477563, color=None, fill_color='gray')
+	# for word in passage.word_centers:
+		# diagram.draw_circle(*word, 5.641895835477563, color=None, fill_color='gray')
 	for fixation, mapped_words in zip(fixation_sequence, solution):
 		for word_i in mapped_words:
 			word_x, word_y = word_XY[word_i]
 			color = globals.illustration_colors[globals.y_to_line_mapping[word_y]-1]
 			diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=color)
 			diagram.draw_line(fixation.xy, (word_x, word_y), color, stroke_width=2)
-	diagram.set_caption('warp')
+	diagram.set_caption('warp', font_face='Menlo', font_size=8)
 	return diagram
 
 
@@ -156,6 +156,7 @@ passage = eyekit.TextBlock(globals.lorem_ipsum_text, position=(360, 161), font_f
 fixation_sequence = eyekit.FixationSequence(globals.lorem_ipsum_XY)
 
 fig = eyekit.Figure(3, 3)
+
 fig.add_image(visualize_attach(passage, fixation_sequence))
 fig.add_image(visualize_chain(passage, fixation_sequence))
 fig.add_image(visualize_cluster(passage, fixation_sequence))
@@ -165,11 +166,7 @@ fig.add_image(visualize_regress(passage, fixation_sequence))
 fig.add_image(visualize_segment(passage, fixation_sequence))
 fig.add_image(visualize_split(passage, fixation_sequence))
 fig.add_image(visualize_warp(passage, fixation_sequence))
-fig.set_crop_margin(2)
-fig.set_caption_font('Helvetica')
-fig.save('../visuals/_illustration_algorithms.pdf', 174)
+fig.set_lettering(font_face='Helvetica Neue bold', font_size=8)
 
-	# image_width=174, v_padding=3, h_padding=3, e_padding=1)
-
-# eyekit.image.make_figure(figure_layout, '../manuscript/figs/fig02_double_column.eps',
-# 	image_width=174, v_padding=3, h_padding=3, e_padding=1)
+fig.save('../visuals/illustration_algorithms.pdf', 174, crop_margin=2)
+fig.save('../manuscript/figs/fig02_double_column.eps', 174, crop_margin=2)

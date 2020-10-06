@@ -14,13 +14,19 @@ from scipy.stats import norm
 def correct_drift(method, fixation_XY, passage, return_solution=False, **params):
 	fixation_XY = fixation_XY.copy()
 	if method in ['attach', 'chain', 'cluster', 'merge', 'regress', 'segment', 'split']:
-		second_argument = passage.line_positions
+		second_argument = np.array(passage.line_positions, dtype=int)
 	elif method in ['compare', 'warp']:
-		second_argument = passage.word_centers
+		second_argument = np.array(passage.word_centers, dtype=int)
 	else:
 		raise ValueError('Invalid method')
 	function = globals()[method]
-	return function(fixation_XY, second_argument, return_solution=return_solution, **params)
+	if return_solution:
+		correction, solution = function(fixation_XY, second_argument, return_solution=True, **params)
+		correction = np.column_stack([correction, np.full(len(correction), 100)])
+		return correction, solution
+	correction = function(fixation_XY, second_argument, **params)
+	correction = np.column_stack([correction, np.full(len(correction), 100, dtype=int)])
+	return correction
 
 def attach(fixation_XY, line_Y, return_solution=False):
 	n = len(fixation_XY)
