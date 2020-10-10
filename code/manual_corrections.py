@@ -14,7 +14,7 @@ def create_empty_correction_file(corrector_id, fixation_sequence, participant_id
 			file.write('%s\t%s\t%s\t\n' % (str(round(fixation.duration)).zfill(4), str(round(fixation.x)).zfill(4), str(round(fixation.y)).zfill(4)))
 
 def create_visualization(fixation_sequence, participant_id, passage_id):
-	fig = eyekit.Image(1920, 1080)
+	fig = eyekit.vis.Image(1920, 1080)
 	fig.draw_text_block(passages[passage_id])
 	fig.draw_fixation_sequence(fixation_sequence, number_fixations=True)
 	fig.save('../visuals/sample/%s_%s.pdf' % (participant_id, passage_id))
