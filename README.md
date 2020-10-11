@@ -34,7 +34,7 @@ Dependencies
 The code in this repo was written for Python 3.8.5 with the following packages:
 
 - cairosvg 2.4.2
-- eyekit 0.2.7
+- eyekit 0.2.8
 - lorem 0.1.1
 - matplotlib 3.3.1
 - numpy 1.19.1

@@ -5,6 +5,8 @@ manual and algorithmic corrections.
 
 import eyekit
 
+eyekit.vis.set_default_font('Helvetica Neue', 8)
+
 passages = eyekit.io.read('../data/passages.json')
 datasets = {dataset : eyekit.io.read('../data/fixations/%s.json'%dataset) for dataset in ['sample', 'gold', 'attach', 'chain', 'cluster', 'compare', 'merge', 'regress', 'segment', 'split', 'warp']}
 
@@ -20,12 +22,12 @@ for trial_id, trial in datasets['sample'].items():
 	sample_image = eyekit.vis.Image(1920, 1080)
 	sample_image.draw_text_block(passages[trial['passage_id']], color='gray')
 	sample_image.draw_fixation_sequence(sample_fixation_sequence)
-	sample_image.set_caption(f'Participant {trial["participant_id"]}, passage {trial["passage_id"]} ({trial["age_group"]})', font_face='Helvetica Neue', font_size=8)
+	sample_image.set_caption(f'Participant {trial["participant_id"]}, passage {trial["passage_id"]} ({trial["age_group"]})')
 
 	gold_image = eyekit.vis.Image(1920, 1080)
 	gold_image.draw_text_block(passages[trial['passage_id']], color='gray')
 	gold_image.draw_fixation_sequence(gold_fixation_sequence)
-	gold_image.set_caption('Manual correction', font_face='Helvetica Neue', font_size=8)
+	gold_image.set_caption('Manual correction')
 
 	fig._grid[0] = [sample_image, gold_image]
 
@@ -34,7 +36,7 @@ for trial_id, trial in datasets['sample'].items():
 		image = eyekit.vis.Image(1920, 1080)
 		image.draw_text_block(passages[trial['passage_id']], color='gray')
 		image.draw_sequence_comparison(gold_fixation_sequence, data[trial_id]['fixations'])
-		image.set_caption(algorithm, font_face='Menlo', font_size=8)
+		image.set_caption(algorithm, font_face='Menlo')
 		fig.add_image(image)
 
 	fig.set_crop_margin(2)

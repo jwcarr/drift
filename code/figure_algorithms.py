@@ -3,6 +3,8 @@ import eyekit
 import algorithms
 import globals
 
+eyekit.vis.set_default_font('Helvetica Neue', 8)
+
 def visualize_attach(passage, fixation_sequence):
 	corrected_sequence, solution = algorithms.correct_drift('attach', fixation_sequence.XYarray(), passage, return_solution=True)
 	corrected_sequence = eyekit.FixationSequence(corrected_sequence)
@@ -12,7 +14,7 @@ def visualize_attach(passage, fixation_sequence):
 		color = globals.illustration_colors[globals.y_to_line_mapping[fixation2.y]-1]
 		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=color)
 		diagram.draw_line(fixation.xy, fixation2.xy, color=color, stroke_width=2)
-	diagram.set_caption('attach', font_face='Menlo', font_size=8)
+	diagram.set_caption('attach', font_face='Menlo')
 	return diagram
 
 def visualize_chain(passage, fixation_sequence):
@@ -27,7 +29,7 @@ def visualize_chain(passage, fixation_sequence):
 		if prev and i not in solution:
 			diagram.draw_line(prev.xy, fixation.xy, color, stroke_width=2)
 		prev = fixation
-	diagram.set_caption('chain', font_face='Menlo', font_size=8)
+	diagram.set_caption('chain', font_face='Menlo')
 	return diagram
 
 def visualize_cluster(passage, fixation_sequence):
@@ -44,7 +46,7 @@ def visualize_cluster(passage, fixation_sequence):
 		y_values = [fixation_sequence[int(f)].y for f in fixations_in_cluster]
 		mn, mx = min(y_values), max(y_values)
 		diagram.draw_rectangle(344, mn, 656, mx-mn, color=globals.illustration_colors[line_i], dashed=True)
-	diagram.set_caption('cluster', font_face='Menlo', font_size=8)
+	diagram.set_caption('cluster', font_face='Menlo')
 	return diagram
 
 def visualize_compare(passage, fixation_sequence):
@@ -66,7 +68,7 @@ def visualize_compare(passage, fixation_sequence):
 			diagram.draw_circle(*tuple(fixation), 5.641895835477563, color=None, fill_color='black')
 		diagram.draw_annotation(950, text_line[0][1], str(int(line_costs[color_i])), color=globals.illustration_colors[color_i], font_size=30, font_face='Helvetica Neue bold')
 		gaze_line[:, 1] += 64
-	diagram.set_caption('compare', font_face='Menlo', font_size=8)
+	diagram.set_caption('compare', font_face='Menlo')
 	return diagram
 
 def visualize_merge(passage, fixation_sequence):
@@ -85,7 +87,7 @@ def visualize_merge(passage, fixation_sequence):
 		start = (344, intercept+(344*k))
 		end = (1000, intercept+(1000*k))
 		diagram.draw_line(start, end, color=color, dashed=True, stroke_width=2)
-	diagram.set_caption('merge', font_face='Menlo', font_size=8)
+	diagram.set_caption('merge', font_face='Menlo')
 	return diagram
 
 def visualize_regress(passage, fixation_sequence):
@@ -104,7 +106,7 @@ def visualize_regress(passage, fixation_sequence):
 		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=globals.illustration_colors[line_i])
 		predicted_y = (fixation.x * k) + passage.line_positions[line_i] + o
 		diagram.draw_line(fixation.xy, (fixation.x, predicted_y), color=globals.illustration_colors[line_i], stroke_width=2)
-	diagram.set_caption('regress', font_face='Menlo', font_size=8)
+	diagram.set_caption('regress', font_face='Menlo')
 	return diagram
 
 def visualize_segment(passage, fixation_sequence):
@@ -118,7 +120,7 @@ def visualize_segment(passage, fixation_sequence):
 	for fixation, fixation2 in zip(fixation_sequence, corrected_sequence):
 		color = globals.illustration_colors[globals.y_to_line_mapping[fixation2.y]-1]
 		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=color)
-	diagram.set_caption('segment', font_face='Menlo', font_size=8)
+	diagram.set_caption('segment', font_face='Menlo')
 	return diagram
 
 def visualize_split(passage, fixation_sequence):
@@ -132,7 +134,7 @@ def visualize_split(passage, fixation_sequence):
 	for fixation, fixation2 in zip(fixation_sequence, corrected_sequence):
 		color = globals.illustration_colors[globals.y_to_line_mapping[fixation2.y]-1]
 		diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=color)
-	diagram.set_caption('split', font_face='Menlo', font_size=8)
+	diagram.set_caption('split', font_face='Menlo')
 	return diagram
 
 def visualize_warp(passage, fixation_sequence):
@@ -148,7 +150,7 @@ def visualize_warp(passage, fixation_sequence):
 			color = globals.illustration_colors[globals.y_to_line_mapping[word_y]-1]
 			diagram.draw_circle(*fixation.xy, 5.641895835477563, color=None, fill_color=color)
 			diagram.draw_line(fixation.xy, (word_x, word_y), color, stroke_width=2)
-	diagram.set_caption('warp', font_face='Menlo', font_size=8)
+	diagram.set_caption('warp', font_face='Menlo')
 	return diagram
 
 
@@ -166,7 +168,6 @@ fig.add_image(visualize_regress(passage, fixation_sequence))
 fig.add_image(visualize_segment(passage, fixation_sequence))
 fig.add_image(visualize_split(passage, fixation_sequence))
 fig.add_image(visualize_warp(passage, fixation_sequence))
-fig.set_lettering(font_face='Helvetica Neue bold', font_size=8)
 fig.set_crop_margin(2)
 fig.save('../visuals/illustration_algorithms.pdf', 174)
 fig.save('../manuscript/figs/fig02_double_column.eps', 174)

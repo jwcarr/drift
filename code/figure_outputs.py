@@ -1,6 +1,8 @@
 import eyekit
 import globals
 
+eyekit.vis.set_default_font('Helvetica Neue', 8)
+
 passages = eyekit.io.read('../data/passages.json')
 gold_data = eyekit.io.read('../data/fixations/gold.json')
 
@@ -16,7 +18,6 @@ for algorithm in globals.algorithms:
 	image.draw_sequence_comparison(gold_fixation_sequence, fixation_sequence)
 	image.set_caption('%s' % algorithm, font_face='Menlo', font_size=8)
 	fig.add_image(image)
-fig.set_lettering(font_face='Helvetica Neue bold', font_size=8)
 fig.set_crop_margin(2)
 fig.save('../visuals/outputs_adult.pdf', 174)
 fig.save('../manuscript/figs/fig09_double_column.eps', 174)
@@ -33,7 +34,6 @@ for algorithm in globals.algorithms:
 	image.draw_sequence_comparison(gold_fixation_sequence, fixation_sequence)
 	image.set_caption('%s' % algorithm, font_face='Menlo', font_size=8)
 	fig.add_image(image)
-fig.set_lettering(font_face='Helvetica Neue bold', font_size=8)
 fig.set_crop_margin(2)
 fig.save('../visuals/outputs_child.pdf', 174)
 fig.save('../manuscript/figs/fig10_double_column.eps', 174)
