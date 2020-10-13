@@ -5,6 +5,7 @@ against the gold standard manual correction.
 
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
+import matplotlib.transforms as transforms
 import numpy as np
 import eyekit
 import globals
@@ -118,7 +119,7 @@ def plot_results(results, filepath, y_label, y_limits, y_unit):
 	if not filepath.endswith('.svg'):
 		globals.convert_svg(filepath, filepath)
 
-def plot_proportion_above(accuracy_results, filepath, target_accuracy=95):
+def plot_proportion_above(axis, accuracy_results, target_accuracy=95, show_legend=False):
 	prop_adults = []
 	prop_kids = []
 	colors = []
@@ -129,15 +130,24 @@ def plot_proportion_above(accuracy_results, filepath, target_accuracy=95):
 		prop_kids.append(prop_kid)
 		colors.append(globals.colors[algorithm])
 	positions = np.arange(0, 27, 3)
-	fig, axis = plt.subplots(1, 1, figsize=(3.3, 2.5))
 	axis.bar(positions, prop_adults, color=colors, width=0.9)
 	axis.bar(positions+1, prop_kids, color=[pseudo_alpha(color) for color in colors], width=0.9)
-	axis.set_ylabel(f'Proportion of trials above {target_accuracy}% accuracy')
+	axis.set_ylabel(f'Proportion of trials at {target_accuracy}% accuracy')
 	axis.set_ylim(0, 1)
-	axis.set_xticks(positions+0.5)
-	axis.set_xticklabels(accuracy_results.keys(), rotation=20, font='Menlo')
+	axis.set_xticks(positions+1.2)
+	axis.set_xticklabels(accuracy_results.keys(), rotation=45, font='Menlo', ha='right')
 	axis.tick_params(bottom=False)
-	axis.legend(handles=[Patch(facecolor='#000000', label='Adults'), Patch(facecolor=pseudo_alpha('#000000'), label='Children')], frameon=False, fontsize=7)
+	if show_legend:
+		axis.legend(handles=[Patch(facecolor='#000000', label='Adults'), Patch(facecolor=pseudo_alpha('#000000', 0.3), label='Children')], frameon=False, fontsize=7)
+
+def plot_proportions(accuracy_results, filepath):
+	fig, axes = plt.subplots(1, 3, figsize=(6.8, 2.5))
+	for axis, target_accuracy, show_legend, letter in zip(axes, [90, 95, 99], [False, False, True], ['A', 'B', 'C']):
+		plot_proportion_above(axis, accuracy_results, target_accuracy, show_legend)
+		inches_from_origin = (fig.dpi_scale_trans + transforms.ScaledTranslation(0, 1, axis.transAxes))
+		axis.text(0.1, -0.1, f'({letter})', fontsize=8, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
+	axes[1].set_yticklabels([])
+	axes[2].set_yticklabels([])
 	fig.tight_layout(pad=0.5, h_pad=1, w_pad=1)
 	fig.savefig(filepath, format='svg')
 	globals.format_svg_labels(filepath, globals.algorithms)
@@ -158,7 +168,7 @@ if __name__ == '__main__':
 	plot_results(accuracy_results, '../manuscript/figs/fig08_double_column.eps', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
 
 	plot_results(improvement_results, '../visuals/results_improvement.pdf', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
-	plot_results(improvement_results, '../manuscript/figs/fig11_double_column.eps', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
+	plot_results(improvement_results, '../manuscript/figs/fig12_double_column.eps', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
 
-	plot_proportion_above(accuracy_results, '../visuals/results_proportion.pdf')
-	plot_proportion_above(accuracy_results, '../manuscript/figs/fig12_single_column.eps')
+	plot_proportions(accuracy_results, '../visuals/results_proportion.pdf')
+	plot_proportions(accuracy_results, '../manuscript/figs/fig11_double_column.eps')
