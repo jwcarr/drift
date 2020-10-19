@@ -84,7 +84,7 @@ def plot_invariance(filepath, show_percentages=False):
 	heatmap.invert_yaxis()
 	heatmap.set_xticks(np.arange(5)+0.5)
 	heatmap.set_xticklabels(['Noise', 'Slope', 'Shift', 'Within', 'Between'])
-	heatmap.set_yticks(np.arange(9)+0.5)
+	heatmap.set_yticks(np.arange(len(globals.algorithms))+0.5)
 	heatmap.set_yticklabels(globals.algorithms)
 	heatmap.tick_params(bottom=False, left=False)
 	legend.set_ylabel('Mean accuracy (%)', labelpad=-38)

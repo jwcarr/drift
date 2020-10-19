@@ -108,7 +108,7 @@ def plot_results(results, filepath, y_label, y_limits, y_unit):
 	plot_legend(axis, 0.87, 0.1)
 	offset = (y_limits[1] - y_limits[0]) / 20
 	axis.set_ylim(y_limits[0]-offset, y_limits[1]+offset)
-	axis.set_xlim(-0.5, len(x_labels)-0.3)
+	axis.set_xlim(-0.5, len(x_labels))
 	axis.set_xticks(list(range(len(x_labels))))
 	axis.tick_params(bottom=False)
 	axis.set_xticklabels(x_labels)
@@ -129,7 +129,7 @@ def plot_proportion_above(axis, accuracy_results, target_accuracy=95, show_legen
 		prop_adults.append(prop_adult)
 		prop_kids.append(prop_kid)
 		colors.append(globals.colors[algorithm])
-	positions = np.arange(0, 27, 3)
+	positions = np.arange(0, len(accuracy_results)*3, 3)
 	axis.bar(positions, prop_adults, color=colors, width=0.9)
 	axis.bar(positions+1, prop_kids, color=[pseudo_alpha(color) for color in colors], width=0.9)
 	axis.set_ylabel(f'Proportion of trials at {target_accuracy}% accuracy')
