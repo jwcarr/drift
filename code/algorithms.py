@@ -246,6 +246,33 @@ def split(fixation_XY, line_Y, return_line_assignments=False):
 	return fixation_XY
 
 
+def stretch(fixation_XY, line_Y, scale_bounds=(0.9, 1.1), offset_bounds=(-50, 50), return_line_assignments=False):
+	n = len(fixation_XY)
+	fixation_Y = fixation_XY[:, 1]
+
+	def fit_lines(params, return_correction=False):
+		candidate_Y = fixation_Y * params[0] + params[1]
+		corrected_Y = np.zeros(n)
+		for fixation_i in range(n):
+			line_i = np.argmin(abs(line_Y - candidate_Y[fixation_i]))
+			corrected_Y[fixation_i] = line_Y[line_i]
+		if return_correction:
+			return corrected_Y
+		return sum(abs(candidate_Y - corrected_Y))
+
+	best_fit = minimize(fit_lines, [1, 0], method='powell', bounds=[scale_bounds, offset_bounds])
+	######################### FOR SIMULATIONS #########################
+	if return_line_assignments:
+		candidate_Y = fixation_Y * best_fit.x[0] + best_fit.x[1]
+		corrected_I = np.zeros(n, dtype=int)
+		for fixation_i in range(n):
+			corrected_I[fixation_i] = np.argmin(abs(line_Y - candidate_Y[fixation_i]))
+		return corrected_I
+	###################################################################
+	fixation_XY[:, 1] = fit_lines(best_fit.x, return_correction=True)
+	return fixation_XY
+
+
 def warp(fixation_XY, line_Y, word_XY, return_line_assignments=False):
 	_, warping_path = dynamic_time_warping(fixation_XY, word_XY)
 	######################### FOR SIMULATIONS #########################

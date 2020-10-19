@@ -50,17 +50,18 @@ colors = {'attach':'#81818D',
           'regress':'#009142',
           'segment':'#FCAF32',
           'split':'#E32823',
+          'stretch':'#525200',
           'warp':'#6742B0',
           'gold':'#B0944B',
           'JC':'black',
           'VP':'black'
 }
 
-algorithms = ['attach', 'chain', 'cluster', 'compare', 'merge', 'regress', 'segment', 'split', 'warp']
+algorithms = ['attach', 'chain', 'cluster', 'compare', 'merge', 'regress', 'segment', 'split', 'stretch', 'warp']
 
-true_algorithms = ['chain', 'cluster', 'compare', 'merge', 'regress', 'segment', 'split', 'warp']
+true_algorithms = ['chain', 'cluster', 'compare', 'merge', 'regress', 'segment', 'split', 'stretch', 'warp']
 
-good_algorithms = ['attach', 'chain', 'cluster', 'merge', 'regress', 'segment', 'split', 'warp']
+good_algorithms = ['attach', 'chain', 'cluster', 'merge', 'regress', 'segment', 'split', 'stretch', 'warp']
 
 factors = {'noise':('Noise distortion', (0, 40)),
            'slope':('Slope distortion', (-0.1, 0.1)),
