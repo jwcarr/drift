@@ -17,7 +17,7 @@ def run_algorithm(sample_data, passages, output_dir, method):
 		correction = algorithms.correct_drift(method, fixation_XY, passages[trial['passage_id']])
 		for fixation, (_, y) in zip(trial['fixations'], correction):
 			new_trial['fixations'].append((fixation.x, int(y), fixation.duration, fixation.discarded))
-		new_trial['fixations'] = FixationSequence(new_trial['fixations'])
+		new_trial['fixations'] = eyekit.FixationSequence(new_trial['fixations'])
 		output_data[trial_id] = new_trial
 	eyekit.io.write(output_data, output_dir + '%s.json' % method)
 
