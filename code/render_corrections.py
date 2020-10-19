@@ -4,11 +4,12 @@ manual and algorithmic corrections.
 '''
 
 import eyekit
+import globals
 
 eyekit.vis.set_default_font('Helvetica Neue', 8)
 
 passages = eyekit.io.read('../data/passages.json')
-datasets = {dataset : eyekit.io.read('../data/fixations/%s.json'%dataset) for dataset in ['sample', 'gold', 'attach', 'chain', 'cluster', 'compare', 'merge', 'regress', 'segment', 'split', 'warp']}
+datasets = {dataset : eyekit.io.read('../data/fixations/%s.json'%dataset) for dataset in ['sample', 'gold']+globals.algorithms}
 
 booklet = eyekit.vis.Booklet()
 
@@ -23,15 +24,15 @@ for trial_id, trial in datasets['sample'].items():
 	sample_image.draw_text_block(passages[trial['passage_id']], color='gray')
 	sample_image.draw_fixation_sequence(sample_fixation_sequence)
 	sample_image.set_caption(f'Participant {trial["participant_id"]}, passage {trial["passage_id"]} ({trial["age_group"]})')
+	fig.add_image(sample_image)
 
 	gold_image = eyekit.vis.Image(1920, 1080)
 	gold_image.draw_text_block(passages[trial['passage_id']], color='gray')
-	gold_image.draw_fixation_sequence(gold_fixation_sequence)
-	gold_image.set_caption('Manual correction')
+	gold_image.draw_fixation_sequence(gold_fixation_sequence, show_discards=True)
+	gold_image.set_caption('Gold standard manual correction')
+	fig.add_image(gold_image)
 
-	fig._grid[0] = [sample_image, gold_image]
-
-	for algorithm in ['attach', 'chain', 'cluster', 'compare', 'merge', 'regress', 'segment', 'split', 'warp']:
+	for algorithm in globals.algorithms:
 		data = datasets[algorithm]
 		image = eyekit.vis.Image(1920, 1080)
 		image.draw_text_block(passages[trial['passage_id']], color='gray')
@@ -45,4 +46,4 @@ for trial_id, trial in datasets['sample'].items():
 
 	booklet.add_figure(fig)
 
-booklet.save('../visuals/_corrections.pdf')
+booklet.save('../visuals/corrections.pdf')
