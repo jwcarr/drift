@@ -6,18 +6,24 @@ import globals
 data = eyekit.io.read('../data/fixations/sample.json')
 passages = eyekit.io.read('../data/passages.json')
 
-for fixation in data['trial_5']['fixations']:
+original_sequence = data['trial_5']['fixations']
+
+for fixation in original_sequence:
 	fixation.duration = 100
-corrected_fixation_sequence, solution = algorithms.correct_drift('warp', data['trial_5']['fixations'].XYarray(), passages['1B'], return_solution=True)
-corrected_fixation_sequence = eyekit.FixationSequence(corrected_fixation_sequence)
+
+fixation_XY = original_sequence.XYarray()
 word_XY = np.array(passages['1B'].word_centers, dtype=int)
-expected_sequence = np.column_stack([word_XY, np.full(len(word_XY), 100, dtype=int)])
+
+expected_sequence = eyekit.FixationSequence(np.column_stack([word_XY, np.full(len(word_XY), 100, dtype=int)]))
 
 diagram = eyekit.vis.Image(1920, 1080)
 diagram.draw_text_block(passages['1B'], color='gray')
-diagram.draw_fixation_sequence(eyekit.FixationSequence(expected_sequence), color=globals.illustration_colors[1])
-diagram.draw_fixation_sequence(data['trial_5']['fixations'], color=globals.illustration_colors[2])
-for fixation, mapped_words in zip(data['trial_5']['fixations'], solution):
+diagram.draw_fixation_sequence(expected_sequence, color=globals.illustration_colors[1])
+diagram.draw_fixation_sequence(original_sequence, color=globals.illustration_colors[2])
+
+_, warping_path = algorithms.dynamic_time_warping(fixation_XY, word_XY)
+
+for fixation, mapped_words in zip(original_sequence, warping_path):
 	for word_i in mapped_words:
 		word_x, word_y = word_XY[word_i]
 		diagram.draw_line(fixation.xy, (word_x, word_y), 'black', dashed=True)
