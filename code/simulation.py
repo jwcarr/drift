@@ -3,6 +3,7 @@ Code for performing the fixation sequence simulations.
 '''
 
 from sys import stdout
+import pickle
 import numpy as np
 import eyekit
 import lorem
@@ -73,15 +74,15 @@ class ReadingScenario:
 		else:
 			line_Y += line_y * self.shift
 		line_Y = np.array(list(map(round, line_Y)), dtype=int)
-		return line_X + x_margin, line_Y + y_margin, [line_y]*len(line_Y)
+		return line_X + x_margin, line_Y + y_margin, [line_i]*len(line_Y)
 
 	def _generate_fixation_sequence(self, passage):
-		X, Y, intended_Y = [], [], []
+		X, Y, intended_I = [], [], []
 		for line_i, line_y in enumerate(passage.line_positions):
 			line_X, line_Y, line_I = self._generate_line_sequence(passage, line_i)
 			X.extend(line_X)
 			Y.extend(line_Y)
-			intended_Y.extend(line_I)
+			intended_I.extend(line_I)
 			if line_i > 0 and np.random.random() < self.regression_between:
 				rand_prev_line = int(np.random.triangular(0, line_i, line_i))
 				rand_insert_point = np.random.randint(1, len(line_X))
@@ -89,8 +90,8 @@ class ReadingScenario:
 				for rx, ry, ri in zip(*regression):
 					X.insert(-rand_insert_point, rx)
 					Y.insert(-rand_insert_point, ry)
-					intended_Y.insert(-rand_insert_point, ri)
-		return np.column_stack([X, Y]), np.array(intended_Y, dtype=int)
+					intended_I.insert(-rand_insert_point, ri)
+		return np.column_stack([X, Y]), np.array(intended_I, dtype=int)
 
 	def simulate(self, passage=None):
 		'''
@@ -102,8 +103,8 @@ class ReadingScenario:
 		'''
 		if passage is None:
 			passage = self._generate_passage()
-		fixation_XY, intended_Y = self._generate_fixation_sequence(passage)
-		return passage, fixation_XY, intended_Y
+		fixation_XY, intended_I = self._generate_fixation_sequence(passage)
+		return passage, fixation_XY, intended_I
 
 
 def simulate_factor(factor, n_gradations, n_sims):
@@ -120,10 +121,10 @@ def simulate_factor(factor, n_gradations, n_sims):
 		print('%s = %f' % (factor, factor_value))
 		reading_scenario = ReadingScenario(**{factor:factor_value})
 		for sim_i in range(n_sims):
-			passage, fixation_XY, intended_Y = reading_scenario.simulate()
+			passage, fixation_XY, intended_I = reading_scenario.simulate()
 			for method_i, method in enumerate(globals.algorithms):
-				corrected_XY = algorithms.correct_drift(method, fixation_XY, passage)
-				matches = intended_Y == corrected_XY[:, 1]
+				corrected_I = algorithms.correct_drift(method, fixation_XY, passage, return_line_assignments=True)
+				matches = intended_I == corrected_I
 				results[method_i][gradation_i][sim_i] = sum(matches) / len(matches)
 			proportion_complete = (sim_i+1) / n_sims
 			stdout.write('\r')
