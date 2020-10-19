@@ -119,8 +119,7 @@ def make_algorithmic_distance_matrix(methods, filepath):
 		print(methods[m1])
 		for m2 in range(m1+1, len(methods)):
 			print('-', methods[m2])
-			distance = algorithmic_output_distance(methods[m1], methods[m2])
-			distances.append(distance)
+			distances.append(algorithmic_output_distance(methods[m1], methods[m2]))
 	matrix = distance.squareform(distances, 'tomatrix')
 	with open(filepath, mode='wb') as file:
 		pickle.dump((methods, matrix), file)
