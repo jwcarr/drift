@@ -45,21 +45,29 @@ class Dendrogram:
 		for node_id in positions.keys():
 			self.node_points[node_id][0] = positions[node_id]
 
-	def _recursive_adjust(self, node, target, adjustment, found=False):
+	def _recursive_adjust(self, node, target, spacing, adjustment=0):
 		node_id = node.get_id()
 		L, R = node.get_left(), node.get_right()
-		if found:
-			self.node_points[node_id][0] += adjustment
-			if L.is_leaf():
-				self.node_points[L.get_id()][0] += adjustment
-			if R.is_leaf():
-				self.node_points[R.get_id()][0] += adjustment
+		adjustment_l, adjustment_r = None, None
 		if node_id == target:
-			found = True
+			x = self.node_points[node_id][0]
+			original_left_x = self.node_points[L.get_id()][0]
+			original_right_x = self.node_points[R.get_id()][0]
+			self.node_points[L.get_id()][0] = x - spacing / 2
+			self.node_points[R.get_id()][0] = x + spacing / 2
+			adjustment_l = self.node_points[L.get_id()][0] - original_left_x
+			adjustment_r = self.node_points[R.get_id()][0] - original_right_x
+		elif adjustment:
+			self.node_points[L.get_id()][0] += adjustment
+			self.node_points[R.get_id()][0] += adjustment
 		if not L.is_leaf():
-			self._recursive_adjust(L, target, adjustment, found)
+			if adjustment_l is not None:
+				adjustment = adjustment_l
+			self._recursive_adjust(L, target, spacing, adjustment)
 		if not R.is_leaf():
-			self._recursive_adjust(R, target, adjustment, found)
+			if adjustment_r is not None:
+				adjustment = adjustment_r
+			self._recursive_adjust(R, target, spacing, adjustment)
 
 	def _recursive_plot(self, node, axis):
 		node_id = node.get_id()
@@ -77,15 +85,14 @@ class Dendrogram:
 		self._recursive_plot(L, axis)
 		self._recursive_plot(R, axis)
 
-	def adjust(self, node_id, adjustment):
+	def adjust_branch_spacing(self, node_spacing):
 		'''
-		Move the x-position of a given node by some amount. This can be used
-		to tidy up a diagram.
+		Adjust the spacing at a set of branch points.
 		'''
-		if node_id >= len(self.object_names): # branch node
-			self._recursive_adjust(self.tree, node_id, adjustment)
-		else: # leaf node
-			self.node_points[node_id][0] += adjustment
+		for node_ids, spacing in node_spacing:
+			adjustment = spacing / 2
+			for node_id in node_ids:
+				self._recursive_adjust(self.tree, node_id, adjustment)
 
 	def plot(self, axis):
 		'''
