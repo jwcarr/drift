@@ -1,4 +1,7 @@
 import numpy as np
+from scipy.optimize import minimize
+from scipy.stats import norm
+from sklearn.cluster import KMeans
 
 ######################################################################
 # ATTACH
@@ -36,8 +39,6 @@ def chain(fixation_XY, line_Y, x_thresh=192, y_thresh=32):
 # 
 # https://github.com/sascha2schroeder/popEye/
 ######################################################################
-
-from sklearn.cluster import KMeans
 
 def cluster(fixation_XY, line_Y):
 	m = len(line_Y)
@@ -154,9 +155,6 @@ def merge(fixation_XY, line_Y, y_thresh=32, g_thresh=0.1, e_thresh=20):
 # https://blogs.umass.edu/rdcl/resources/
 ######################################################################
 
-from scipy.optimize import minimize
-from scipy.stats import norm
-
 def regress(fixation_XY, line_Y, k_bounds=(-0.1, 0.1), o_bounds=(-50, 50), s_bounds=(1, 20)):
 	n = len(fixation_XY)
 	m = len(line_Y)
@@ -223,6 +221,34 @@ def split(fixation_XY, line_Y):
 		line_i = np.argmin(abs(line_Y - mean_y))
 		fixation_XY[start_of_line:end_of_line, 1] = line_Y[line_i]
 		start_of_line = end_of_line
+	return fixation_XY
+
+######################################################################
+# STRETCH
+#
+# Lohmeier, S. (2015). Experimental evaluation and modelling of the
+#   comprehension of indirect anaphors in a programming language
+#   (Master’s thesis). Technische Universität Berlin.
+#
+# http://www.monochromata.de/master_thesis/ma1.3.pdf
+######################################################################
+
+def stretch(fixation_XY, line_Y, scale_bounds=(0.9, 1.1), offset_bounds=(-50, 50)):
+	n = len(fixation_XY)
+	fixation_Y = fixation_XY[:, 1]
+
+	def fit_lines(params, return_correction=False):
+		candidate_Y = fixation_Y * params[0] + params[1]
+		corrected_Y = np.zeros(n)
+		for fixation_i in range(n):
+			line_i = np.argmin(abs(line_Y - candidate_Y[fixation_i]))
+			corrected_Y[fixation_i] = line_Y[line_i]
+		if return_correction:
+			return corrected_Y
+		return sum(abs(candidate_Y - corrected_Y))
+
+	best_fit = minimize(fit_lines, [1, 0], bounds=[scale_bounds, offset_bounds])
+	fixation_XY[:, 1] = fit_lines(best_fit.x, return_correction=True)
 	return fixation_XY
 
 ######################################################################

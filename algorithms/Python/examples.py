@@ -45,6 +45,10 @@ split_output = drift_algorithms.split(fixation_XY.copy(), line_Y)
 print('Output from the split algorithm')
 print(split_output)
 
+stretch_output = drift_algorithms.stretch(fixation_XY.copy(), line_Y)
+print('Output from the stretch algorithm')
+print(stretch_output)
+
 warp_output = drift_algorithms.warp(fixation_XY.copy(), word_XY)
 print('Output from the warp algorithm')
 print(warp_output)

@@ -47,6 +47,10 @@ split_output = split(fixation_XY, line_Y);
 disp('Output from the split algorithm');
 disp(split_output);
 
+stretch_output = stretch(fixation_XY, line_Y);
+disp('Output from the stretch algorithm');
+disp(stretch_output);
+
 warp_output = warp(fixation_XY, word_XY);
 disp('Output from the warp algorithm');
 disp(warp_output);

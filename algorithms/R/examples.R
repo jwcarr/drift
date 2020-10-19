@@ -44,6 +44,10 @@ split_output <- split(fixation_XY, line_Y)
 print('Output from the split algorithm')
 print(split_output)
 
+stretch_output <- stretch(fixation_XY, line_Y)
+print('Output from the stretch algorithm')
+print(stretch_output)
+
 warp_output <- warp(fixation_XY, word_XY)
 print('Output from the warp algorithm')
 print(warp_output)
