@@ -164,22 +164,20 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 	ahc_methods, linkage_matrix = ahc_solution
 	method_names = {i:method for i, method in enumerate(ahc_methods)}
 	dendrogram = Dendrogram(linkage_matrix, method_names, globals.colors)
-	dendrogram.adjust(0, -2) # Manual adjustments for prettiness
-	dendrogram.adjust(1, 2)
-	dendrogram.adjust(2, -2)
-	dendrogram.adjust(4, 2)
-	dendrogram.adjust(5, -2)
-	dendrogram.adjust(6, 8)
-	dendrogram.adjust(7, 2)
-	dendrogram.adjust(13, -8)
+	dendrogram.adjust_branch_spacing([ ([9,10,11,12,13,15], 50),  ([14,16], 100) ])
 	dendrogram.plot(axes[0])
-	for node, label in [(8, 'Sequential'), (13, 'Positional'), (10, 'Relative'), (11, 'Absolute')]:
+	for node, label in [(9, 'Sequential'), (15, 'Positional'), (12, 'Relative'), (13, 'Absolute')]:
 		x, y = dendrogram.node_points[node]
-		axes[0].text(x+3, y, label, ha='left', va='center')
+		axes[0].text(x+5, y, label, ha='left', va='center')
 	inches_from_origin = (fig.dpi_scale_trans + transforms.ScaledTranslation(0, 1, axes[0].transAxes))
 	axes[0].text(0.1, -0.1, '(A)', fontsize=8, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
-	axes[0].set_xlim(-3, 76)
-	
+	s, e = axes[0].get_xlim()
+	padding = (e - s) * 0.05
+	axes[0].set_xlim(s-padding, e+padding)
+	s, e = axes[0].get_ylim()
+	padding = (e - s) * 0.05
+	axes[0].set_ylim(s-padding, e+padding)
+
 	# Plot MDS solution
 	mds_methods, positions = mds_solution
 	mn, mx = positions[:, 0].min(), positions[:, 0].max()
@@ -187,7 +185,7 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 	furthest_method_to_right = mds_methods[np.argmax(positions[:, 0])]
 	axes[1].scatter(positions[:, 0], positions[:, 1], color=[globals.colors[m] for m in mds_methods])
 	for label, position in zip(mds_methods, positions):
-		if label == furthest_method_to_right:
+		if label == furthest_method_to_right or label == 'stretch':
 			axes[1].text(position[0]-offset/3, position[1], label, va='center', ha='right')
 		else:
 			axes[1].text(position[0]+offset/3, position[1], label, va='center', ha='left')
@@ -210,7 +208,7 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 if __name__ == '__main__':
 
 	# Measure pairwise distances between methods and pickle the distance matrix
-	# make_algorithmic_distance_matrix(globals.algorithms+['gold'], '../data/algorithm_distances.pkl')
+	# make_algorithmic_distance_matrix(globals.good_algorithms+['gold'], '../data/algorithm_distances.pkl')
 
 	# Load the distance matrix created in the above step
 	with open('../data/algorithm_distances.pkl', mode='rb') as file:
@@ -220,7 +218,7 @@ if __name__ == '__main__':
 	ahc_solution = hierarchical_clustering_analysis(algorithm_distances, globals.good_algorithms)
 
 	# Compute the multidimensional scaling solution
-	mds_solution = multidimensional_scaling_analysis(algorithm_distances, globals.good_algorithms+['gold'], random_seed=11)
+	mds_solution = multidimensional_scaling_analysis(algorithm_distances, globals.good_algorithms+['gold'], random_seed=9)
 
 	# Plot the analyses
 	plot_analyses(ahc_solution, mds_solution, '../visuals/results_similarity.pdf')
