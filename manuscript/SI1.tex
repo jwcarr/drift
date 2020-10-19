@@ -227,7 +227,7 @@ function split(fixation_XY, line_Y)
 \subsection{Stretch}
 
 \noindent
-\texttt{stretch} takes two additional arguments, \texttt{S} and \texttt{O}, which give the lower and upper bounds of the vertical scaling factor and vertical offset. \texttt{regress} calls on one external function, \texttt{minimize}, which minimizes the objective function \texttt{fit\_lines}. The \texttt{fit\_lines} function is nested inside the \texttt{stretch} function so that it inherits its lexical scope.
+\texttt{stretch} takes two additional arguments, \texttt{S} and \texttt{O}, which give the lower and upper bounds of the vertical scaling factor and vertical offset. \texttt{stretch} calls on one external function, \texttt{minimize}, which minimizes the objective function \texttt{fit\_lines}. The \texttt{fit\_lines} function is nested inside the \texttt{stretch} function so that it inherits its lexical scope.
 
 \begin{verbatim}
 function stretch(fixation_XY, line_Y, S=[0.9,1.1], O=[-50,50])
