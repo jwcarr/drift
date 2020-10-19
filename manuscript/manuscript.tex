@@ -13,23 +13,11 @@
 \title{Algorithms for the Automated Correction of Vertical Drift in Eye Tracking Data}
 \shorttitle{Algorithms for the correction of vertical drift}
 
-%%%%%%%%%%%%%%%%%%%%% PREPRINT VERSION %%%%%%%%%%%%%%%%%%%%%
-
 \author{Jon W. Carr, Valentina N. Pescuma, Michele Furlan, Maria Ktori, Davide Crepaldi}
 
 \affiliation{Cognitive Neuroscience, International School for Advanced Studies, Trieste, Italy}
 
 \authornote{\textbf{Cite as:} Carr, J.\@ W., Pescuma, V.\@ N., Furlan, M., Ktori, M., \& Crepaldi, D.\@ (under review). Algorithms for the automated correction of vertical drift in eye tracking data. https://doi.org/10.31219/osf.io/jg3nc}
-
-%%%%%%%%%%%%%%%%%%%% SUBMISSION VERSION %%%%%%%%%%%%%%%%%%%%
-
-% \fiveauthors{Jon W. Carr}{Valentina N. Pescuma}{Michele Furlan}{Maria Ktori}{Davide Crepaldi}
-
-% \fiveaffiliations{Cognitive Neuroscience, International School for Advanced Studies (SISSA)\\Via Bonomea 265, 34136 Trieste TS, Italy\\+39 338 360 3224, jcarr@sissa.it}{Cognitive Neuroscience, International School for Advanced Studies (SISSA)}{Cognitive Neuroscience, International School for Advanced Studies (SISSA)}{Cognitive Neuroscience, International School for Advanced Studies (SISSA)}{Cognitive Neuroscience, International School for Advanced Studies (SISSA)}
-
-% \authornote{The authors are grateful to the editor, Victor Kuperman, and reviewers, Sascha Schroeder and Tim Slattery, for helpful and insightful commentary. This work was funded by an ERC Starting Grant (no.\@ 679010, STATLEARN) and a FARE 2016 grant (no.\@ R164XBHNYR, CROWDLEARN), both awarded to \textbf{DC}. \textbf{VNP}, \textbf{MK}, and \textbf{DC} conceived the original idea behind this work. \textbf{JWC} and \textbf{VNP} explored the literature and selected the algorithms. \textbf{VNP} and \textbf{MF} developed the \texttt{split} algorithm, with input from \textbf{MK} and \textbf{DC}. \textbf{JWC} developed the \texttt{warp} algorithm, implemented all algorithms in a single framework, conducted the simulations, and performed the analyses. \textbf{JWC} and \textbf{VNP} performed the manual corrections and drafted the paper. \textbf{DC} revised the paper and coordinated the project.}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \abstract{A common problem in eye tracking research is vertical drift---the progressive displacement of fixation registrations on the vertical axis that results from a gradual loss of eye tracker calibration over time. This is particularly problematic in experiments that involve the reading of multiline passages, where it is critical that fixations on one line are not erroneously recorded on an adjacent line. Correction is often performed manually by the researcher, but this process is tedious, time-consuming, and prone to error and inconsistency. Various methods have previously been proposed for the automated, post-hoc correction of vertical drift in reading data, but these methods vary greatly, not just in terms of the algorithmic principles on which they are based, but also in terms of their availability, documentation, implementation languages, and so forth. Furthermore, these methods have largely been developed in isolation with little attempt to systematically evaluate them, meaning that drift correction techniques are moving forward blindly. We document nine major algorithms, including two that are novel to this paper, and evaluate them using both simulated and natural eye tracking data. Our results suggest that a method based on dynamic time warping offers great promise, but we also find that some algorithms are better suited than others to particular types of drift phenomena and reading behavior, allowing us to offer evidence-based advice on algorithm selection.}
 
@@ -467,19 +455,17 @@ It is possible that our use of an Italian dataset may mean that our results will
 
 Finally, we have introduced two novel methods in this paper that are distinct from those that have previously been presented. The \texttt{warp} algorithm, in particular, showed great promise and is likely to be especially useful to researchers working on reading development in children. We also hope that connecting the literature on vertical drift to sequence alignment techniques might also open new avenues for future algorithm development.
 
-%%%%%%%%%%%%%%%%%%%%% PREPRINT VERSION %%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Acknowledgments}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The authors are grateful to the editor, Victor Kuperman, and reviewers, Sascha Schroeder and Tim Slattery, for helpful and insightful commentary. This work was funded by an ERC Starting Grant (no.\@ 679010, STATLEARN) and a FARE 2016 grant (no.\@ R164XBHNYR, CROWDLEARN), both awarded to \textbf{DC}. \textbf{VNP}, \textbf{MK}, and \textbf{DC} conceived the original idea behind this work. \textbf{JWC} and \textbf{VNP} explored the literature and selected the algorithms. \textbf{VNP} and \textbf{MF} developed the \texttt{split} algorithm, with input from \textbf{MK} and \textbf{DC}. \textbf{JWC} developed the \texttt{warp} algorithm, implemented all algorithms in a single framework, conducted the simulations, and performed the analyses. \textbf{JWC} and \textbf{VNP} performed the manual corrections and drafted the paper. \textbf{DC} revised the paper and coordinated the project.
 
-%%%%%%%%%%%%%%%%%%%% SUBMISSION VERSION %%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Open Practices Statement}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \section{Open Practices Statement}
-
-% All code and data required to reproduce the analyses reported in this paper, as well as Matlab/Octave, Python, and R implementations of the algorithms, are available from the OSF archive associated with this paper: https://doi.org/10.17605/OSF.IO/7SRKG Preregistration is not applicable to this study.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+All code and data required to reproduce the analyses reported in this paper, as well as Matlab/Octave, Python, and R implementations of the algorithms, are available from the OSF archive associated with this paper: https://doi.org/10.17605/OSF.IO/7SRKG
 
 \printbibliography
 
