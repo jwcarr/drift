@@ -27,7 +27,7 @@ for algorithm in ['sample', 'gold'] + globals.algorithms:
 	fig.add_image(image)
 fig.set_crop_margin(2)
 fig.save('../visuals/outputs_adult.pdf', 174)
-fig.save('../manuscript/figs/fig09_double_column.eps', 174)
+fig.save('../manuscript/figs/fig08_double_column.eps', 174)
 
 # Child example
 
@@ -50,4 +50,4 @@ for algorithm in ['sample', 'gold'] + globals.algorithms:
 	fig.add_image(image)
 fig.set_crop_margin(2)
 fig.save('../visuals/outputs_child.pdf', 174)
-fig.save('../manuscript/figs/fig10_double_column.eps', 174)
+fig.save('../manuscript/figs/fig09_double_column.eps', 174)
