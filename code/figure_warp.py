@@ -26,7 +26,7 @@ _, warping_path = algorithms.dynamic_time_warping(fixation_XY, word_XY)
 for fixation, mapped_words in zip(original_sequence, warping_path):
 	for word_i in mapped_words:
 		word_x, word_y = word_XY[word_i]
-		diagram.draw_line(fixation.xy, (word_x, word_y), 'black', dashed=True)
+		diagram.draw_line(fixation.xy, (word_x, word_y), 'black', stroke_width=0.5, dashed=True)
 
 fig = eyekit.vis.Figure()
 fig.add_image(diagram)
