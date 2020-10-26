@@ -1,3 +1,8 @@
+% This script runs a simple test case through all ten algorithms. Tested under
+% Matlab 9.8.0 and Octave 5.2.0. The regress and stretch algorithms currently
+% do not work in Octave because it does not support handles to nested
+% functions; this is supposed to be fixed in version 6.
+
 % For Octave compatibility, first load the statistics package
 if exist('OCTAVE_VERSION')
 	pkg load statistics

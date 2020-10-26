@@ -1,3 +1,9 @@
+# This script runs a simple test case through all ten algorithms. Tested under
+# Python 3.8.5 with the following packages:
+# - numpy 1.19.1
+# - scikit-learn 0.23.2
+# - scipy 1.5.2
+
 import numpy as np
 import drift_algorithms
 

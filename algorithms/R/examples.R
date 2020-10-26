@@ -1,3 +1,6 @@
+# This script runs a simple test case through all ten algorithms. Tested under
+# R version 3.5.2.
+
 source('drift_algorithms.R')
 
 # Matrix representing the XY coordinates of the original fixations
