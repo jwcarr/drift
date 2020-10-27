@@ -1,7 +1,7 @@
 import numpy as np
 import eyekit
 import simulation
-import globals
+import core
 
 eyekit.vis.set_default_font('Helvetica Neue', 8)
 
@@ -17,7 +17,7 @@ def run_and_visualize(passage, label, **params):
 	return diagram
 
 
-passage = eyekit.TextBlock(globals.lorem_ipsum_text, position=(360, 161), font_face='Courier New', font_size=26.667, line_height=64)
+passage = eyekit.TextBlock(core.lorem_ipsum_text, position=(360, 161), font_face='Courier New', font_size=26.667, line_height=64)
 
 fig = eyekit.vis.Figure(5, 1)
 fig.add_image(run_and_visualize(passage, 'Noise', noise=20.0))

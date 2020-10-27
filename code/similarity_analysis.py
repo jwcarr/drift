@@ -11,7 +11,7 @@ from sklearn.manifold import MDS
 from scipy.spatial import distance
 from scipy.cluster import hierarchy
 import eyekit
-import globals
+import core
 from algorithms import dynamic_time_warping
 
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
@@ -163,7 +163,7 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 	# Plot AHC clustering
 	ahc_methods, linkage_matrix = ahc_solution
 	method_names = {i:method for i, method in enumerate(ahc_methods)}
-	dendrogram = Dendrogram(linkage_matrix, method_names, globals.colors)
+	dendrogram = Dendrogram(linkage_matrix, method_names, core.colors)
 	dendrogram.adjust_branch_spacing([ ([9,10,11,12,13,15], 50),  ([14,16], 100) ])
 	dendrogram.plot(axes[0])
 	for node, label in [(9, 'Sequential'), (15, 'Positional'), (12, 'Relative'), (13, 'Absolute')]:
@@ -183,7 +183,7 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 	mn, mx = positions[:, 0].min(), positions[:, 0].max()
 	offset = (mx - mn) * 0.1
 	furthest_method_to_right = mds_methods[np.argmax(positions[:, 0])]
-	axes[1].scatter(positions[:, 0], positions[:, 1], color=[globals.colors[m] for m in mds_methods])
+	axes[1].scatter(positions[:, 0], positions[:, 1], color=[core.colors[m] for m in mds_methods])
 	for label, position in zip(mds_methods, positions):
 		if label == furthest_method_to_right or label == 'stretch':
 			axes[1].text(position[0]-offset/3, position[1], label, va='center', ha='right')
@@ -200,25 +200,25 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 
 	fig.tight_layout(pad=0.5, h_pad=1, w_pad=1)
 	fig.savefig(filepath, format='svg')
-	globals.format_svg_labels(filepath, monospace=globals.algorithms, arbitrary_replacements={'gold':'Gold standard', 'JC':'Jon', 'VP':'Vale'})
+	core.format_svg_labels(filepath, monospace=core.algorithms, arbitrary_replacements={'gold':'Gold standard', 'JC':'Jon', 'VP':'Vale'})
 	if not filepath.endswith('.svg'):
-		globals.convert_svg(filepath, filepath)
+		core.convert_svg(filepath, filepath)
 
 
 if __name__ == '__main__':
 
 	# Measure pairwise distances between methods and pickle the distance matrix
-	# make_algorithmic_distance_matrix(globals.good_algorithms+['gold'], '../data/algorithm_distances.pkl')
+	# make_algorithmic_distance_matrix(core.good_algorithms+['gold'], '../data/algorithm_distances.pkl')
 
 	# Load the distance matrix created in the above step
 	with open('../data/algorithm_distances.pkl', mode='rb') as file:
 		algorithm_distances = pickle.load(file)
 
 	# Compute the hierarchical clustering solution
-	ahc_solution = hierarchical_clustering_analysis(algorithm_distances, globals.good_algorithms)
+	ahc_solution = hierarchical_clustering_analysis(algorithm_distances, core.good_algorithms)
 
 	# Compute the multidimensional scaling solution
-	mds_solution = multidimensional_scaling_analysis(algorithm_distances, globals.good_algorithms+['gold'], random_seed=9)
+	mds_solution = multidimensional_scaling_analysis(algorithm_distances, core.good_algorithms+['gold'], random_seed=9)
 
 	# Plot the analyses
 	plot_analyses(ahc_solution, mds_solution, '../visuals/results_similarity.pdf')

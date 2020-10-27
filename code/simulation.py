@@ -8,7 +8,7 @@ import numpy as np
 import eyekit
 import lorem
 import algorithms
-import globals
+import core
 
 
 class ReadingScenario:
@@ -115,14 +115,14 @@ def simulate_factor(factor, n_gradations, n_sims):
 	and corrected by each algorithm. Results are returned as a 3D numpy
 	array.
 	'''
-	results = np.zeros((len(globals.algorithms), n_gradations, n_sims), dtype=float)
-	_, (factor_min, factor_max) = globals.factors[factor]
+	results = np.zeros((len(core.algorithms), n_gradations, n_sims), dtype=float)
+	_, (factor_min, factor_max) = core.factors[factor]
 	for gradation_i, factor_value in enumerate(np.linspace(factor_min, factor_max, n_gradations)):
 		print('%s = %f' % (factor, factor_value))
 		reading_scenario = ReadingScenario(**{factor:factor_value})
 		for sim_i in range(n_sims):
 			passage, fixation_XY, intended_I = reading_scenario.simulate()
-			for method_i, method in enumerate(globals.algorithms):
+			for method_i, method in enumerate(core.algorithms):
 				corrected_I = algorithms.correct_drift(method, fixation_XY, passage, return_line_assignments=True)
 				matches = intended_I == corrected_I
 				results[method_i][gradation_i][sim_i] = sum(matches) / len(matches)

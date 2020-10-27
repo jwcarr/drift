@@ -4,12 +4,12 @@ manual and algorithmic corrections.
 '''
 
 import eyekit
-import globals
+import core
 
 eyekit.vis.set_default_font('Helvetica Neue', 8)
 
 passages = eyekit.io.read('../data/passages.json')
-datasets = {dataset : eyekit.io.read('../data/fixations/%s.json'%dataset) for dataset in ['sample', 'gold']+globals.algorithms}
+datasets = {dataset : eyekit.io.read('../data/fixations/%s.json'%dataset) for dataset in ['sample', 'gold']+core.algorithms}
 
 booklet = eyekit.vis.Booklet()
 
@@ -32,7 +32,7 @@ for trial_id, trial in datasets['sample'].items():
 	gold_image.set_caption('Gold standard manual correction')
 	fig.add_image(gold_image)
 
-	for algorithm in globals.algorithms:
+	for algorithm in core.algorithms:
 		data = datasets[algorithm]
 		image = eyekit.vis.Image(1920, 1080)
 		image.draw_text_block(passages[trial['passage_id']], color='gray')

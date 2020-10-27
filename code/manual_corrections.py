@@ -13,7 +13,7 @@ files for analysis. Validation includes:
 '''
 
 import eyekit
-import globals
+import core
 
 def create_empty_correction_file(correction_path, fixation_sequence, participant_id, passage_id):
 	participant_id = participant_id.zfill(3)
@@ -87,11 +87,11 @@ def compare_two_corrections(correction1_file_path, correction2_file_path):
 			if fixation1.discarded:
 				line_assignment1 = 0
 			else:
-				line_assignment1 = globals.y_to_line_mapping[fixation1.y]
+				line_assignment1 = core.y_to_line_mapping[fixation1.y]
 			if fixation2.discarded:
 				line_assignment2 = 0
 			else:
-				line_assignment2 = globals.y_to_line_mapping[fixation2.y]
+				line_assignment2 = core.y_to_line_mapping[fixation2.y]
 			if line_assignment1 != line_assignment2:
 				if line_assignment1 == 0 or line_assignment2 == 0:
 					print(' - Fixation %i: Corrector 1 says %i, Corrector 2 says %i (difference in discarding)'%((i+1), line_assignment1, line_assignment2))
@@ -101,28 +101,28 @@ def compare_two_corrections(correction1_file_path, correction2_file_path):
 
 if __name__ == '__main__':
 
-	participant_data = eyekit.io.read(globals.FIXATIONS / 'sample.json')
-	passages = eyekit.io.read(globals.DATA / 'passages.json')
+	participant_data = eyekit.io.read(core.FIXATIONS / 'sample.json')
+	passages = eyekit.io.read(core.DATA / 'passages.json')
 
 	# Step 0: Initialize the empty correction files and plots of the original data
 	# for corrector_id in ['JC', 'VP']:
-	# 	correction_path = globals.MANUAL_CORRECTIONS / corrector_id
+	# 	correction_path = core.MANUAL_CORRECTIONS / corrector_id
 	# 	correction_path.mkdir()
 	# 	for trial_id, trial in participant_data.items():
 	# 		create_empty_correction_file(correction_path, trial['fixations'], trial['participant_id'], trial['passage_id'])
 	# 		create_visualization(correction_path, trial['fixations'], passages[trial['passage_id']], trial['participant_id'], trial['passage_id'])
 
 	# Step 1: Check validity of JC's correction and make JSON file
-	check_correction(globals.MANUAL_CORRECTIONS / 'JC', participant_data, passages)
-	make_corrected_file(globals.MANUAL_CORRECTIONS / 'JC', participant_data, passages, globals.FIXATIONS / 'JC.json')
+	check_correction(core.MANUAL_CORRECTIONS / 'JC', participant_data, passages)
+	make_corrected_file(core.MANUAL_CORRECTIONS / 'JC', participant_data, passages, core.FIXATIONS / 'JC.json')
 
 	# Step 2: Check validity of VP's correction and make JSON file
-	check_correction(globals.MANUAL_CORRECTIONS / 'VP', participant_data, passages)
-	make_corrected_file(globals.MANUAL_CORRECTIONS / 'VP', participant_data, passages, globals.FIXATIONS / 'VP.json')
+	check_correction(core.MANUAL_CORRECTIONS / 'VP', participant_data, passages)
+	make_corrected_file(core.MANUAL_CORRECTIONS / 'VP', participant_data, passages, core.FIXATIONS / 'VP.json')
 
 	# Step 3: Compare JC and VP's corrections and highlight any differences
-	compare_two_corrections(globals.FIXATIONS / 'JC.json', globals.FIXATIONS / 'VP.json')
+	compare_two_corrections(core.FIXATIONS / 'JC.json', core.FIXATIONS / 'VP.json')
 
 	# Step 4: Create the gold standard JSON file from a merger of the two corrections (manual merger should be created first)
-	check_correction(globals.MANUAL_CORRECTIONS / 'gold', participant_data, passages)
-	make_corrected_file(globals.MANUAL_CORRECTIONS / 'gold', participant_data, passages, globals.FIXATIONS / 'gold.json')
+	check_correction(core.MANUAL_CORRECTIONS / 'gold', participant_data, passages)
+	make_corrected_file(core.MANUAL_CORRECTIONS / 'gold', participant_data, passages, core.FIXATIONS / 'gold.json')

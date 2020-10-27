@@ -5,7 +5,7 @@ Code for running the algorithms over the sample data
 import numpy as np
 import eyekit
 import algorithms
-import globals
+import core
 
 def run_algorithm(sample_data, passages, output_dir, method):
 	print(method.upper())
@@ -27,5 +27,5 @@ if __name__ == '__main__':
 	sample_data = eyekit.io.read('../data/fixations/sample.json')
 	passages = eyekit.io.read('../data/passages.json')
 
-	for method in globals.algorithms:
+	for method in core.algorithms:
 		run_algorithm(sample_data, passages, '../data/fixations/', method)

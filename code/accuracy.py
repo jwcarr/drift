@@ -8,7 +8,7 @@ from matplotlib.patches import Patch
 import matplotlib.transforms as transforms
 import numpy as np
 import eyekit
-import globals
+import core
 
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
 plt.rcParams.update({'font.size': 7})
@@ -24,7 +24,7 @@ def line_assignments(fixations):
 	line_assignments = np.zeros(len(fixations), dtype=int)
 	for i, fixation in enumerate(fixations.iter_with_discards()):
 		if not fixation.discarded:
-			line_assignments[i] = globals.y_to_line_mapping[fixation.y]
+			line_assignments[i] = core.y_to_line_mapping[fixation.y]
 	return line_assignments
 
 def compare_outputs(method1, method2):
@@ -47,7 +47,7 @@ def calculate_improvement(results):
 	improvement_results = {}
 	attach_adults = np.array(results['attach']['adults'], dtype=float)
 	attach_kids = np.array(results['attach']['kids'], dtype=float)
-	for algorithm in globals.true_algorithms:
+	for algorithm in core.true_algorithms:
 		assert results[algorithm]['adults_IDs'] == results['attach']['adults_IDs']
 		assert results[algorithm]['kids_IDs'] == results['attach']['kids_IDs']
 		alg_adults = np.array(results[algorithm]['adults'], dtype=float)
@@ -101,7 +101,7 @@ def plot_results(results, filepath, y_label, y_limits, y_unit):
 	special_adult, special_kid = None, None
 	x_labels = []
 	for x_position, (algorithm, data) in enumerate(results.items()):
-		color = globals.colors[algorithm]
+		color = core.colors[algorithm]
 		special_adult, special_kid = scatter_with_specials(axis, data, x_position, color, special_adult, special_kid)
 		plot_median_lines(axis, data, x_position, y_unit)
 		x_labels.append(algorithm)
@@ -115,9 +115,9 @@ def plot_results(results, filepath, y_label, y_limits, y_unit):
 	axis.set_ylabel(y_label)
 	fig.tight_layout(pad=0.5, h_pad=1, w_pad=1)
 	fig.savefig(filepath, format='svg')
-	globals.format_svg_labels(filepath, globals.algorithms)
+	core.format_svg_labels(filepath, core.algorithms)
 	if not filepath.endswith('.svg'):
-		globals.convert_svg(filepath, filepath)
+		core.convert_svg(filepath, filepath)
 
 def plot_proportion_above(axis, accuracy_results, target_accuracy=95, show_legend=False):
 	prop_adults = []
@@ -128,7 +128,7 @@ def plot_proportion_above(axis, accuracy_results, target_accuracy=95, show_legen
 		prop_kid = len(np.where(np.array(results['kids']) >= target_accuracy)[0]) / len(results['kids'])
 		prop_adults.append(prop_adult)
 		prop_kids.append(prop_kid)
-		colors.append(globals.colors[algorithm])
+		colors.append(core.colors[algorithm])
 	positions = np.arange(0, len(accuracy_results)*3, 3)
 	axis.bar(positions, prop_adults, color=colors, width=0.9)
 	axis.bar(positions+1, prop_kids, color=[pseudo_alpha(color) for color in colors], width=0.9)
@@ -150,9 +150,9 @@ def plot_proportions(accuracy_results, filepath):
 	axes[2].set_yticklabels([])
 	fig.tight_layout(pad=0.5, h_pad=1, w_pad=1)
 	fig.savefig(filepath, format='svg')
-	globals.format_svg_labels(filepath, globals.algorithms)
+	core.format_svg_labels(filepath, core.algorithms)
 	if not filepath.endswith('.svg'):
-		globals.convert_svg(filepath, filepath)
+		core.convert_svg(filepath, filepath)
 
 def pseudo_alpha(color, opacity=0.5):
 	r, g, b = tuple(bytes.fromhex(color[1:]))
@@ -161,7 +161,7 @@ def pseudo_alpha(color, opacity=0.5):
 
 if __name__ == '__main__':
 
-	accuracy_results = {algorithm : compare_outputs('gold', algorithm) for algorithm in globals.algorithms}
+	accuracy_results = {algorithm : compare_outputs('gold', algorithm) for algorithm in core.algorithms}
 	improvement_results = calculate_improvement(accuracy_results)
 
 	plot_results(accuracy_results, '../visuals/results_accuracy.pdf', 'Accuracy of algorithmic correction (%)', (0, 100), '%')

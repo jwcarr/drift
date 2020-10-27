@@ -1,5 +1,5 @@
 import eyekit
-import globals
+import core
 
 eyekit.vis.set_default_font('Helvetica Neue', 8)
 
@@ -10,7 +10,7 @@ gold_data = eyekit.io.read('../data/fixations/gold.json')
 
 gold_fixation_sequence = gold_data['trial_5']['fixations']
 fig = eyekit.vis.Figure(4, 3)
-for algorithm in ['sample', 'gold'] + globals.algorithms:
+for algorithm in ['sample', 'gold'] + core.algorithms:
 	data = eyekit.io.read('../data/fixations/%s.json'%algorithm)
 	fixation_sequence = data['trial_5']['fixations']
 	image = eyekit.vis.Image(1920, 1080)
@@ -33,7 +33,7 @@ fig.save('../visuals/outputs_adult.pdf', 174)
 
 gold_fixation_sequence = gold_data['trial_30']['fixations']
 fig = eyekit.vis.Figure(4, 3)
-for algorithm in ['sample', 'gold'] + globals.algorithms:
+for algorithm in ['sample', 'gold'] + core.algorithms:
 	data = eyekit.io.read('../data/fixations/%s.json'%algorithm)
 	fixation_sequence = data['trial_30']['fixations']
 	image = eyekit.vis.Image(1920, 1080)
