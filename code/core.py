@@ -44,6 +44,7 @@ def convert_svg(svg_file_path, out_file_path):
 # PATHS TO COMMON DIRECTORIES
 ROOT = Path(__file__).parent.parent
 DATA = ROOT / 'data'
+FIGS = ROOT / 'manuscript' / 'figs'
 FIXATIONS = DATA / 'fixations'
 MANUAL_CORRECTIONS = DATA / 'manual_corrections'
 SIMULATIONS = DATA / 'simulations'

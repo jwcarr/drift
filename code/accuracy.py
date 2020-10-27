@@ -28,8 +28,8 @@ def line_assignments(fixations):
 	return line_assignments
 
 def compare_outputs(method1, method2):
-	data1 = eyekit.io.read('../data/fixations/%s.json'%method1)
-	data2 = eyekit.io.read('../data/fixations/%s.json'%method2)
+	data1 = eyekit.io.read(core.FIXATIONS / f'{method1}.json')
+	data2 = eyekit.io.read(core.FIXATIONS / f'{method2}.json')
 	results = {'adults':[], 'kids':[], 'adults_IDs':[], 'kids_IDs':[]}
 	for trial_id, trial in data1.items():
 		line_assignments1 = line_assignments(trial['fixations'])
@@ -95,6 +95,7 @@ def plot_legend(axis, legend_x, legend_y):
 	axis.text(legend_x+0.05, legend_y, 'Children', ha='left', va='center', fontsize=7, transform=axis.transAxes)
 
 def plot_results(results, filepath, y_label, y_limits, y_unit):
+	filepath = str(filepath)
 	fig, axis = plt.subplots(1, 1, figsize=(6.8, 2.5))
 	if y_limits[0] < 0:
 		axis.plot([-1, len(results)], [0, 0], color='black', linewidth=0.5)
@@ -141,6 +142,7 @@ def plot_proportion_above(axis, accuracy_results, target_accuracy=95, show_legen
 		axis.legend(handles=[Patch(facecolor='#000000', label='Adults'), Patch(facecolor=pseudo_alpha('#000000', 0.3), label='Children')], frameon=False, fontsize=7)
 
 def plot_proportions(accuracy_results, filepath):
+	filepath = str(filepath)
 	fig, axes = plt.subplots(1, 3, figsize=(6.8, 2.5))
 	for axis, target_accuracy, show_legend, letter in zip(axes, [90, 95, 99], [False, False, True], ['A', 'B', 'C']):
 		plot_proportion_above(axis, accuracy_results, target_accuracy, show_legend)
@@ -164,11 +166,11 @@ if __name__ == '__main__':
 	accuracy_results = {algorithm : compare_outputs('gold', algorithm) for algorithm in core.algorithms}
 	improvement_results = calculate_improvement(accuracy_results)
 
-	plot_results(accuracy_results, '../visuals/results_accuracy.pdf', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
-	# plot_results(accuracy_results, '../manuscript/figs/fig07_double_column.eps', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
+	plot_results(accuracy_results, core.VISUALS / 'results_accuracy.pdf', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
+	# plot_results(accuracy_results, core.FIGS / 'fig07_double_column.eps', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
 
-	plot_results(improvement_results, '../visuals/results_improvement.pdf', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
-	# plot_results(improvement_results, '../manuscript/figs/fig11_double_column.eps', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
+	plot_results(improvement_results, core.VISUALS / 'results_improvement.pdf', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
+	# plot_results(improvement_results, core.FIGS / 'fig11_double_column.eps', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
 
-	plot_proportions(accuracy_results, '../visuals/results_proportion.pdf')
-	# plot_proportions(accuracy_results, '../manuscript/figs/fig10_double_column.eps')
+	plot_proportions(accuracy_results, core.VISUALS / 'results_proportion.pdf')
+	# plot_proportions(accuracy_results, core.FIGS / 'fig10_double_column.eps')

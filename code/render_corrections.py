@@ -8,8 +8,8 @@ import core
 
 eyekit.vis.set_default_font('Helvetica Neue', 8)
 
-passages = eyekit.io.read('../data/passages.json')
-datasets = {dataset : eyekit.io.read('../data/fixations/%s.json'%dataset) for dataset in ['sample', 'gold']+core.algorithms}
+passages = eyekit.io.read(core.DATA / 'passages.json')
+datasets = {dataset : eyekit.io.read(core.FIXATIONS / f'{dataset}.json') for dataset in ['sample', 'gold']+core.algorithms}
 
 booklet = eyekit.vis.Booklet()
 
@@ -46,4 +46,4 @@ for trial_id, trial in datasets['sample'].items():
 
 	booklet.add_figure(fig)
 
-booklet.save('../visuals/corrections.pdf', height=227)
+booklet.save(core.VISUALS / 'corrections.pdf', height=227)

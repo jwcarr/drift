@@ -3,8 +3,8 @@ import eyekit
 import algorithms
 import core
 
-data = eyekit.io.read('../data/fixations/sample.json')
-passages = eyekit.io.read('../data/passages.json')
+data = eyekit.io.read(core.FIXATIONS / 'sample.json')
+passages = eyekit.io.read(core.DATA / 'passages.json')
 
 original_sequence = data['trial_5']['fixations']
 
@@ -32,5 +32,5 @@ fig = eyekit.vis.Figure()
 fig.add_image(diagram)
 fig.set_lettering(False)
 fig.set_crop_margin(3)
-fig.save('../visuals/illustration_warp.pdf', 83)
-# fig.save('../manuscript/figs/fig02_single_column.eps', 83)
+fig.save(core.VISUALS / 'illustration_warp.pdf', 83)
+# fig.save(core.FIGS / 'fig02_single_column.eps', 83)

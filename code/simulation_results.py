@@ -14,6 +14,7 @@ plt.rcParams.update({'font.size': 7})
 
 
 def plot_results(filepath, layout, n_rows=2, figsize=None, stagger=0):
+	filepath = str(filepath)
 	n_cols = len(layout) // n_rows
 	if len(layout) % n_rows:
 		n_cols += 1
@@ -29,7 +30,7 @@ def plot_results(filepath, layout, n_rows=2, figsize=None, stagger=0):
 			for line in legend.get_lines():
 				line.set_linewidth(2.5)
 			continue
-		with open('../data/simulations/%s.pkl'%factor, mode='rb') as file:
+		with open(core.SIMULATIONS / f'{factor}.pkl', mode='rb') as file:
 			results = pickle.load(file)
 		results *= 100
 		factor_label, (factor_min_val, factor_max_val) = core.factors[factor]
@@ -62,10 +63,11 @@ def plot_results(filepath, layout, n_rows=2, figsize=None, stagger=0):
 
 
 def plot_invariance(filepath, show_percentages=False):
+	filepath = str(filepath)
 	accuracy = np.zeros((len(core.algorithms), len(core.factors)), dtype=float)
 	invariance = np.zeros((len(core.algorithms), len(core.factors)), dtype=bool)
 	for f, factor in enumerate(core.factors):
-		with open('../data/simulations/%s.pkl'%factor, mode='rb') as file:
+		with open(core.SIMULATIONS / f'{factor}.pkl', mode='rb') as file:
 			results = pickle.load(file)
 		for a, algorithm in enumerate(core.algorithms):
 			accuracy[a, f] = results[a].mean() * 100
@@ -97,8 +99,8 @@ def plot_invariance(filepath, show_percentages=False):
 
 if __name__ == '__main__':
 
-	plot_results('../visuals/results_simulations.pdf', ['noise', 'slope', 'shift', 'regression_within', 'regression_between', 'legend'], 2, (7, 5), 0.75)
-	# plot_results('../manuscript/figs/fig04_double_column.eps', ['noise', 'legend', 'slope', 'shift', 'regression_within', 'regression_between'], 3, (6.8, 7), 0.75)
+	plot_results(core.VISUALS / 'results_simulations.pdf', ['noise', 'slope', 'shift', 'regression_within', 'regression_between', 'legend'], 2, (7, 5), 0.75)
+	# plot_results(core.FIGS / 'fig04_double_column.eps', ['noise', 'legend', 'slope', 'shift', 'regression_within', 'regression_between'], 3, (6.8, 7), 0.75)
 	
-	plot_invariance('../visuals/results_invariance.pdf')
-	# plot_invariance('../manuscript/figs/fig05_single_column.eps')
+	plot_invariance(core.VISUALS / 'results_invariance.pdf')
+	# plot_invariance(core.FIGS / 'fig05_single_column.eps')

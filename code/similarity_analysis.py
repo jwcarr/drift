@@ -110,8 +110,8 @@ class Dendrogram:
 
 
 def algorithmic_output_distance(method1, method2):
-	data1 = eyekit.io.read('../data/fixations/%s.json'%method1)
-	data2 = eyekit.io.read('../data/fixations/%s.json'%method2)
+	data1 = eyekit.io.read(core.FIXATIONS / f'{method1}.json')
+	data2 = eyekit.io.read(core.FIXATIONS / f'{method2}.json')
 	results = []
 	for trial_id, trial in data1.items():
 		fixation_XY1 = np.array([f.xy for f in trial['fixations'] if not f.discarded], dtype=int)
@@ -158,6 +158,7 @@ def multidimensional_scaling_analysis(algorithm_distances, methods, random_seed=
 	return methods, min_max_normalize(positions)
 
 def plot_analyses(ahc_solution, mds_solution, filepath):
+	filepath = str(filepath)
 	fig, axes = plt.subplots(2, 1, figsize=(3.3, 5))
 
 	# Plot AHC clustering
@@ -208,10 +209,10 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 if __name__ == '__main__':
 
 	# Measure pairwise distances between methods and pickle the distance matrix
-	# make_algorithmic_distance_matrix(core.good_algorithms+['gold'], '../data/algorithm_distances.pkl')
+	# make_algorithmic_distance_matrix(core.good_algorithms+['gold'], core.DATA / 'algorithm_distances.pkl')
 
 	# Load the distance matrix created in the above step
-	with open('../data/algorithm_distances.pkl', mode='rb') as file:
+	with open(core.DATA / 'algorithm_distances.pkl', mode='rb') as file:
 		algorithm_distances = pickle.load(file)
 
 	# Compute the hierarchical clustering solution
@@ -221,5 +222,5 @@ if __name__ == '__main__':
 	mds_solution = multidimensional_scaling_analysis(algorithm_distances, core.good_algorithms+['gold'], random_seed=9)
 
 	# Plot the analyses
-	plot_analyses(ahc_solution, mds_solution, '../visuals/results_similarity.pdf')
-	# plot_analyses(ahc_solution, mds_solution, '../manuscript/figs/fig12_single_column.eps')
+	plot_analyses(ahc_solution, mds_solution, core.VISUALS / 'results_similarity.pdf')
+	# plot_analyses(ahc_solution, mds_solution, core.FIGS / 'fig12_single_column.eps')

@@ -5,7 +5,7 @@ cffi==1.14.2
 cssselect2==0.3.0
 cycler==0.10.0
 defusedxml==0.6.0
-eyekit==0.2.11
+eyekit==0.2.12
 joblib==0.16.0
 kiwisolver==1.2.0
 lorem==0.1.1

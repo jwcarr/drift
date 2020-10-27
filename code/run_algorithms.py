@@ -19,13 +19,13 @@ def run_algorithm(sample_data, passages, output_dir, method):
 			new_trial['fixations'].append((fixation.x, int(y), fixation.duration, fixation.discarded))
 		new_trial['fixations'] = eyekit.FixationSequence(new_trial['fixations'])
 		output_data[trial_id] = new_trial
-	eyekit.io.write(output_data, output_dir + '%s.json' % method)
+	eyekit.io.write(output_data, output_dir / f'{method}.json')
 
 
 if __name__ == '__main__':
 
-	sample_data = eyekit.io.read('../data/fixations/sample.json')
-	passages = eyekit.io.read('../data/passages.json')
+	sample_data = eyekit.io.read(core.FIXATIONS / 'sample.json')
+	passages = eyekit.io.read(core.DATA / 'passages.json')
 
 	for method in core.algorithms:
-		run_algorithm(sample_data, passages, '../data/fixations/', method)
+		run_algorithm(sample_data, passages, core.FIXATIONS, method)

@@ -26,5 +26,5 @@ fig.add_image(run_and_visualize(passage, 'Shift (downward)', noise=2.0, shift=0.
 fig.add_image(run_and_visualize(passage, 'Within-line regression', noise=2.0, regression_within=0.5))
 fig.add_image(run_and_visualize(passage, 'Between-line regression', noise=2.0, regression_between=0.5))
 fig.set_crop_margin(5)
-fig.save('../visuals/illustration_phenomena.pdf', 83)
-# fig.save('../manuscript/figs/fig03_single_column.eps', 83)
+fig.save(core.VISUALS / 'illustration_phenomena.pdf', 83)
+# fig.save(core.FIGS / 'fig03_single_column.eps', 83)
