@@ -1,4 +1,5 @@
-from os import path
+from os.path import splitext
+from pathlib import Path
 import re
 import cairosvg
 
@@ -29,7 +30,7 @@ def convert_svg(svg_file_path, out_file_path):
 	Convert an SVG file into PDF, EPS, or PNG. This function is
 	essentially a wrapper around CairoSVG.
 	'''
-	_, extension = path.splitext(out_file_path)
+	_, extension = splitext(out_file_path)
 	if extension == '.pdf':
 		cairosvg.svg2pdf(url=svg_file_path, write_to=out_file_path)
 	elif extension == '.eps':
@@ -38,6 +39,15 @@ def convert_svg(svg_file_path, out_file_path):
 		cairosvg.svg2png(url=svg_file_path, write_to=out_file_path)
 	else:
 		raise ValueError('Cannot save to this format. Use either .pdf, .eps, or .png')
+
+
+# PATHS TO COMMON DIRECTORIES
+ROOT = Path(__file__).parent.parent
+DATA = ROOT / 'data'
+FIXATIONS = DATA / 'fixations'
+MANUAL_CORRECTIONS = DATA / 'manual_corrections'
+SIMULATIONS = DATA / 'simulations'
+VISUALS = ROOT / 'visuals'
 
 
 y_to_line_mapping = {155:1, 219:2, 283:3, 347:4, 411:5, 475:6, 539:7, 603:8, 667:9, 731:10, 795:11, 859:12, 923:13}
