@@ -16,8 +16,11 @@ def run_and_visualize(passage, label, **params):
 	diagram.set_caption(label)
 	return diagram
 
+lorem_ipsum_text = ['Lorem ipsum dolor sit amet, consectetur',
+                    'adipiscing elit, sed do eiusmod tempor',
+                    'incididunt ut labore.']
 
-passage = eyekit.TextBlock(core.lorem_ipsum_text, position=(360, 161), font_face='Courier New', font_size=26.667, line_height=64)
+passage = eyekit.TextBlock(lorem_ipsum_text, position=(360, 161), font_face='Courier New', font_size=26.667, line_height=64)
 
 fig = eyekit.vis.Figure(5, 1)
 fig.add_image(run_and_visualize(passage, 'Noise', noise=20.0))

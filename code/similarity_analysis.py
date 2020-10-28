@@ -12,7 +12,6 @@ from scipy.spatial import distance
 from scipy.cluster import hierarchy
 import eyekit
 import core
-from algorithms import dynamic_time_warping
 
 plt.rcParams['svg.fonttype'] = 'none' # don't convert fonts to curves in SVGs
 plt.rcParams.update({'font.size': 7})
@@ -110,6 +109,7 @@ class Dendrogram:
 
 
 def algorithmic_output_distance(method1, method2):
+	from algorithms import dynamic_time_warping
 	data1 = eyekit.io.read(core.FIXATIONS / f'{method1}.json')
 	data2 = eyekit.io.read(core.FIXATIONS / f'{method2}.json')
 	results = []

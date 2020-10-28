@@ -18,8 +18,8 @@ expected_sequence = eyekit.FixationSequence(np.column_stack([word_XY, np.full(le
 
 diagram = eyekit.vis.Image(1920, 1080)
 diagram.draw_text_block(passages['1B'], color='gray')
-diagram.draw_fixation_sequence(expected_sequence, color=core.illustration_colors[1])
-diagram.draw_fixation_sequence(original_sequence, color=core.illustration_colors[2])
+diagram.draw_fixation_sequence(expected_sequence, color='#E32823')
+diagram.draw_fixation_sequence(original_sequence, color='#205E84')
 
 _, warping_path = algorithms.dynamic_time_warping(fixation_XY, word_XY)
 

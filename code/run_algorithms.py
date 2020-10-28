@@ -2,7 +2,6 @@
 Code for running the algorithms over the sample data
 '''
 
-import numpy as np
 import eyekit
 import algorithms
 import core
