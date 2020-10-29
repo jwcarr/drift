@@ -46,4 +46,4 @@ for trial_id, trial in datasets['sample'].items():
 
 	booklet.add_figure(fig)
 
-booklet.save(core.VISUALS / 'corrections.pdf', height=227)
+booklet.save(core.SUPPLEMENT / 'item2.pdf', height=227)

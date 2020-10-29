@@ -10,6 +10,7 @@ FIGS = ROOT / 'manuscript' / 'figs'
 FIXATIONS = DATA / 'fixations'
 MANUAL_CORRECTIONS = DATA / 'manual_corrections'
 SIMULATIONS = DATA / 'simulations'
+SUPPLEMENT = ROOT / 'supplement'
 VISUALS = ROOT / 'visuals'
 
 # For mapping y-values to the equivalent line of text

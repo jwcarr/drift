@@ -31,7 +31,9 @@ Structure of this repository
 
 - `manuscript/`: LaTeX source and postscript figures for the manuscript.
 
-- `visuals/`: Various visualizations and illustrations, including corrections of all 48 trials by all algorithms.
+- `supplement/`: Supplementary Item 1 (pseudocode) and Supplementary Item 2 (corrections of all 48 trials by all algorithms).
+
+- `visuals/`: Various visualizations and illustrations.
 
 
 Replication of the analyses
