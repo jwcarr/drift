@@ -1,11 +1,11 @@
-cairocffi==1.1.0
+cairocffi==1.2.0
 CairoSVG==2.5.0
 certifi==2020.6.20
 cffi==1.14.2
 cssselect2==0.3.0
 cycler==0.10.0
 defusedxml==0.6.0
-eyekit==0.2.12
+eyekit==0.3.1
 joblib==0.16.0
 kiwisolver==1.2.0
 lorem==0.1.1

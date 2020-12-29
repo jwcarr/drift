@@ -8,11 +8,12 @@ eyekit.vis.set_default_font('Helvetica Neue', 8)
 def run_and_visualize(passage, label, **params):
 	reading_scenario = simulation.ReadingScenario(**params)
 	_, fixations, _ = reading_scenario.simulate(passage)
-	fixations = np.column_stack([fixations, np.full(len(fixations), 100, dtype=int)])
+	start_times = np.array([i*100 for i in range(len(fixations))], dtype=int)
+	fixations = np.column_stack([fixations, start_times, start_times+100])
 	fixation_sequence = eyekit.FixationSequence(fixations)
 	diagram = eyekit.vis.Image(1920, 1080)
 	diagram.draw_text_block(passage, color='gray')
-	diagram.draw_fixation_sequence(fixation_sequence, color='black')
+	diagram.draw_fixation_sequence(fixation_sequence, color='black', fixation_radius=6)
 	diagram.set_caption(label)
 	return diagram
 

@@ -8,18 +8,16 @@ passages = eyekit.io.read(core.DATA / 'passages.json')
 
 original_sequence = data['trial_5']['fixations']
 
-for fixation in original_sequence:
-	fixation.duration = 100
-
 fixation_XY = original_sequence.XYarray()
 word_XY = np.array(passages['1B'].word_centers, dtype=int)
 
-expected_sequence = eyekit.FixationSequence(np.column_stack([word_XY, np.full(len(word_XY), 100, dtype=int)]))
+start_times = np.array([i*100 for i in range(len(word_XY))], dtype=int)
+expected_sequence = eyekit.FixationSequence(np.column_stack([word_XY, start_times, start_times+100]))
 
 diagram = eyekit.vis.Image(1920, 1080)
 diagram.draw_text_block(passages['1B'], color='gray')
-diagram.draw_fixation_sequence(expected_sequence, color='#E32823')
-diagram.draw_fixation_sequence(original_sequence, color='#205E84')
+diagram.draw_fixation_sequence(expected_sequence, color='#E32823', fixation_radius=6)
+diagram.draw_fixation_sequence(original_sequence, color='#205E84', fixation_radius=6)
 
 _, warping_path = algorithms.dynamic_time_warping(fixation_XY, word_XY)
 
@@ -32,5 +30,5 @@ fig = eyekit.vis.Figure()
 fig.add_image(diagram)
 fig.set_lettering(False)
 fig.set_crop_margin(3)
-fig.save(core.VISUALS / 'illustration_warp.pdf', 83)
+fig.save(core.VISUALS / 'illustration_warp_new.pdf', 83)
 # fig.save(core.FIGS / 'fig02_single_column.eps', 83)

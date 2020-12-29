@@ -69,13 +69,13 @@ def make_corrected_file(correction_path, participant_data, passages, corrected_f
 			for line, fixation in zip(file, trial['fixations'].iter_with_discards()):
 				l = int(line.split('\t')[3])
 				if l == 0:
-					new_trial['fixations'].append((fixation.x, fixation.y, fixation.duration, True))
+					new_trial['fixations'].append((fixation.x, fixation.y, fixation.start, fixation.end, True))
 				else:
 					new_y = passages[trial['passage_id']].line_positions[l-1]
-					new_trial['fixations'].append((fixation.x, int(new_y), fixation.duration, False))
+					new_trial['fixations'].append((fixation.x, int(new_y), fixation.start, fixation.end, False))
 		new_trial['fixations'] = eyekit.FixationSequence(new_trial['fixations'])
 		new_dataset[trial_id] = new_trial
-	eyekit.io.write(new_dataset, corrected_file_path)
+	eyekit.io.write(new_dataset, corrected_file_path, compress=True)
 
 def compare_two_corrections(correction1_file_path, correction2_file_path):
 	correction1 = eyekit.io.read(correction1_file_path)
