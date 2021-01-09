@@ -14,10 +14,10 @@ from scipy.stats import norm
 
 def correct_drift(method, fixation_XY, passage, return_line_assignments=False, **params):
 	function = globals()[method]
-	fixation_XY = fixation_XY.copy()
-	line_positions = np.array(passage.line_positions, dtype=int)
+	fixation_XY = np.array(fixation_XY, dtype=int)
+	line_positions = np.array(passage.midlines, dtype=int)
 	if method in ['compare', 'warp']:
-		word_centers = np.array(passage.word_centers, dtype=int)
+		word_centers = np.array(passage.word_centers(), dtype=int)
 		return function(fixation_XY, line_positions, word_centers, return_line_assignments=return_line_assignments, **params)
 	return function(fixation_XY, line_positions, return_line_assignments=return_line_assignments, **params)
 

@@ -66,12 +66,12 @@ def make_corrected_file(correction_path, participant_data, passages, corrected_f
 		passage_id = trial['passage_id']
 		correction_file_path = str(correction_path / f'{participant_id}_{passage_id}')
 		with open(correction_file_path) as file:
-			for line, fixation in zip(file, trial['fixations'].iter_with_discards()):
+			for line, fixation in zip(file, trial['fixations']):
 				l = int(line.split('\t')[3])
 				if l == 0:
 					new_trial['fixations'].append((fixation.x, fixation.y, fixation.start, fixation.end, True))
 				else:
-					new_y = passages[trial['passage_id']].line_positions[l-1]
+					new_y = passages[trial['passage_id']].midlines[l-1]
 					new_trial['fixations'].append((fixation.x, int(new_y), fixation.start, fixation.end, False))
 		new_trial['fixations'] = eyekit.FixationSequence(new_trial['fixations'])
 		new_dataset[trial_id] = new_trial
@@ -82,7 +82,7 @@ def compare_two_corrections(correction1_file_path, correction2_file_path):
 	correction2 = eyekit.io.read(correction2_file_path)
 	for trial_id, trial in correction1.items():
 		print('Trial %s, Participant %s, passage %s'%(trial_id, trial['participant_id'], trial['passage_id']))
-		for i, fixation1 in enumerate(trial['fixations'].iter_with_discards()):
+		for i, fixation1 in enumerate(trial['fixations']):
 			fixation2 = correction2[trial_id]['fixations'][i]
 			if fixation1.discarded:
 				line_assignment1 = 0

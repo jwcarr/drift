@@ -22,7 +22,7 @@ def percentage_match(line_assignments1, line_assignments2):
 
 def line_assignments(fixations):
 	line_assignments = np.zeros(len(fixations), dtype=int)
-	for i, fixation in enumerate(fixations.iter_with_discards()):
+	for i, fixation in enumerate(fixations):
 		if not fixation.discarded:
 			line_assignments[i] = core.y_to_line_mapping[fixation.y]
 	return line_assignments

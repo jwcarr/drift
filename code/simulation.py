@@ -66,7 +66,7 @@ class ReadingScenario:
 					x_regression = int(np.random.triangular(x_margin, word[0].x+1, word[0].x+1))
 					line_X.append(x_regression)
 		line_X = np.array(line_X, dtype=int) - x_margin
-		line_y = passage.line_positions[line_i] - y_margin
+		line_y = passage.midlines[line_i] - y_margin
 		line_Y = np.random.normal(line_y, self.noise, len(line_X))
 		line_Y += line_X * self.slope
 		if inherited_line_y_for_shift:
@@ -78,7 +78,7 @@ class ReadingScenario:
 
 	def _generate_fixation_sequence(self, passage):
 		X, Y, intended_I = [], [], []
-		for line_i, line_y in enumerate(passage.line_positions):
+		for line_i, line_y in enumerate(passage.midlines):
 			line_X, line_Y, line_I = self._generate_line_sequence(passage, line_i)
 			X.extend(line_X)
 			Y.extend(line_Y)

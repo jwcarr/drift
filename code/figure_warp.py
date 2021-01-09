@@ -8,8 +8,8 @@ passages = eyekit.io.read(core.DATA / 'passages.json')
 
 original_sequence = data['trial_5']['fixations']
 
-fixation_XY = original_sequence.XYarray()
-word_XY = np.array(passages['1B'].word_centers, dtype=int)
+fixation_XY = np.array([fixation.xy for fixation in original_sequence], dtype=int)
+word_XY = np.array(passages['1B'].word_centers(), dtype=int)
 
 start_times = np.array([i*100 for i in range(len(word_XY))], dtype=int)
 expected_sequence = eyekit.FixationSequence(np.column_stack([word_XY, start_times, start_times+100]))
