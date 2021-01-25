@@ -23,6 +23,8 @@ Structure of this repository
 
 	- `manual_corrections/`: Raw manual corrections performed by the two correctors plus the gold standard correction. Each file is a reading trial, and files are named by participant ID and passage ID. Each line in these files corresponds to a fixation (duration, x-coordinate, y-coordinate, and line assignment, with 0 used to represent discarding).
 
+	- `ratings/`: Subjective judgments of the algorithmic corrections by two raters. Each rater judged the corrections blind and in random order; their ratings (1 for "acceptable", 0 for "needs more work") can be mapped back to the trial and algorithm using the `_map` files.
+
 	- `simulations/`: Pickled Numpy arrays which store the simulated performance results. Each cell in the array stores the proportion of correct line assignments, and the arrays have a shape of (10, 50, 100) – 100 simulations of 50 gradations corrected by 10 algorithms.
 
 	- `algorithm_distances.pkl`: Pickled distance matrix which stores the median DTW distance between each pair of algorithms for use in the similarity analyses.
