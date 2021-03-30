@@ -205,6 +205,13 @@ def segment(fixation_XY, line_Y):
 
 ######################################################################
 # SPLIT
+#
+# Carr, J. W., Pescuma, V. N., Furlan, M., Ktori, M., & Crepaldi, D.
+#   (2021). Algorithms for the automated correction of vertical drift
+#   in eye tracking data. Behavior Research Methods.
+#
+# https://doi.org/10.3758/s13428-021-01554-0
+# https://github.com/jwcarr/drift
 ######################################################################
 
 def split(fixation_XY, line_Y):
@@ -253,6 +260,13 @@ def stretch(fixation_XY, line_Y, scale_bounds=(0.9, 1.1), offset_bounds=(-50, 50
 
 ######################################################################
 # WARP
+#
+# Carr, J. W., Pescuma, V. N., Furlan, M., Ktori, M., & Crepaldi, D.
+#   (2021). Algorithms for the automated correction of vertical drift
+#   in eye tracking data. Behavior Research Methods.
+#
+# https://doi.org/10.3758/s13428-021-01554-0
+# https://github.com/jwcarr/drift
 ######################################################################
 
 def warp(fixation_XY, word_XY):

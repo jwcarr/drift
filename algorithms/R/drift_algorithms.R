@@ -234,6 +234,13 @@ segment <- function(fixation_XY, line_Y) {
 
 ######################################################################
 # SPLIT
+#
+# Carr, J. W., Pescuma, V. N., Furlan, M., Ktori, M., & Crepaldi, D.
+#   (2021). Algorithms for the automated correction of vertical drift
+#   in eye tracking data. Behavior Research Methods.
+#
+# https://doi.org/10.3758/s13428-021-01554-0
+# https://github.com/jwcarr/drift
 ######################################################################
 
 split <- function(fixation_XY, line_Y) {
@@ -288,6 +295,13 @@ stretch <- function(fixation_XY, line_Y, scale_bounds=c(0.9, 1.1), offset_bounds
 
 ######################################################################
 # WARP
+#
+# Carr, J. W., Pescuma, V. N., Furlan, M., Ktori, M., & Crepaldi, D.
+#   (2021). Algorithms for the automated correction of vertical drift
+#   in eye tracking data. Behavior Research Methods.
+#
+# https://doi.org/10.3758/s13428-021-01554-0
+# https://github.com/jwcarr/drift
 ######################################################################
 
 warp <- function(fixation_XY, word_XY) {
