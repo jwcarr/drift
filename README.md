@@ -1,7 +1,7 @@
 Algorithms for the automated correction of vertical drift in eye tracking data
 ==============================================================================
 
-This repository contains the code and data for a paper on vertical drift correction algorithms that is currently under review at *Behavior Research Methods*. You can download the preprint [here](https://doi.org/10.31219/osf.io/jg3nc) or you can watch our 15-minute Psychonomics talk [here](https://joncarr.net/d/carr_pescuma_furlan_ktori_crepaldi-2020-psychonomics-video.mp4).
+This repository contains the code and data for a paper on vertical drift correction algorithms published in *Behavior Research Methods*. You can download the open-access paper [here](https://doi.org/10.3758/s13428-021-01554-0) or you can watch our 15-minute Psychonomics talk [here](https://joncarr.net/d/carr_pescuma_furlan_ktori_crepaldi-2020-psychonomics-video.mp4).
 
 If you simply want to correct some eyetracking data, you may first want to look into the Python package [Eyekit](https://jwcarr.github.io/eyekit/) or the R package [popEye](https://github.com/sascha2schroeder/popEye). These packages provide more general, higher-level tools for managing, cleaning, and analyzing eyetracking data with a particular emphasis on reading behavior. This includes the ability to correct vertical drift issues with many of the algorithms reported in the paper.
 
@@ -157,20 +157,20 @@ If you find any bugs in the algorithms, errors in our analyses, or mistakes in o
 Citing this work
 ----------------
 
-If you wish to cite this work, please cite the following preprint:
+If you wish to cite this work, please cite the following paper:
 
-Carr, J. W., Pescuma, V. N., Furlan, M., Ktori, M., & Crepaldi, D. (under review). Algorithms for the automated correction of vertical drift in eye tracking data. https://doi.org/10.31219/osf.io/jg3nc
+Carr, J. W., Pescuma, V. N., Furlan, M., Ktori, M., & Crepaldi, D. (2021). Algorithms for the automated correction of vertical drift in eye tracking data. *Behavior Research Methods*. https://doi.org/10.3758/s13428-021-01554-0
 
 ```bibtex
 @article{Carr:2021,
 author = {Carr, Jon W and Pescuma, Valentina N and Furlan, Michele and Ktori, Maria and Crepaldi, Davide},
 title = {Algorithms for the Automated Correction of Vertical Drift in Eye Tracking Data},
-journal = {},
-year = {},
+journal = {Behavior Research Methods},
+year = {2021},
 volume = {},
 number = {},
 pages = {},
-doi = {10.31219/osf.io/jg3nc}
+doi = {10.3758/s13428-021-01554-0}
 }
 ```
 
