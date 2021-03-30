@@ -1,15 +1,17 @@
 #!/bin/bash
 
-master_bib='/Users/jon/Documents/master.bib'
+if [ $# -eq 0 ]; then
+	echo "You must specify a .tex file to typeset"; exit 1
+fi
 
 # Identify the basename of the passed tex file
 basename=$(basename $1 .tex)
 
-# If my master.bib file is available on this system...
-if test -f $master_bib; then
-	# ... we're on Jon's system so use makebib to create refs.bib from master.bib
-	echo "Creating refs.bib from $master_bib"
-	makebib $basename.tex $master_bib refs.bib
+# If two arguments have been supplied...
+if [ $# -eq 2 ]; then
+	# ... use bibfish to creates a local bib file
+	echo "Creating refs.bib from $2"
+	bibfish -f --cc "textcite,parencite,possessivecite" $basename.tex $2 refs.bib
 fi
 
 echo "Parsing $basename.tex"
