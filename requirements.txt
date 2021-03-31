@@ -5,13 +5,13 @@ cffi==1.14.2
 cssselect2==0.3.0
 cycler==0.10.0
 defusedxml==0.6.0
-eyekit==0.3.3
+eyekit==0.3.11
 joblib==0.16.0
 kiwisolver==1.2.0
 lorem==0.1.1
 matplotlib==3.3.1
 numpy==1.19.1
-Pillow==8.1.1
+Pillow==8.1.2
 pycparser==2.20
 pyparsing==2.4.7
 python-dateutil==2.8.1
