@@ -1,4 +1,4 @@
-Algorithms for the automated correction of vertical drift in eye tracking data
+Algorithms for the automated correction of vertical drift in eye-tracking data
 ==============================================================================
 
 This repository contains the code and data for a paper on vertical drift correction algorithms published in *Behavior Research Methods*. You can download the open-access paper [here](https://doi.org/10.3758/s13428-021-01554-0) or you can watch our 15-minute Psychonomics talk [here](https://joncarr.net/d/carr_pescuma_furlan_ktori_crepaldi-2020-psychonomics-video.mp4).
@@ -159,12 +159,12 @@ Citing this work
 
 If you wish to cite this work, please cite the following paper:
 
-Carr, J. W., Pescuma, V. N., Furlan, M., Ktori, M., & Crepaldi, D. (2021). Algorithms for the automated correction of vertical drift in eye tracking data. *Behavior Research Methods*. https://doi.org/10.3758/s13428-021-01554-0
+Carr, J. W., Pescuma, V. N., Furlan, M., Ktori, M., & Crepaldi, D. (2021). Algorithms for the automated correction of vertical drift in eye-tracking data. *Behavior Research Methods*. https://doi.org/10.3758/s13428-021-01554-0
 
 ```bibtex
 @article{Carr:2021,
 author = {Carr, Jon W and Pescuma, Valentina N and Furlan, Michele and Ktori, Maria and Crepaldi, Davide},
-title = {Algorithms for the Automated Correction of Vertical Drift in Eye Tracking Data},
+title = {Algorithms for the Automated Correction of Vertical Drift in Eye-Tracking Data},
 journal = {Behavior Research Methods},
 year = {2021},
 volume = {},
