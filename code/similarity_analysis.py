@@ -171,7 +171,7 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 		x, y = dendrogram.node_points[node]
 		axes[0].text(x+5, y, label, ha='left', va='center')
 	inches_from_origin = (fig.dpi_scale_trans + transforms.ScaledTranslation(0, 1, axes[0].transAxes))
-	axes[0].text(0.1, -0.1, '(A)', fontsize=8, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
+	axes[0].text(0.1, -0.1, 'a', fontsize=12, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
 	s, e = axes[0].get_xlim()
 	padding = (e - s) * 0.05
 	axes[0].set_xlim(s-padding, e+padding)
@@ -197,7 +197,7 @@ def plot_analyses(ahc_solution, mds_solution, filepath):
 	axes[1].set_xticks([])
 	axes[1].set_yticks([])
 	inches_from_origin = (fig.dpi_scale_trans + transforms.ScaledTranslation(0, 1, axes[1].transAxes))
-	axes[1].text(0.1, -0.1, '(B)', fontsize=8, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
+	axes[1].text(0.1, -0.1, 'b', fontsize=12, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
 
 	fig.tight_layout(pad=0.5, h_pad=1, w_pad=1)
 	fig.savefig(filepath, format='svg')
@@ -222,5 +222,5 @@ if __name__ == '__main__':
 	mds_solution = multidimensional_scaling_analysis(algorithm_distances, core.good_algorithms+['gold'], random_seed=9)
 
 	# Plot the analyses
-	plot_analyses(ahc_solution, mds_solution, core.VISUALS / 'results_similarity.pdf')
-	# plot_analyses(ahc_solution, mds_solution, core.FIGS / 'fig12_single_column.eps')
+	# plot_analyses(ahc_solution, mds_solution, core.VISUALS / 'results_similarity.pdf')
+	plot_analyses(ahc_solution, mds_solution, core.FIGS / 'fig12_single_column.eps')

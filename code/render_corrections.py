@@ -41,7 +41,7 @@ for trial_id, trial in datasets['sample'].items():
 		fig.add_image(image)
 
 	fig.set_crop_margin(2)
-	fig.set_lettering(False)
+	fig.set_enumeration(False)
 	fig.set_padding(5, 5, 10)
 
 	booklet.add_figure(fig)

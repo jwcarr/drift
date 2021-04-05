@@ -42,7 +42,7 @@ def generate_rating_set(rater_id):
 			fig.add_image(original_image)
 			fig.add_image(correction_image)
 			fig.set_crop_margin(2)
-			fig.set_lettering(False)
+			fig.set_enumeration(False)
 			fig.set_padding(5, 5, 10)
 			fig.save(core.VISUALS / 'rating_images' / rater_id / f'{random_id}.pdf')
 

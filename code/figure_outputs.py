@@ -14,7 +14,7 @@ for algorithm in ['sample', 'gold'] + core.algorithms:
 	data = eyekit.io.read(core.FIXATIONS / f'{algorithm}.json')
 	fixation_sequence = data['trial_5']['fixations']
 	image = eyekit.vis.Image(1920, 1080)
-	image.draw_text_block(passages['1B'], color='gray')
+	image.draw_text_block(passages['1B'], mask_text=True)
 	if algorithm == 'sample':
 		image.draw_fixation_sequence(fixation_sequence)
 		image.set_caption('Original data')
@@ -26,8 +26,10 @@ for algorithm in ['sample', 'gold'] + core.algorithms:
 		image.set_caption('%s' % algorithm, font_face='Menlo', font_size=8)
 	fig.add_image(image)
 fig.set_crop_margin(2)
-fig.save(core.VISUALS / 'outputs_adult.pdf', 174)
-# fig.save(core.FIGS / 'fig08_double_column.eps', 174)
+fig.set_padding(vertical=2, horizontal=3, edge=1)
+fig.set_enumeration('<a>  ', font_size=12)
+# fig.save(core.VISUALS / 'outputs_adult.pdf', 174)
+fig.save(core.FIGS / 'fig08_double_column.eps', 174)
 
 # Child example
 
@@ -37,7 +39,7 @@ for algorithm in ['sample', 'gold'] + core.algorithms:
 	data = eyekit.io.read(core.FIXATIONS / f'{algorithm}.json')
 	fixation_sequence = data['trial_30']['fixations']
 	image = eyekit.vis.Image(1920, 1080)
-	image.draw_text_block(passages['4A'], color='gray')
+	image.draw_text_block(passages['4A'], mask_text=True)
 	if algorithm == 'sample':
 		image.draw_fixation_sequence(fixation_sequence)
 		image.set_caption('Original data')
@@ -49,5 +51,7 @@ for algorithm in ['sample', 'gold'] + core.algorithms:
 		image.set_caption('%s' % algorithm, font_face='Menlo', font_size=8)
 	fig.add_image(image)
 fig.set_crop_margin(2)
-fig.save(core.VISUALS / 'outputs_child.pdf', 174)
-# fig.save(core.FIGS / 'fig09_double_column.eps', 174)
+fig.set_padding(vertical=2, horizontal=3, edge=1)
+fig.set_enumeration('<a>  ', font_size=12)
+# fig.save(core.VISUALS / 'outputs_child.pdf', 174)
+fig.save(core.FIGS / 'fig09_double_column.eps', 174)

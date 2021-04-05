@@ -47,7 +47,7 @@ def plot_results(filepath, layout, n_rows=2, figsize=None, stagger=0):
 			axes[r][c].set_xlim(factor_min_val-offset, factor_max_val+offset)
 			axes[r][c].set_xlabel(factor_label)
 		inches_from_origin = (fig.dpi_scale_trans + transforms.ScaledTranslation(0, 0, axes[r][c].transAxes))
-		axes[r][c].text(0.1, 0.1, '(%s)'%('ABCDE'[subplot_i]), fontsize=8, fontweight='bold', ha='left', va='bottom', transform=inches_from_origin)
+		axes[r][c].text(0.05, 0.05, '%s'%('abcde'[subplot_i]), fontsize=12, fontweight='bold', ha='left', va='bottom', transform=inches_from_origin)
 		subplot_i += 1
 	for axis in axes[:, 0]:
 		axis.set_ylabel('Accuracy of algorithmic correction (%)')
@@ -99,8 +99,8 @@ def plot_invariance(filepath, show_percentages=False):
 
 if __name__ == '__main__':
 
-	plot_results(core.VISUALS / 'results_simulations.pdf', ['noise', 'slope', 'shift', 'regression_within', 'regression_between', 'legend'], 2, (7, 5), 0.75)
-	# plot_results(core.FIGS / 'fig04_double_column.eps', ['noise', 'legend', 'slope', 'shift', 'regression_within', 'regression_between'], 3, (6.8, 7), 0.75)
+	# plot_results(core.VISUALS / 'results_simulations.pdf', ['noise', 'slope', 'shift', 'regression_within', 'regression_between', 'legend'], 2, (7, 5), 0.75)
+	plot_results(core.FIGS / 'fig04_double_column.eps', ['noise', 'legend', 'slope', 'shift', 'regression_within', 'regression_between'], 3, (6.8, 6), 0.75)
 	
-	plot_invariance(core.VISUALS / 'results_invariance.pdf')
-	# plot_invariance(core.FIGS / 'fig05_single_column.eps')
+	# plot_invariance(core.VISUALS / 'results_invariance.pdf')
+	plot_invariance(core.FIGS / 'fig05_single_column.eps')

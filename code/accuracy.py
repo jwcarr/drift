@@ -161,13 +161,13 @@ def plot_proportion_above(axis, accuracy_results, target_accuracy=95):
 def plot_proportions(accuracy_results, rater_ids, filepath):
 	filepath = str(filepath)
 	fig, axes = plt.subplots(1, 4, figsize=(6.8, 2.3))
-	for axis, target_accuracy, letter in zip(axes, [90, 95, 99], ['A', 'B', 'C']):
+	for axis, target_accuracy, letter in zip(axes, [90, 95, 99], ['a', 'b', 'c']):
 		plot_proportion_above(axis, accuracy_results, target_accuracy)
 		inches_from_origin = (fig.dpi_scale_trans + transforms.ScaledTranslation(0, 1, axis.transAxes))
-		axis.text(0.1, -0.1, f'({letter})', fontsize=8, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
+		axis.text(0.1, -0.1, f'{letter}', fontsize=12, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
 	plot_acceptability_ratings(axes[3], rater_ids)
 	inches_from_origin = (fig.dpi_scale_trans + transforms.ScaledTranslation(0, 1, axes[3].transAxes))
-	axes[3].text(0.1, -0.1, '(D)', fontsize=8, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
+	axes[3].text(0.1, -0.1, 'd', fontsize=12, fontweight='bold', ha='left', va='top', transform=inches_from_origin)
 	axes[1].set_yticklabels([])
 	axes[2].set_yticklabels([])
 	axes[3].set_yticklabels([])
@@ -205,11 +205,11 @@ if __name__ == '__main__':
 	accuracy_results = {algorithm : compare_outputs('gold', algorithm) for algorithm in core.algorithms}
 	improvement_results = calculate_improvement(accuracy_results)
 
-	plot_results(accuracy_results, core.VISUALS / 'results_accuracy.pdf', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
-	# plot_results(accuracy_results, core.FIGS / 'fig07_double_column.eps', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
+	# plot_results(accuracy_results, core.VISUALS / 'results_accuracy.pdf', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
+	plot_results(accuracy_results, core.FIGS / 'fig07_double_column.eps', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
 
-	plot_results(improvement_results, core.VISUALS / 'results_improvement.pdf', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
-	# plot_results(improvement_results, core.FIGS / 'fig11_double_column.eps', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
+	# plot_results(improvement_results, core.VISUALS / 'results_improvement.pdf', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
+	plot_results(improvement_results, core.FIGS / 'fig11_double_column.eps', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
 
-	plot_proportions(accuracy_results, ['JC', 'VP'], core.VISUALS / 'results_proportion.pdf')
-	# plot_proportions(accuracy_results, ['JC', 'VP'], core.FIGS / 'fig10_double_column.eps')
+	# plot_proportions(accuracy_results, ['JC', 'VP'], core.VISUALS / 'results_proportion.pdf')
+	plot_proportions(accuracy_results, ['JC', 'VP'], core.FIGS / 'fig10_double_column.eps')
