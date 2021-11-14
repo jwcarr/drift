@@ -99,8 +99,8 @@ def plot_invariance(filepath, show_percentages=False):
 
 if __name__ == '__main__':
 
-	# plot_results(core.VISUALS / 'results_simulations.pdf', ['noise', 'slope', 'shift', 'regression_within', 'regression_between', 'legend'], 2, (7, 5), 0.75)
-	plot_results(core.FIGS / 'fig04_double_column.eps', ['noise', 'legend', 'slope', 'shift', 'regression_within', 'regression_between'], 3, (6.8, 6), 0.75)
+	plot_results(core.VISUALS / 'results_simulations.pdf', ['noise', 'slope', 'shift', 'regression_within', 'regression_between', 'legend'], 2, (7, 5), 0.75)
+	# plot_results(core.FIGS / 'fig04_double_column.eps', ['noise', 'legend', 'slope', 'shift', 'regression_within', 'regression_between'], 3, (6.8, 6), 0.75)
 	
-	# plot_invariance(core.VISUALS / 'results_invariance.pdf')
-	plot_invariance(core.FIGS / 'fig05_single_column.eps')
+	plot_invariance(core.VISUALS / 'results_invariance.pdf')
+	# plot_invariance(core.FIGS / 'fig05_single_column.eps')

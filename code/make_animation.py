@@ -32,13 +32,13 @@ def make_animation():
 	imageio.mimsave(str(core.VISUALS / 'animation.gif'), images, fps=30, loop=0, palettesize=8, subrectangles=True)
 
 
-data = eyekit.io.read(core.FIXATIONS / 'sample.json')
-txt = eyekit.io.read(core.DATA / 'passages.json')['1B']
+data = eyekit.io.load(core.FIXATIONS / 'sample.json')
+txt = eyekit.io.load(core.DATA / 'passages.json')['1B']
 
 orig_seq = data['trial_5']['fixations']
 corr_seq = orig_seq.copy()
 
-eyekit.tools.snap_to_lines(corr_seq, txt)
+corr_seq.snap_to_lines(txt)
 
 # make_frames()
 make_animation()

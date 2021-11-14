@@ -8,8 +8,8 @@ import core
 
 eyekit.vis.set_default_font('Helvetica Neue', 8)
 
-passages = eyekit.io.read(core.DATA / 'passages.json')
-datasets = {dataset : eyekit.io.read(core.FIXATIONS / f'{dataset}.json') for dataset in ['sample', 'gold']+core.algorithms}
+passages = eyekit.io.load(core.DATA / 'passages.json')
+datasets = {dataset : eyekit.io.load(core.FIXATIONS / f'{dataset}.json') for dataset in ['sample', 'gold']+core.algorithms}
 
 booklet = eyekit.vis.Booklet()
 
@@ -36,13 +36,18 @@ for trial_id, trial in datasets['sample'].items():
 		data = datasets[algorithm]
 		image = eyekit.vis.Image(1920, 1080)
 		image.draw_text_block(passages[trial['passage_id']], color='gray')
-		image.draw_sequence_comparison(gold_fixation_sequence, data[trial_id]['fixations'])
+		for fxn, ref_fxn in zip(data[trial_id]['fixations'], gold_fixation_sequence):
+			if fxn.y != ref_fxn.y:
+				fxn.add_tag('mismatch')
+		image.draw_fixation_sequence(data[trial_id]['fixations'],
+			color=lambda fxn: 'red' if fxn.has_tag('mismatch') else 'black'
+		)
 		image.set_caption(algorithm, font_face='Menlo')
 		fig.add_image(image)
 
 	fig.set_crop_margin(2)
 	fig.set_enumeration(False)
-	fig.set_padding(5, 5, 10)
+	fig.set_padding(horizontal=5, vertical=5, edge=10)
 
 	booklet.add_figure(fig)
 

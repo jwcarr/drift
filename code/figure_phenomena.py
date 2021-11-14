@@ -32,5 +32,5 @@ fig.add_image(run_and_visualize(passage, 'Between-line regression', noise=2.0, r
 fig.set_crop_margin(4)
 fig.set_padding(vertical=2, horizontal=3, edge=1)
 fig.set_enumeration('<a>  ', font_size=12)
-# fig.save(core.VISUALS / 'illustration_phenomena.pdf', 83)
-fig.save(core.FIGS / 'fig03_single_column.eps', 83)
+fig.save(core.VISUALS / 'illustration_phenomena.pdf', width=83)
+# fig.save(core.FIGS / 'fig03_single_column.eps', width=83)

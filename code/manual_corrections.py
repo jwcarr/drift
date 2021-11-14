@@ -75,11 +75,11 @@ def make_corrected_file(correction_path, participant_data, passages, corrected_f
 					new_trial['fixations'].append((fixation.x, int(new_y), fixation.start, fixation.end, False))
 		new_trial['fixations'] = eyekit.FixationSequence(new_trial['fixations'])
 		new_dataset[trial_id] = new_trial
-	eyekit.io.write(new_dataset, corrected_file_path, compress=True)
+	eyekit.io.save(new_dataset, corrected_file_path, compress=True)
 
 def compare_two_corrections(correction1_file_path, correction2_file_path):
-	correction1 = eyekit.io.read(correction1_file_path)
-	correction2 = eyekit.io.read(correction2_file_path)
+	correction1 = eyekit.io.load(correction1_file_path)
+	correction2 = eyekit.io.load(correction2_file_path)
 	for trial_id, trial in correction1.items():
 		print('Trial %s, Participant %s, passage %s'%(trial_id, trial['participant_id'], trial['passage_id']))
 		for i, fixation1 in enumerate(trial['fixations']):
@@ -101,8 +101,8 @@ def compare_two_corrections(correction1_file_path, correction2_file_path):
 
 if __name__ == '__main__':
 
-	participant_data = eyekit.io.read(core.FIXATIONS / 'sample.json')
-	passages = eyekit.io.read(core.DATA / 'passages.json')
+	participant_data = eyekit.io.load(core.FIXATIONS / 'sample.json')
+	passages = eyekit.io.load(core.DATA / 'passages.json')
 
 	# Step 0: Initialize the empty correction files and plots of the original data
 	# for corrector_id in ['JC', 'VP']:

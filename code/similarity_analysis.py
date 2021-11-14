@@ -110,8 +110,8 @@ class Dendrogram:
 
 def algorithmic_output_distance(method1, method2):
 	from algorithms import dynamic_time_warping
-	data1 = eyekit.io.read(core.FIXATIONS / f'{method1}.json')
-	data2 = eyekit.io.read(core.FIXATIONS / f'{method2}.json')
+	data1 = eyekit.io.load(core.FIXATIONS / f'{method1}.json')
+	data2 = eyekit.io.load(core.FIXATIONS / f'{method2}.json')
 	results = []
 	for trial_id, trial in data1.items():
 		fixation_XY1 = np.array([f.xy for f in trial['fixations'] if not f.discarded], dtype=int)
@@ -222,5 +222,5 @@ if __name__ == '__main__':
 	mds_solution = multidimensional_scaling_analysis(algorithm_distances, core.good_algorithms+['gold'], random_seed=9)
 
 	# Plot the analyses
-	# plot_analyses(ahc_solution, mds_solution, core.VISUALS / 'results_similarity.pdf')
-	plot_analyses(ahc_solution, mds_solution, core.FIGS / 'fig12_single_column.eps')
+	plot_analyses(ahc_solution, mds_solution, core.VISUALS / 'results_similarity.pdf')
+	# plot_analyses(ahc_solution, mds_solution, core.FIGS / 'fig12_single_column.eps')

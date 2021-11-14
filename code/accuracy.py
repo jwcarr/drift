@@ -28,8 +28,8 @@ def line_assignments(fixations):
 	return line_assignments
 
 def compare_outputs(method1, method2):
-	data1 = eyekit.io.read(core.FIXATIONS / f'{method1}.json')
-	data2 = eyekit.io.read(core.FIXATIONS / f'{method2}.json')
+	data1 = eyekit.io.load(core.FIXATIONS / f'{method1}.json')
+	data2 = eyekit.io.load(core.FIXATIONS / f'{method2}.json')
 	results = {'adults':[], 'kids':[], 'adults_IDs':[], 'kids_IDs':[]}
 	for trial_id, trial in data1.items():
 		line_assignments1 = line_assignments(trial['fixations'])
@@ -205,11 +205,11 @@ if __name__ == '__main__':
 	accuracy_results = {algorithm : compare_outputs('gold', algorithm) for algorithm in core.algorithms}
 	improvement_results = calculate_improvement(accuracy_results)
 
-	# plot_results(accuracy_results, core.VISUALS / 'results_accuracy.pdf', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
-	plot_results(accuracy_results, core.FIGS / 'fig07_double_column.eps', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
+	plot_results(accuracy_results, core.VISUALS / 'results_accuracy.pdf', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
+	# plot_results(accuracy_results, core.FIGS / 'fig07_double_column.eps', 'Accuracy of algorithmic correction (%)', (0, 100), '%')
 
-	# plot_results(improvement_results, core.VISUALS / 'results_improvement.pdf', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
-	plot_results(improvement_results, core.FIGS / 'fig11_double_column.eps', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
+	plot_results(improvement_results, core.VISUALS / 'results_improvement.pdf', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
+	# plot_results(improvement_results, core.FIGS / 'fig11_double_column.eps', 'Percentage point improvement in accuracy', (-80, 80), 'pp')
 
-	# plot_proportions(accuracy_results, ['JC', 'VP'], core.VISUALS / 'results_proportion.pdf')
-	plot_proportions(accuracy_results, ['JC', 'VP'], core.FIGS / 'fig10_double_column.eps')
+	plot_proportions(accuracy_results, ['JC', 'VP'], core.VISUALS / 'results_proportion.pdf')
+	# plot_proportions(accuracy_results, ['JC', 'VP'], core.FIGS / 'fig10_double_column.eps')
