@@ -129,7 +129,13 @@ This will use the precomputed distance matrix stored in `data/algorithm_distance
 visuals/results_similarity.pdf
 ```
 
-To reproduce the distance matrix, uncomment the relevant line in `code/similarity_analysis.py` – this will take a little while to run. 
+To reproduce the distance matrix, uncomment the relevant line in `code/similarity_analysis.py` – this will take a little while to run.
+
+
+Updates
+-------
+
+After publication of the paper, a new algorithm called `slice` was reported by [Glandorf and Schroeder](https://doi.org/10.1016/j.procs.2021.09.069). Although this algorithm is not discussed in the paper, we have written a Python implementation and benchmarked its performance. The implementation can be found in the `algorithms` directory, and the updated benchmarking results can be found in the `visuals` directory. In short, `slice` appears to offer excellent performance. It was marginally better than all other algorithms on the natural dataset and we found it to be invariant to all simulated phenomena except noise (on which its performance is broadly comparable to `merge`).
 
 
 Building a new algorithm
@@ -159,17 +165,17 @@ Citing this work
 
 If you wish to cite this work, please cite the following paper:
 
-Carr, J. W., Pescuma, V. N., Furlan, M., Ktori, M., & Crepaldi, D. (2021). Algorithms for the automated correction of vertical drift in eye-tracking data. *Behavior Research Methods*. https://doi.org/10.3758/s13428-021-01554-0
+Carr, J. W., Pescuma, V. N., Furlan, M., Ktori, M., & Crepaldi, D. (2022). Algorithms for the automated correction of vertical drift in eye-tracking data. *Behavior Research Methods*, *54*(1), 287–310. https://doi.org/10.3758/s13428-021-01554-0
 
 ```bibtex
-@article{Carr:2021,
+@article{Carr:2022,
 author = {Carr, Jon W and Pescuma, Valentina N and Furlan, Michele and Ktori, Maria and Crepaldi, Davide},
 title = {Algorithms for the Automated Correction of Vertical Drift in Eye-Tracking Data},
 journal = {Behavior Research Methods},
-year = {2021},
-volume = {},
-number = {},
-pages = {},
+year = {2022},
+volume = {54},
+number = {1},
+pages = {287-310},
 doi = {10.3758/s13428-021-01554-0}
 }
 ```
