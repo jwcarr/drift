@@ -219,6 +219,84 @@ def segment(fixation_XY, line_Y, return_line_assignments=False):
 	return fixation_XY
 
 
+def slice(fixation_XY, line_Y, x_thresh=192, y_thresh=32, w_thresh=32, n_thresh=90, return_line_assignments=False):
+	n = len(fixation_XY)
+	line_height = np.mean(np.diff(line_Y))
+	proto_lines, phantom_proto_lines = {}, {}
+	dist_X = abs(np.diff(fixation_XY[:, 0]))
+	dist_Y = abs(np.diff(fixation_XY[:, 1]))
+	end_run_indices = list(np.where(np.logical_or(dist_X > x_thresh, dist_Y > y_thresh))[0] + 1)
+	run_starts = [0] + end_run_indices
+	run_ends = end_run_indices + [n]
+	runs = [list(range(start, end)) for start, end in zip(run_starts, run_ends)]
+	longest_run_i = np.argmax([fixation_XY[run[-1], 0] - fixation_XY[run[0], 0] for run in runs])
+	proto_lines[0] = runs.pop(longest_run_i)
+	while runs:
+		change_on_this_iteration = False
+		for proto_line_i, direction in [(min(proto_lines), -1), (max(proto_lines), 1)]:
+			proto_lines[proto_line_i + direction] = []
+			if proto_lines[proto_line_i]:
+				proto_line_XY = fixation_XY[proto_lines[proto_line_i]]
+			else:
+				proto_line_XY = phantom_proto_lines[proto_line_i]
+			run_differences = np.zeros(len(runs))
+			for run_i, run in enumerate(runs):
+				y_diffs = [y - proto_line_XY[np.argmin(abs(proto_line_XY[:, 0] - x)), 1] for x, y in fixation_XY[run]]
+				run_differences[run_i] = np.mean(y_diffs)
+			merge_into_current = list(np.where(abs(run_differences) < w_thresh)[0])
+			merge_into_adjacent = list(np.where(np.logical_and(
+				run_differences * direction >= w_thresh,
+				run_differences * direction < n_thresh
+			))[0])
+			for index in merge_into_current:
+				proto_lines[proto_line_i].extend(runs[index])
+			for index in merge_into_adjacent:
+				proto_lines[proto_line_i + direction].extend(runs[index])
+			if not merge_into_adjacent:
+				average_x, average_y = np.mean(proto_line_XY, axis=0)
+				adjacent_y = average_y + line_height * direction
+				phantom_proto_lines[proto_line_i + direction] = np.array([[average_x, adjacent_y]])
+			for index in sorted(merge_into_current + merge_into_adjacent, reverse=True):
+				del runs[index]
+				change_on_this_iteration = True
+		if not change_on_this_iteration:
+			break
+	for run in runs:
+		best_pl_distance = np.inf
+		best_pl_assignemnt = None
+		for proto_line_i in proto_lines:
+			if proto_lines[proto_line_i]:
+				proto_line_XY = fixation_XY[proto_lines[proto_line_i]]
+			else:
+				proto_line_XY = phantom_proto_lines[proto_line_i]
+			y_diffs = [y - proto_line_XY[np.argmin(abs(proto_line_XY[:, 0] - x)), 1] for x, y in fixation_XY[run]]
+			pl_distance = abs(np.mean(y_diffs))
+			if pl_distance < best_pl_distance:
+				best_pl_distance = pl_distance
+				best_pl_assignemnt = proto_line_i
+		proto_lines[best_pl_assignemnt].extend(run)
+	while len(proto_lines) > len(line_Y):
+		top, bot = min(proto_lines), max(proto_lines)
+		if len(proto_lines[top]) < len(proto_lines[bot]):
+			proto_lines[top + 1].extend(proto_lines[top])
+			del proto_lines[top]
+		else:
+			proto_lines[bot - 1].extend(proto_lines[bot])
+			del proto_lines[bot]
+
+	######################### FOR SIMULATIONS #########################
+	if return_line_assignments:
+		line_assignments = np.zeros(n, dtype=int)
+		for line_i, proto_line_i in enumerate(sorted(proto_lines)):
+			line_assignments[proto_lines[proto_line_i]] = line_i
+		return line_assignments
+	###################################################################
+
+	for line_i, proto_line_i in enumerate(sorted(proto_lines)):
+		fixation_XY[proto_lines[proto_line_i], 1] = line_Y[line_i]
+	return fixation_XY
+
+
 def split(fixation_XY, line_Y, return_line_assignments=False):
 	n = len(fixation_XY)
 	diff_X = np.diff(fixation_XY[:, 0])

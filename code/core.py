@@ -25,6 +25,7 @@ colors = {'attach':'#81818D',
           'merge':'#205E84',
           'regress':'#009142',
           'segment':'#FCAF32',
+          'slice':'#000000',
           'split':'#E32823',
           'stretch':'#525200',
           'warp':'#6742B0',
@@ -34,13 +35,13 @@ colors = {'attach':'#81818D',
 }
 
 # Main set of ten algorithms
-algorithms = ['attach', 'chain', 'cluster', 'compare', 'merge', 'regress', 'segment', 'split', 'stretch', 'warp']
+algorithms = ['attach', 'chain', 'cluster', 'compare', 'merge', 'regress', 'segment', 'slice', 'split', 'stretch', 'warp']
 
 # Algorithms without attach
-true_algorithms = ['chain', 'cluster', 'compare', 'merge', 'regress', 'segment', 'split', 'stretch', 'warp']
+true_algorithms = ['chain', 'cluster', 'compare', 'merge', 'regress', 'segment', 'slice', 'split', 'stretch', 'warp']
 
 # Algorithms without compare
-good_algorithms = ['attach', 'chain', 'cluster', 'merge', 'regress', 'segment', 'split', 'stretch', 'warp']
+good_algorithms = ['attach', 'chain', 'cluster', 'merge', 'regress', 'segment', 'slice', 'split', 'stretch', 'warp']
 
 # Simulation factors and their parameter spaces
 factors = {'noise':('Noise distortion', (0, 40)),

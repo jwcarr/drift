@@ -47,6 +47,10 @@ segment_output = drift_algorithms.segment(fixation_XY.copy(), line_Y)
 print('Output from the segment algorithm')
 print(segment_output)
 
+slice_output = drift_algorithms.slice(fixation_XY.copy(), line_Y)
+print('Output from the slice algorithm')
+print(slice_output)
+
 split_output = drift_algorithms.split(fixation_XY.copy(), line_Y)
 print('Output from the split algorithm')
 print(split_output)
